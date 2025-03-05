@@ -70,38 +70,6 @@ class Player {
     );
   }
 
-<<<<<<< HEAD
-=======
-  block() {
-    let b = {}; // Blockade-Objekt als Rückgabewert
-    b.spalteL = Math.floor(this.playerPosX / this.tileSize); // Spaltennummer der linken Spielerkante
-    b.spalteR = Math.floor(
-      (this.playerPosX + this.playerWidth) / this.tileSize
-    ); // Spaltennummer der rechten Spielerkante
-    b.zeileO = Math.floor(this.playerPosY / this.tileSize); // Zeilennummer der oberen Spielerkante
-    b.zeileU = Math.floor(
-      (this.playerPosY + this.playerHeight) / this.tileSize
-    ); // Zeilennummer der unteren Spielerkante
-    // Prüfung, ob Spieler mit einer seiner Ecken in einem BLOCKER-Tile steht:
-    b.links =
-      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
-      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0;
-    b.rechts =
-      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0 ||
-      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
-
-    b.oben =
-      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
-      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0;
-
-    b.unten =
-      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0 ||
-      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
-
-    return b; // Liefert das Objekt an die Stelle des Aufrufs zurück
-  }
-
->>>>>>> ca07d0c961251f75f1bbbd0d61ef84ec981af1f1
   move(controls) {
     let nextX = this.playerPosX;
     let nextY = this.playerPosY;

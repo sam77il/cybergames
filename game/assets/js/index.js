@@ -218,11 +218,6 @@ function startGameLoop(currentTime) {
 
     ctx.clearRect(0, 0, gameSettings.global.width, gameSettings.global.height);
     ctx.drawImage(bgCanvas, 0, 0);
-<<<<<<< HEAD
-=======
-    // console.log("now: " + performance.now());
-    // console.log("current: " + currentTime);
->>>>>>> ca07d0c961251f75f1bbbd0d61ef84ec981af1f1
     player.move(controls);
     player.update();
   }
