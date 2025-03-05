@@ -45,7 +45,7 @@ async function InitiateCharacters() {
         ".character-selection-start"
       );
       for (let button of CHARACTER_SELECTION_START) {
-        button.addEventListener("click", handleStartCharacter);
+        button.addEventListener("click", StartGame);
       }
       for (let button of CHARACTER_SELECTION_DELETE) {
         button.addEventListener("click", handleDeleteCharacter);
