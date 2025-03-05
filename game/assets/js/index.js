@@ -51,7 +51,7 @@ async function initializeGame() {
     tileset = document.querySelector("#tileset");
     console.log(gameSettings);
     if (gameSettings.global.dev) {
-      handleStartCharacter();
+      StartGame();
     } else {
       ChangeScreen("title-screen");
     }
