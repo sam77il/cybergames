@@ -13,6 +13,10 @@ ul {
   list-style: none;
 }
 
+#cache {
+  display: none;
+}
+
 #box {
   position: fixed;
   width: 100vw;

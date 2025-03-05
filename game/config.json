@@ -1,8 +1,37 @@
 {
   "global": {
+    "dev": false,
     "tileSize": 50,
     "width": 1024,
-    "height": 600
+    "height": 600,
+    "tiles": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Z"
+    ],
+    "blocker": "ABCDEFGHIMNOPQRSTUVWXYZ"
   },
   "levels": [
     {
@@ -22,17 +51,13 @@
         "B       PPPPP                  PPPPP           T B",
         "B                   PPPPPPP                  PPPPB",
         "B                                                B",
-        "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
-      ]
-    },
-    {
-      "name": "lek",
-      "label": "Lek",
-      "level": 2,
-      "enemies": 5,
-      "map": [
-        "BBBBZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-        "B                                                B",
+        "B    PPPPPPP             PPPPP         T         B",
+        "B                                     PPPP       B",
+        "B              PPPPPPP                           B",
+        "B                        PPPPPPP                 B",
+        "B         T                    T      PPPPP      B",
+        "B       PPPPP                  PPPPP           T B",
+        "B                   PPPPPPP                  PPPPB",
         "B                                                B",
         "B    PPPPPPP             PPPPP         T         B",
         "B                                     PPPP       B",
@@ -43,6 +68,30 @@
         "B                   PPPPPPP                  PPPPB",
         "B                                                B",
         "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+      ]
+    },
+    {
+      "name": "lek",
+      "label": "Lek",
+      "level": 2,
+      "enemies": 5,
+      "map": [
+        "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAAAAAAAAAAAA",
+        "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAARAAAAAAAAA",
+        "AAAAAAAAA                NAAAAAAAAAAAAAAAAAA             NAAAAAADAAAAA",
+        "ALLLLLLLA                      NAAAAAEAAAAAA             OAAAAAAAAP  A",
+        "AAAAAAAAA                      NAAAAARAAAAAA                         A",
+        "AAAAAAAAA                      OAAAAAAAARAAAAP                       A",
+        "ALLLLLLLA                                       STU                  A",
+        "F                                                    STTU            A",
+        "A                                                                    A",
+        "F                                                                    Q",
+        "A                                                          STTTU    VA",
+        "A                                                                   NA",
+        "ALLK          JLLK                                 VAAAAW           NA",
+        "AAACABAAAW   VACABAAAFG                     STTU   NAADAM           NA",
+        "ADDAAEAAAM   NDAAEAAAAAFG       JK   JK            NAAAAM  JLLLLK   NA",
+        "AAAAAAAAAAAABAAAAAAAAAAAAAAAABBCAAAACBAAAACAAAAAAAAAAAAAABCAAAACAAADAAA"
       ]
     }
   ]

@@ -3,14 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="./assets/js/game.js"></script>
-    <script src="./assets/js/player.js"></script>
-    <script src="./assets/js/index.js"></script>
     <link rel="stylesheet" href="./assets/css/index.css" />
     <title>Cybergame</title>
   </head>
   <body>
     <div id="box"></div>
     <div id="content"></div>
+    <div id="pause">
+      <button id="lvl"></button>
+      <button id="ctr"></button>
+      <button id="resume"></button>
+      <button id="quit"></button>
+    </div>
+    <div id="cache">
+      <img
+        id="tileset"
+        src="./assets/img/tileset-cybergame.png"
+        alt="Tilesets"
+      />
+    </div>
+
+    <script src="./assets/js/game.module.js"></script>
+    <script src="./assets/js/player.module.js"></script>
+    <script src="./assets/js/screen.handler.js"></script>
+    <script src="./assets/js/character.handler.js"></script>
+    <script src="./assets/js/game.handler.js"></script>
+    <script src="./assets/js/core.handler.js"></script>
+    <script src="./assets/js/index.js"></script>
   </body>
 </html>
