@@ -1,26 +1,16 @@
 class Player {
-  constructor(
-    context,
-    startPosX,
-    startPosY,
-    playerWidth,
-    playerHeight,
-    tileSize,
-    map
-  ) {
-    this.context = context;
+  constructor(startPosX, startPosY, playerWidth, playerHeight) {
     this.playerPosX = startPosX;
     this.playerPosY = startPosY;
     this.playerWidth = playerWidth;
     this.playerHeight = playerHeight;
-    this.tileSize = tileSize;
-    this.map = map;
+    this.tileSize = game.tileSize;
     this.playerSpeed = 5;
     this.gravity = 1;
     this.playerFall = 0;
     this.playerJumpForce = 20;
     this.onGround = false;
-    this.blocks = "PB";
+    this.blocks = "ABCMW";
   }
 
   initialize() {
@@ -28,8 +18,8 @@ class Player {
   }
 
   draw() {
-    this.context.fillStyle = "black";
-    this.context.fillRect(
+    ctx.fillStyle = "black";
+    ctx.fillRect(
       this.playerPosX,
       this.playerPosY,
       this.playerWidth,
@@ -46,11 +36,11 @@ class Player {
     const row = Math.floor(y / this.tileSize);
     if (
       row >= 0 &&
-      row < this.map.length &&
+      row < game.map.length &&
       col >= 0 &&
-      col < this.map[0].length
+      col < game.map[0].length
     ) {
-      return this.map[row][col];
+      return game.map[row][col];
     }
     return null;
   }
@@ -61,12 +51,18 @@ class Player {
     const bottomY = y + this.playerHeight - 1;
 
     return (
-      this.blocks.includes(this.getTileAt(x, topY)) ||
-      this.blocks.includes(this.getTileAt(x + this.playerWidth - 1, topY)) ||
-      this.blocks.includes(this.getTileAt(x, middleY)) ||
-      this.blocks.includes(this.getTileAt(x + this.playerWidth - 1, middleY)) ||
-      this.blocks.includes(this.getTileAt(x, bottomY)) ||
-      this.blocks.includes(this.getTileAt(x + this.playerWidth - 1, bottomY))
+      gameSettings.global.blocker.includes(this.getTileAt(x, topY)) ||
+      gameSettings.global.blocker.includes(
+        this.getTileAt(x + this.playerWidth - 1, topY)
+      ) ||
+      gameSettings.global.blocker.includes(this.getTileAt(x, middleY)) ||
+      gameSettings.global.blocker.includes(
+        this.getTileAt(x + this.playerWidth - 1, middleY)
+      ) ||
+      gameSettings.global.blocker.includes(this.getTileAt(x, bottomY)) ||
+      gameSettings.global.blocker.includes(
+        this.getTileAt(x + this.playerWidth - 1, bottomY)
+      )
     );
   }
 
