@@ -4,11 +4,12 @@ let MAIN_MENU = null;
 let CHARACTER_SELECTION = null;
 let CHARACTER_CREATION = null;
 let GAME_SCREEN = null;
+let SETTINGS = null;
 let canvas = null;
 let ctx = null;
 let bgCanvas = null;
 let bgCtx = null;
-let gameStarted = false;
+let characterSelectioned = false;
 let locales = {};
 let player = null;
 let game = null;
@@ -19,6 +20,7 @@ const controls = {
   right: false,
   up: false,
 };
+let gameSettings = {};
 
 // Loading config.json
 async function loadConfig() {
@@ -43,10 +45,36 @@ async function loadLocales() {
   }
 }
 
+// Loading settings from localStorage
+async function loadSettings() {
+  try {
+    const settings = JSON.parse(localStorage.getItem("settings"));
+    if (settings) {
+      gameSettings = settings;
+    } else {
+      gameSettings = {
+        sound: {
+          volume: 0.5,
+        },
+        controls: {
+          keyLeft: "a",
+          keyRight: "d",
+          keyUp: "w",
+        },
+        language: "de",
+      };
+    }
+    console.log("Successfully loaded settings");
+  } catch {
+    console.error("Failed loading settings");
+  }
+}
+
 // Game Initializing
 async function initializeGame() {
   await loadLocales();
-  if (!gameStarted) {
+  await loadSettings();
+  if (!characterSelectioned) {
     console.log("Starting game");
     tileset = document.querySelector("#tileset");
     console.log(gameSettings);

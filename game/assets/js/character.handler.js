@@ -22,20 +22,20 @@ async function InitiateCharacters() {
     for (let character of characters) {
       CHARACTER_SELECTION.innerHTML += `
             <div>
-                <p>${locales.de.gameStartName}: ${character.name}</p>
-                <p>${locales.de.gameStartType}: ${
+                <p>${locales.de.characterSelectionName}: ${character.name}</p>
+                <p>${locales.de.characterSelectionType}: ${
         character.type || "Normalo"
       }</p>
-                <p>${locales.de.gameStartLevel}: ${character.level}</p>
-                <p>${locales.de.gameStartCoins}: ${character.coins}</p>
+                <p>${locales.de.characterSelectionLevel}: ${character.level}</p>
+                <p>${locales.de.characterSelectionCoins}: ${character.coins}</p>
                 <button class="character-selection-start" data-id="${
                   character.id
-                }">${locales.de.gameStartPlayButton} <b>${
+                }">${locales.de.characterSelectionPlayButton} <b>${
         character.name
       }</b></button>
                 <button class="character-selection-delete" data-id="${
                   character.id
-                }">${locales.de.gameStartDeleteButton}</button>
+                }">${locales.de.characterSelectionDeleteButton}</button>
             </div>
         `;
       const CHARACTER_SELECTION_DELETE = document.querySelectorAll(
@@ -78,23 +78,23 @@ async function CharacterCreation_Handler() {
   }
 
   CHARACTER_CREATION.innerHTML = `
-        <h2>${locales.de.createCharTitle}</h2>
+        <h2>${locales.de.characterCreationTitle}</h2>
         <form id="character-creation-form">
-            <label for="character-creation-form-name">${locales.de.createCharName}: </label>
-            <input id="character-creation-form-name" type="text" placeholder="${locales.de.createCharName}..." name="name" required />
+            <label for="character-creation-form-name">${locales.de.characterCreationName}: </label>
+            <input id="character-creation-form-name" type="text" placeholder="${locales.de.characterCreationName}..." name="name" required />
             <br>
-            <p>${locales.de.createCharType}: </p>
-            <input type="radio" id="character-creation-form-type-punk" name="type" value="${locales.de.createCharTypePunk}">
-            <label for="character-creation-form-type-punk">${locales.de.createCharTypePunk} </label>
+            <p>${locales.de.characterCreationType}: </p>
+            <input type="radio" id="character-creation-form-type-punk" name="type" value="${locales.de.characterCreationTypePunk}">
+            <label for="character-creation-form-type-punk">${locales.de.characterCreationTypePunk} </label>
             <br />
-            <input type="radio" id="character-creation-form-type-net" name="type" value="${locales.de.createCharTypeNet}">
-            <label for="character-creation-form-type-net">${locales.de.createCharTypeNet} </label>
+            <input type="radio" id="character-creation-form-type-net" name="type" value="${locales.de.characterCreationTypeNet}">
+            <label for="character-creation-form-type-net">${locales.de.characterCreationTypeNet} </label>
             <br />
-            <input type="radio" id="character-creation-form-type-psycho" name="type" value="${locales.de.createCharTypePsycho}">
-            <label for="character-creation-form-type-psycho">${locales.de.createCharTypePsycho} </label>
+            <input type="radio" id="character-creation-form-type-psycho" name="type" value="${locales.de.characterCreationTypePsycho}">
+            <label for="character-creation-form-type-psycho">${locales.de.characterCreationTypePsycho} </label>
             <br />
-            <button type="submit">${locales.de.createCharSubmitButton}</button>
-            <button id="character-creation-form-back" type="button">${locales.de.createCharBackButton}</button>
+            <button type="submit">${locales.de.characterCreationSubmitButton}</button>
+            <button id="character-creation-form-back" type="button">${locales.de.characterCreationBackButton}</button>
         </form>
       `;
   const CHARACTER_CREATION_FORM_BACK = document.querySelector(
