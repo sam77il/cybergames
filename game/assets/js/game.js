@@ -11,7 +11,7 @@ async function loadConfig() {
 
 loadConfig();
 
-export default class Game {
+class Game {
   constructor() {
     this.level = 1;
     this.tileSize = gameSettings.global.tileSize;
