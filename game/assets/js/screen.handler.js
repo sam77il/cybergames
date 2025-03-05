@@ -23,12 +23,18 @@ function ChangeScreen(screen) {
           content.appendChild(MAIN_MENU);
           MainMenu_Handler();
           break;
+        case "settings":
+          SETTINGS = document.createElement("div");
+          SETTINGS.setAttribute("id", "settings");
+          content.appendChild(SETTINGS);
+          Settings_Handler();
+          break;
         case "character-selection":
           CHARACTER_SELECTION = document.createElement("div");
           CHARACTER_SELECTION.setAttribute("id", "character-selection");
           CHARACTER_SELECTION.innerHTML = `
-              <button id="character-selection-back">${locales.de.gameStartBackButton}</button>
-              <button id="character-selection-createchar" type="button">${locales.de.gameStartCreateCharButton}</button>
+              <button id="character-selection-back">${locales.de.characterSelectionBackButton}</button>
+              <button id="character-selection-createchar" type="button">${locales.de.characterSelectionCreateCharButton}</button>
             `;
           content.appendChild(CHARACTER_SELECTION);
           CharacterSelection_Handler();
