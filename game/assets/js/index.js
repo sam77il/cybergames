@@ -1,6 +1,3 @@
-import Game from "./game.js";
-import Player from "./player.js";
-
 let START_MENU = null;
 let ACTION_MENU = null;
 let GAMESTART_MENU = null;
@@ -12,7 +9,6 @@ let bgCanvas = null;
 let bgCtx = null;
 let gameStarted = false;
 let locales = {};
-let gameSettings = null;
 let player = null;
 let game = null;
 
@@ -208,14 +204,23 @@ function listenToControls(state) {
   }
 }
 
+const targetFPS = 60;
+const frameDuration = 1000 / targetFPS;
+
+let lastTime = 0;
+
 function startGameLoop(currentTime) {
-  ctx.clearRect(0, 0, gameSettings.global.width, gameSettings.global.height);
-  ctx.drawImage(bgCanvas, 0, 0);
-  // console.log("now: " + performance.now());
-  // console.log("current: " + currentTime);
-  player.move(controls);
-  player.update();
   requestAnimationFrame(startGameLoop);
+  const deltaTime = currentTime - lastTime;
+
+  if (deltaTime >= frameDuration) {
+    lastTime = currentTime - (deltaTime % frameDuration);
+
+    ctx.clearRect(0, 0, gameSettings.global.width, gameSettings.global.height);
+    ctx.drawImage(bgCanvas, 0, 0);
+    player.move(controls);
+    player.update();
+  }
 }
 
 function loadMap(map, size) {

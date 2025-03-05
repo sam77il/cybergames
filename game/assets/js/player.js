@@ -1,4 +1,4 @@
-export default class Player {
+class Player {
   constructor(
     context,
     startPosX,
@@ -8,25 +8,26 @@ export default class Player {
     tileSize,
     map
   ) {
+    this.context = context;
     this.playerPosX = startPosX;
     this.playerPosY = startPosY;
     this.playerWidth = playerWidth;
     this.playerHeight = playerHeight;
-    this.playerSpeed = 5;
-    this.context = context;
-    this.controls = null;
-    this.onGround = false;
-    this.playerFall = 0;
-    this.playerJumpForce = 20;
-    this.velocityY = 0.3;
     this.tileSize = tileSize;
     this.map = map;
-    this.blocks = "PB";
+    this.playerSpeed = 5;
     this.gravity = 1;
+    this.playerFall = 0;
+    this.playerJumpForce = 20;
+    this.onGround = false;
+    this.blocks = "PB";
   }
 
   initialize() {
-    console.log("first");
+    this.draw();
+  }
+
+  draw() {
     this.context.fillStyle = "black";
     this.context.fillRect(
       this.playerPosX,
@@ -37,98 +38,84 @@ export default class Player {
   }
 
   update() {
-    this.context.fillStyle = "black";
-    this.context.fillRect(
-      this.playerPosX,
-      this.playerPosY,
-      this.playerWidth,
-      this.playerHeight
+    this.draw();
+  }
+
+  getTileAt(x, y) {
+    const col = Math.floor(x / this.tileSize);
+    const row = Math.floor(y / this.tileSize);
+    if (
+      row >= 0 &&
+      row < this.map.length &&
+      col >= 0 &&
+      col < this.map[0].length
+    ) {
+      return this.map[row][col];
+    }
+    return null;
+  }
+
+  isColliding(x, y) {
+    const topY = y;
+    const middleY = y + this.playerHeight / 2;
+    const bottomY = y + this.playerHeight - 1;
+
+    return (
+      this.blocks.includes(this.getTileAt(x, topY)) ||
+      this.blocks.includes(this.getTileAt(x + this.playerWidth - 1, topY)) ||
+      this.blocks.includes(this.getTileAt(x, middleY)) ||
+      this.blocks.includes(this.getTileAt(x + this.playerWidth - 1, middleY)) ||
+      this.blocks.includes(this.getTileAt(x, bottomY)) ||
+      this.blocks.includes(this.getTileAt(x + this.playerWidth - 1, bottomY))
     );
   }
 
-  block() {
-    let b = {}; // Blockade-Objekt als Rückgabewert
-    b.spalteL = Math.floor(this.playerPosX / this.tileSize); // Spaltennummer der linken Spielerkante
-    b.spalteR = Math.floor(
-      (this.playerPosX + this.playerWidth) / this.tileSize
-    ); // Spaltennummer der rechten Spielerkante
-    b.zeileO = Math.floor(this.playerPosY / this.tileSize); // Zeilennummer der oberen Spielerkante
-    b.zeileU = Math.floor(
-      (this.playerPosY + this.playerHeight) / this.tileSize
-    ); // Zeilennummer der unteren Spielerkante
-    // Prüfung, ob Spieler mit einer seiner Ecken in einem BLOCKER-Tile steht:
-    if (this.onGround) {
-      b.links =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0;
-      b.rechts =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
-    } else {
-      //console.log("checking on air");
-      b.links =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0;
-      b.rechts =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
-    }
-
-    b.oben =
-      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
-      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0;
-
-    b.unten =
-      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0 ||
-      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
-
-    return b; // Liefert das Objekt an die Stelle des Aufrufs zurück
-  }
-
   move(controls) {
-    let abc = this.block();
-    console.log(abc.unten);
+    let nextX = this.playerPosX;
+    let nextY = this.playerPosY;
+
+    // Horizontale Bewegung mit Seitenkollision (oben, Mitte, unten prüfen)
     if (controls.left) {
-      let blocked = this.block();
-
-      this.playerPosX -= this.playerSpeed;
-      if (blocked.links) {
-        this.playerPosX = this.tileSize * blocked.spalteL + this.tileSize;
+      nextX -= this.playerSpeed;
+      if (this.isColliding(nextX, this.playerPosY)) {
+        nextX = this.playerPosX;
       }
     }
+
     if (controls.right) {
-      let blocked = this.block();
-
-      this.playerPosX += this.playerSpeed;
-      if (blocked.rechts) {
-        this.playerPosX =
-          this.tileSize * blocked.spalteR - this.playerWidth - 1;
+      nextX += this.playerSpeed;
+      if (this.isColliding(nextX, this.playerPosY)) {
+        nextX = this.playerPosX;
       }
     }
-    if (this.onGround) {
-      if (controls.up) {
-        this.onGround = false;
-        this.playerFall = -this.playerJumpForce;
-      }
-      let blocked = this.block();
-      if (!blocked.unten) {
-        this.onGround = false;
-      }
-    } else {
-      this.playerFall += this.gravity;
-      this.playerPosY += this.playerFall;
-      let blocked = this.block();
 
-      if (this.playerFall > 0 && blocked.unten) {
-        this.playerFall = 0;
-        this.playerPosY =
-          this.tileSize * blocked.zeileU - this.playerHeight - 0.5;
+    // Sprunglogik
+    if (this.onGround && controls.up) {
+      this.onGround = false;
+      this.playerFall = -this.playerJumpForce;
+    }
+
+    // Vertikale Bewegung
+    this.playerFall += this.gravity;
+    nextY += this.playerFall;
+
+    if (this.playerFall > 0) {
+      if (this.isColliding(nextX, nextY)) {
         this.onGround = true;
-      }
-      if (this.playerFall < 0 && blocked.oben) {
-        this.playerPosY = this.tileSize * blocked.zeileO + this.tileSize;
         this.playerFall = 0;
+        nextY =
+          Math.floor((nextY + this.playerHeight) / this.tileSize) *
+            this.tileSize -
+          this.playerHeight;
+      }
+    } else if (this.playerFall < 0) {
+      if (this.isColliding(nextX, nextY)) {
+        this.playerFall = 0;
+        nextY = Math.ceil(nextY / this.tileSize) * this.tileSize;
       }
     }
+
+    this.playerPosX = nextX;
+    this.playerPosY = nextY;
   }
 }
