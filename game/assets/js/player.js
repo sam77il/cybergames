@@ -57,22 +57,12 @@ export default class Player {
       (this.playerPosY + this.playerHeight) / this.tileSize
     ); // Zeilennummer der unteren Spielerkante
     // Prüfung, ob Spieler mit einer seiner Ecken in einem BLOCKER-Tile steht:
-    if (this.onGround) {
-      b.links =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0;
-      b.rechts =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
-    } else {
-      //console.log("checking on air");
-      b.links =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0;
-      b.rechts =
-        this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0 ||
-        this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
-    }
+    b.links =
+      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||
+      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteL)) >= 0;
+    b.rechts =
+      this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteR)) >= 0 ||
+      this.blocks.indexOf(this.map[b.zeileU].charAt(b.spalteR)) >= 0;
 
     b.oben =
       this.blocks.indexOf(this.map[b.zeileO].charAt(b.spalteL)) >= 0 ||

@@ -208,14 +208,25 @@ function listenToControls(state) {
   }
 }
 
+const targetFPS = 60;
+const frameDuration = 1000 / targetFPS;
+
+let lastTime = 0;
+
 function startGameLoop(currentTime) {
-  ctx.clearRect(0, 0, gameSettings.global.width, gameSettings.global.height);
-  ctx.drawImage(bgCanvas, 0, 0);
-  // console.log("now: " + performance.now());
-  // console.log("current: " + currentTime);
-  player.move(controls);
-  player.update();
   requestAnimationFrame(startGameLoop);
+  const deltaTime = currentTime - lastTime;
+
+  if (deltaTime >= frameDuration) {
+    lastTime = currentTime - (deltaTime % frameDuration);
+
+    ctx.clearRect(0, 0, gameSettings.global.width, gameSettings.global.height);
+    ctx.drawImage(bgCanvas, 0, 0);
+    // console.log("now: " + performance.now());
+    // console.log("current: " + currentTime);
+    player.move(controls);
+    player.update();
+  }
 }
 
 function loadMap(map, size) {
