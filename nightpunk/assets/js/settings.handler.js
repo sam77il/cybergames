@@ -1,6 +1,6 @@
 function Settings_Handler() {
   SETTINGS.innerHTML = `
-      <h1>Cybergame</h1>
+      <h1>Nightpunk</h1>
       <h2>${locales.de.settingsTitle}</h2>
       <ul>
           <li><button id="settings-back" type="button">${locales.de.settingsBackButton}</button></li>

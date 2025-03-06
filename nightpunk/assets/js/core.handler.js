@@ -1,6 +1,6 @@
 async function TitleScreen_Handler() {
   TITLE_SCREEN.innerHTML = `
-      <h1>Cybergame</h1>
+      <h1>${locales.de.gameName}</h1>
       <p>${locales.de.titleScreenMessage}</p>
       `;
   window.addEventListener("keyup", TitleScreen_Event);
@@ -15,7 +15,7 @@ function TitleScreen_Event(e) {
 
 async function MainMenu_Handler() {
   MAIN_MENU.innerHTML = `
-      <h1>Cybergame</h1>
+      <h1>${locales.de.gameName}</h1>
   
       <ul>
           <li><button id="main-menu-start" type="button">${locales.de.mainMenuStartButton}</button></li>
