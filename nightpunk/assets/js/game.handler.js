@@ -1,4 +1,5 @@
 async function initPlayArea() {
+  GAME_SCREEN.innerHTML = "";
   canvas = document.createElement("canvas");
   canvas.style.backgroundColor = "#333";
   ctx = canvas.getContext("2d");
@@ -43,27 +44,91 @@ async function initPlayArea() {
 
 function handleKeyDown(e) {
   switch (e.key) {
-    case "d":
+    case gameSettings.controls.walkRight:
       controls.right = true;
       break;
-    case "a":
+    case gameSettings.controls.walkLeft:
       controls.left = true;
       break;
-    case "w":
+    case gameSettings.controls.jump:
       controls.up = true;
+      break;
+    case "Escape":
+      handlePauseMenu();
+      break;
+    case "p":
+      handlePauseMenu();
       break;
   }
 }
 
+function handlePauseMenu() {
+  listenToControls(false);
+  isInPause = true;
+
+  if (document.querySelector("#pause-menu")?.id === "pause-menu") {
+    GAME_SCREEN.removeChild(document.querySelector("#pause-menu"));
+  }
+  const pauseMenu = document.createElement("div");
+  pauseMenu.setAttribute("id", "pause-menu");
+  pauseMenu.style.position = "absolute";
+  pauseMenu.style.top = "50%";
+  pauseMenu.style.left = "50%";
+  pauseMenu.style.transform = "translate(-50%, -50%)";
+  pauseMenu.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  pauseMenu.style.color = "#fff";
+  pauseMenu.style.padding = "20px";
+  pauseMenu.style.borderRadius = "10px";
+  pauseMenu.style.zIndex = "2";
+  pauseMenu.style.textAlign = "center";
+  pauseMenu.innerHTML = `
+    <h1>${locales[gameSettings.language].pauseMenuTitle}</h1>
+    <button id="resume">${
+      locales[gameSettings.language].pauseMenuResumeButton
+    }</button>
+    <button id="settings">${
+      locales[gameSettings.language].pauseMenuSettingsButton
+    }</button>
+    <button id="quit">${
+      locales[gameSettings.language].pauseMenuQuitButton
+    }</button>
+  `;
+
+  GAME_SCREEN.appendChild(pauseMenu);
+
+  const resumeButton = pauseMenu.querySelector("#resume");
+  resumeButton.addEventListener("click", () => {
+    GAME_SCREEN.removeChild(pauseMenu);
+    listenToControls(true);
+    isInPause = false;
+  });
+
+  const settingsButton = pauseMenu.querySelector("#settings");
+  settingsButton.addEventListener("click", () => {
+    pauseMenu.innerHTML = "";
+    SETTINGS = document.createElement("div");
+    SETTINGS.setAttribute("id", "settings");
+    pauseMenu.appendChild(SETTINGS);
+    Settings_Handler();
+  });
+
+  const quitButton = pauseMenu.querySelector("#quit");
+  quitButton.addEventListener("click", async () => {
+    await ChangeScreen("main-menu");
+    GAME_SCREEN.innerHTML = "";
+    isInPause = false;
+  });
+}
+
 function handleKeyUp(e) {
   switch (e.key) {
-    case "d":
+    case gameSettings.controls.walkRight:
       controls.right = false;
       break;
-    case "a":
+    case gameSettings.controls.walkLeft:
       controls.left = false;
       break;
-    case "w":
+    case gameSettings.controls.jump:
       controls.up = false;
       break;
   }
@@ -88,7 +153,7 @@ function startGameLoop(currentTime) {
   requestAnimationFrame(startGameLoop);
   const deltaTime = currentTime - lastTime;
 
-  if (deltaTime >= frameDuration) {
+  if (deltaTime >= frameDuration && !isInPause) {
     lastTime = currentTime - (deltaTime % frameDuration);
 
     ctx.clearRect(0, 0, gameConfig.global.width, gameConfig.global.height);

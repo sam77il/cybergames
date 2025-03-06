@@ -15,6 +15,7 @@ let player = null;
 let game = null;
 let camera = null; // Add camera variable
 let tileset = null;
+let isInPause = false;
 const controls = {
   left: false,
   right: false,
@@ -50,19 +51,10 @@ async function loadSettings() {
   try {
     const settings = JSON.parse(localStorage.getItem("settings"));
     if (settings) {
-      gameSettings = settings;
+      gameSettings = gameConfig.defaultSettings;
     } else {
-      gameSettings = {
-        sound: {
-          volume: 0.5,
-        },
-        controls: {
-          keyLeft: "a",
-          keyRight: "d",
-          keyUp: "w",
-        },
-        language: "de",
-      };
+      gameSettings = gameConfig.defaultSettings;
+      localStorage.setItem("settings", JSON.stringify(gameSettings));
     }
     console.log("Successfully loaded settings");
   } catch {
@@ -77,11 +69,12 @@ async function initializeGame() {
   if (!characterSelectioned) {
     console.log("Starting game");
     tileset = document.querySelector("#tileset");
-    if (gameConfig.global.dev) {
-      StartGame();
-    } else {
-      ChangeScreen("title-screen");
-    }
+    // if (gameConfig.global.dev) {
+    //   StartGame();
+    // } else {
+    //   ChangeScreen("title-screen");
+    // }
+    StartGame();
   }
 }
 

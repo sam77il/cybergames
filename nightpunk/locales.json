@@ -49,8 +49,23 @@
     "settingsLanguageGerman": "Deutsch",
     "settingsLanguageEnglish": "Englisch",
 
+    "settingsControlsTitle": "Steuerung",
+    "settingsControlsWalkLeft": "Nach links laufen",
+    "settingsControlsWalkRight": "Nach rechts laufen",
+    "settingsControlsJump": "Springen",
+
+    "settingsSoundTitle": "Sound",
+    "settingsSoundVolume": "Lautstärke",
+    "settingsMusicVolume": "Musiklautstärke",
+
     "settingsSaveButton": "Speichern",
-    "settingsDefaultMessage": "Bitte wähle eine Einstellungskategorie aus."
+    "settingsDefaultMessage": "Bitte wähle eine Einstellungskategorie aus.",
+
+    "pauseMenuTitle": "Pause",
+
+    "pauseMenuResumeButton": "Weiter",
+    "pauseMenuSettingsButton": "Einstellungen",
+    "pauseMenuQuitButton": "Verlassen"
   },
   "en": {
     "gameName": "Nightpunk",

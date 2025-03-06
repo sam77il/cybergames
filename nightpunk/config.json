@@ -33,6 +33,18 @@
     ],
     "blocker": "ABCDEFGHIMNOPQRSTUVWXYZ"
   },
+  "defaultSettings": {
+    "sound": {
+      "volume": 100,
+      "music": 100
+    },
+    "controls": {
+      "walkLeft": "a",
+      "walkRight": "d",
+      "jump": "w"
+    },
+    "language": "de"
+  },
   "levels": [
     {
       "name": "goontown",
