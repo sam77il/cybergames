@@ -27,7 +27,7 @@ async function loadConfig() {
   try {
     const respone = await fetch("config.json");
     const json = await respone.json();
-    gameSettings = json;
+    gameConfig = json;
     if (respone.ok) console.log("Successfully loaded config.json");
   } catch (error) {}
 }
@@ -77,8 +77,7 @@ async function initializeGame() {
   if (!characterSelectioned) {
     console.log("Starting game");
     tileset = document.querySelector("#tileset");
-    console.log(gameSettings);
-    if (gameSettings.global.dev) {
+    if (gameConfig.global.dev) {
       StartGame();
     } else {
       ChangeScreen("title-screen");
