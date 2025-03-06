@@ -1,6 +1,6 @@
 {
   "de": {
-    "gameName": "Cybergame",
+    "gameName": "Nightpunk",
 
     "_comment": "-- StartMenu --",
     "titleScreenMessage": "Drücke Leertaste um das Spiel zu starten.",
@@ -32,17 +32,17 @@
 
     "_____comment": "-- Settings --",
     "settingsTitle": "Einstellungen",
-    "settingsLanguage": "Sprache",
+    "settingsLanguageButton": "Sprache",
     "settingsLanguageDe": "Deutsch",
     "settingsLanguageEn": "Englisch",
     "settingsBackButton": "Zurück",
-    "settingsSound": "Sound",
+    "settingsSoundButton": "Sound",
     "settingsSoundOn": "An",
     "settingsSoundOff": "Aus",
     "settingsMusic": "Musik",
     "settingsMusicOn": "An",
     "settingsMusicOff": "Aus",
-    "settingsControls": "Steuerung",
+    "settingsControlsButton": "Steuerung",
     "settingsControlsKeyboard": "Tastatur"
   }
 }
