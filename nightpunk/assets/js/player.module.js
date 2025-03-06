@@ -50,7 +50,15 @@ class Player {
     const middleY = y + this.playerHeight / 2;
     const bottomY = y + this.playerHeight - 1;
 
-    return (
+    // Prüfe zuerst auf "G" und gib ein Objekt mit Informationen zurück
+    if (this.getTileAt(x, bottomY) === "G") {
+      return { collides: true, type: "G" };
+    } else if (this.getTileAt(x + this.playerWidth, bottomY) === "H") {
+      return { collides: true, type: "H" };
+    }
+
+    // Prüfe auf andere Kollisionen
+    const collides =
       gameConfig.global.blocker.includes(this.getTileAt(x, topY)) ||
       gameConfig.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, topY)
@@ -62,26 +70,40 @@ class Player {
       gameConfig.global.blocker.includes(this.getTileAt(x, bottomY)) ||
       gameConfig.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, bottomY)
-      )
-    );
+      );
+
+    return { collides: collides, type: collides ? "block" : null };
   }
 
   move(controls) {
     let nextX = this.playerPosX;
     let nextY = this.playerPosY;
 
-    // Horizontale Bewegung mit Seitenkollision (oben, Mitte, unten prüfen)
+    // Horizontale Bewegung mit Seitenkollision
     if (controls.left) {
-      nextX -= this.playerSpeed;
-      if (this.isColliding(nextX, this.playerPosY)) {
-        nextX = this.playerPosX;
+      const collision = this.isColliding(
+        nextX - this.playerSpeed,
+        this.playerPosY
+      );
+
+      if (collision.type === "G") {
+        nextX -= this.playerSpeed;
+        nextY -= this.playerSpeed;
+      } else if (!collision.collides) {
+        nextX -= this.playerSpeed;
       }
     }
 
     if (controls.right) {
-      nextX += this.playerSpeed;
-      if (this.isColliding(nextX, this.playerPosY)) {
-        nextX = this.playerPosX;
+      const collision = this.isColliding(
+        nextX + this.playerSpeed,
+        this.playerPosY
+      );
+      if (collision.type === "H") {
+        nextX += this.playerSpeed;
+        nextY -= this.playerSpeed;
+      } else if (!collision.collides) {
+        nextX += this.playerSpeed;
       }
     }
 
@@ -96,16 +118,20 @@ class Player {
     nextY += this.playerFall;
 
     if (this.playerFall > 0) {
-      if (this.isColliding(nextX, nextY)) {
+      const collision = this.isColliding(nextX, nextY);
+      if (collision.collides) {
         this.onGround = true;
         this.playerFall = 0;
         nextY =
           Math.floor((nextY + this.playerHeight) / this.tileSize) *
             this.tileSize -
           this.playerHeight;
+      } else {
+        this.onGround = false;
       }
     } else if (this.playerFall < 0) {
-      if (this.isColliding(nextX, nextY)) {
+      const collision = this.isColliding(nextX, nextY);
+      if (collision.collides) {
         this.playerFall = 0;
         nextY = Math.ceil(nextY / this.tileSize) * this.tileSize;
       }

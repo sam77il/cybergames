@@ -2,8 +2,12 @@ let CHARACTERS_LIST = null;
 
 function CharacterSelection_Handler() {
   CHARACTER_SELECTION.innerHTML = `
-    <button id="character-selection-createchar" type="button">${locales.de.characterSelectionCreateCharButton}</button>
-    <button id="character-selection-back" type="button">${locales.de.characterSelectionBackButton}</button>
+    <button id="character-selection-createchar" type="button">${
+      locales[gameSettings.language].characterSelectionCreateCharButton
+    }</button>
+    <button id="character-selection-back" type="button">${
+      locales[gameSettings.language].characterSelectionBackButton
+    }</button>
     <div id="characters-list"></div>
   `;
   let CHARACTER_SELECTION_CREATECHAR = document.querySelector(
@@ -52,15 +56,17 @@ function InitiateCharacters() {
 function CharacterItem({ name, type, level, coins, id }) {
   CHARACTERS_LIST.innerHTML += `
     <div>
-      <p>${locales.de.characterSelectionName}: ${name}</p>
-      <p>${locales.de.characterSelectionType}: ${type || "Normalo"}</p>
-      <p>${locales.de.characterSelectionLevel}: ${level}</p>
-      <p>${locales.de.characterSelectionCoins}: ${coins}</p>
+      <p>${locales[gameSettings.language].characterSelectionName}: ${name}</p>
+      <p>${locales[gameSettings.language].characterSelectionType}: ${
+    type || "Normalo"
+  }</p>
+      <p>${locales[gameSettings.language].characterSelectionLevel}: ${level}</p>
+      <p>${locales[gameSettings.language].characterSelectionCoins}: ${coins}</p>
       <button class="character-selection-start" data-id="${id}">${
-    locales.de.characterSelectionPlayButton
+    locales[gameSettings.language].characterSelectionPlayButton
   } <b>${name}</b></button>
       <button class="character-selection-delete" data-id="${id}">${
-    locales.de.characterSelectionDeleteButton
+    locales[gameSettings.language].characterSelectionDeleteButton
   }</button>
     </div>
   `;
@@ -91,23 +97,43 @@ async function CharacterCreation_Handler() {
   }
 
   CHARACTER_CREATION.innerHTML = `
-        <h2>${locales.de.characterCreationTitle}</h2>
+        <h2>${locales[gameSettings.language].characterCreationTitle}</h2>
         <form id="character-creation-form">
-            <label for="character-creation-form-name">${locales.de.characterCreationName}: </label>
-            <input id="character-creation-form-name" type="text" placeholder="${locales.de.characterCreationName}..." name="name" required />
+            <label for="character-creation-form-name">${
+              locales[gameSettings.language].characterCreationName
+            }: </label>
+            <input id="character-creation-form-name" type="text" placeholder="${
+              locales[gameSettings.language].characterCreationName
+            }..." name="name" required />
             <br>
-            <p>${locales.de.characterCreationType}: </p>
-            <input type="radio" id="character-creation-form-type-punk" name="type" value="${locales.de.characterCreationTypePunk}" required>
-            <label for="character-creation-form-type-punk">${locales.de.characterCreationTypePunk} </label>
+            <p>${locales[gameSettings.language].characterCreationType}: </p>
+            <input type="radio" id="character-creation-form-type-punk" name="type" value="${
+              locales[gameSettings.language].characterCreationTypePunk
+            }" required>
+            <label for="character-creation-form-type-punk">${
+              locales[gameSettings.language].characterCreationTypePunk
+            } </label>
             <br />
-            <input type="radio" id="character-creation-form-type-net" name="type" value="${locales.de.characterCreationTypeNet}" required>
-            <label for="character-creation-form-type-net">${locales.de.characterCreationTypeNet} </label>
+            <input type="radio" id="character-creation-form-type-net" name="type" value="${
+              locales[gameSettings.language].characterCreationTypeNet
+            }" required>
+            <label for="character-creation-form-type-net">${
+              locales[gameSettings.language].characterCreationTypeNet
+            } </label>
             <br />
-            <input type="radio" id="character-creation-form-type-psycho" name="type" value="${locales.de.characterCreationTypePsycho}" required>
-            <label for="character-creation-form-type-psycho">${locales.de.characterCreationTypePsycho} </label>
+            <input type="radio" id="character-creation-form-type-psycho" name="type" value="${
+              locales[gameSettings.language].characterCreationTypePsycho
+            }" required>
+            <label for="character-creation-form-type-psycho">${
+              locales[gameSettings.language].characterCreationTypePsycho
+            } </label>
             <br />
-            <button type="submit">${locales.de.characterCreationSubmitButton}</button>
-            <button id="character-creation-form-back" type="button">${locales.de.characterCreationBackButton}</button>
+            <button type="submit">${
+              locales[gameSettings.language].characterCreationSubmitButton
+            }</button>
+            <button id="character-creation-form-back" type="button">${
+              locales[gameSettings.language].characterCreationBackButton
+            }</button>
         </form>
       `;
   const CHARACTER_CREATION_FORM_BACK = document.querySelector(

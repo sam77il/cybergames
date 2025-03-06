@@ -43,6 +43,66 @@
     "settingsMusicOn": "An",
     "settingsMusicOff": "Aus",
     "settingsControlsButton": "Steuerung",
-    "settingsControlsKeyboard": "Tastatur"
+    "settingsControlsKeyboard": "Tastatur",
+
+    "settingsLanguageTitle": "Sprache",
+    "settingsLanguageGerman": "Deutsch",
+    "settingsLanguageEnglish": "Englisch",
+
+    "settingsSaveButton": "Speichern",
+    "settingsDefaultMessage": "Bitte wähle eine Einstellungskategorie aus."
+  },
+  "en": {
+    "gameName": "Nightpunk",
+
+    "_comment": "-- StartMenu --",
+    "titleScreenMessage": "Press spacebar to start the game.",
+
+    "__comment": "-- MainMenu --",
+    "mainMenuStartButton": "Start",
+    "mainMenuSettingsButton": "Settings",
+    "mainMenuQuitButton": "Quit",
+
+    "___comment": "-- CharacterSelection --",
+    "characterSelectionBackButton": "Back",
+    "characterSelectionCreateCharButton": "Create new character",
+    "characterSelectionName": "Name",
+    "characterSelectionType": "Body type",
+    "characterSelectionLevel": "Level",
+    "characterSelectionCoins": "Coins",
+    "characterSelectionPlayButton": "Play as",
+    "characterSelectionDeleteButton": "Delete",
+
+    "____comment": "-- CharacterCreation --",
+    "characterCreationTitle": "Character Creation",
+    "characterCreationName": "Name",
+    "characterCreationType": "Body type",
+    "characterCreationTypeNet": "Pink Netrunner",
+    "characterCreationTypePunk": "Blue Cyberpunk",
+    "characterCreationTypePsycho": "Red Cyberpsycho",
+    "characterCreationSubmitButton": "Create",
+    "characterCreationBackButton": "Back",
+
+    "_____comment": "-- Settings --",
+    "settingsTitle": "Settings",
+    "settingsLanguageButton": "Language",
+    "settingsLanguageDe": "German",
+    "settingsLanguageEn": "English",
+    "settingsBackButton": "Back",
+    "settingsSoundButton": "Sound",
+    "settingsSoundOn": "On",
+    "settingsSoundOff": "Off",
+    "settingsMusic": "Music",
+    "settingsMusicOn": "On",
+    "settingsMusicOff": "Off",
+    "settingsControlsButton": "Controls",
+    "settingsControlsKeyboard": "Keyboard",
+
+    "settingsLanguageTitle": "Language",
+    "settingsLanguageGerman": "German",
+    "settingsLanguageEnglish": "English",
+
+    "settingsSaveButton": "Save",
+    "settingsDefaultMessage": "Please select a settings category."
   }
 }
