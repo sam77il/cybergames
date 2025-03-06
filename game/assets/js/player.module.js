@@ -51,16 +51,16 @@ class Player {
     const bottomY = y + this.playerHeight - 1;
 
     return (
-      gameSettings.global.blocker.includes(this.getTileAt(x, topY)) ||
-      gameSettings.global.blocker.includes(
+      gameConfig.global.blocker.includes(this.getTileAt(x, topY)) ||
+      gameConfig.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, topY)
       ) ||
-      gameSettings.global.blocker.includes(this.getTileAt(x, middleY)) ||
-      gameSettings.global.blocker.includes(
+      gameConfig.global.blocker.includes(this.getTileAt(x, middleY)) ||
+      gameConfig.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, middleY)
       ) ||
-      gameSettings.global.blocker.includes(this.getTileAt(x, bottomY)) ||
-      gameSettings.global.blocker.includes(
+      gameConfig.global.blocker.includes(this.getTileAt(x, bottomY)) ||
+      gameConfig.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, bottomY)
       )
     );

@@ -3,8 +3,8 @@ async function initPlayArea() {
   canvas.style.backgroundColor = "#333";
   ctx = canvas.getContext("2d");
   GAME_SCREEN.appendChild(canvas);
-  canvas.width = gameSettings.global.width;
-  canvas.height = gameSettings.global.height;
+  canvas.width = gameConfig.global.width;
+  canvas.height = gameConfig.global.height;
   canvas.style.width = "100%";
   canvas.style.height = "100%";
   canvas.style.objectFit = "contain";
@@ -91,7 +91,7 @@ function startGameLoop(currentTime) {
   if (deltaTime >= frameDuration) {
     lastTime = currentTime - (deltaTime % frameDuration);
 
-    ctx.clearRect(0, 0, gameSettings.global.width, gameSettings.global.height);
+    ctx.clearRect(0, 0, gameConfig.global.width, gameConfig.global.height);
 
     // Update camera position
     camera.update(player.playerPosX, player.playerPosY);
@@ -117,7 +117,7 @@ function loadMap(map, size) {
 
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[row].length; col++) {
-        let pos = gameSettings.global.tiles.indexOf(map[row].charAt(col));
+        let pos = gameConfig.global.tiles.indexOf(map[row].charAt(col));
 
         if (pos >= 0) {
           bgCtx.drawImage(
