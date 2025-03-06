@@ -1,7 +1,7 @@
 async function TitleScreen_Handler() {
   TITLE_SCREEN.innerHTML = `
-      <h1>${locales.de.gameName}</h1>
-      <p>${locales.de.titleScreenMessage}</p>
+      <h1>${locales[gameSettings.language].gameName}</h1>
+      <p>${locales[gameSettings.language].titleScreenMessage}</p>
       `;
   window.addEventListener("keyup", TitleScreen_Event);
 }
@@ -15,12 +15,18 @@ function TitleScreen_Event(e) {
 
 async function MainMenu_Handler() {
   MAIN_MENU.innerHTML = `
-      <h1>${locales.de.gameName}</h1>
+      <h1>${locales[gameSettings.language].gameName}</h1>
   
       <ul>
-          <li><button id="main-menu-start" type="button">${locales.de.mainMenuStartButton}</button></li>
-          <li><button id="main-menu-settings" type="button">${locales.de.mainMenuSettingsButton}</button></li>
-          <li><button id="main-menu-quit" type="button">${locales.de.mainMenuQuitButton}</button></li>
+          <li><button id="main-menu-start" type="button">${
+            locales[gameSettings.language].mainMenuStartButton
+          }</button></li>
+          <li><button id="main-menu-settings" type="button">${
+            locales[gameSettings.language].mainMenuSettingsButton
+          }</button></li>
+          <li><button id="main-menu-quit" type="button">${
+            locales[gameSettings.language].mainMenuQuitButton
+          }</button></li>
       </ul>
     `;
   const MAIN_MENU_QUIT = document.querySelector("#main-menu-quit");
