@@ -185,6 +185,18 @@ function loadMap(map, size) {
         let pos = gameConfig.global.tiles.indexOf(map[row].charAt(col));
 
         if (pos >= 0) {
+          // if (
+          //   gameConfig.global.tiles[pos] === "G" ||
+          //   gameConfig.global.tiles[pos] === "H"
+          // ) {
+          //   bgCtx.shadowColor = "red";
+          //   bgCtx.shadowOffsetX = 0;
+          //   bgCtx.shadowOffsetY = 0;
+          //   bgCtx.shadowBlur = 50;
+          // } else {
+          //   bgCtx.shadowColor = "transparent";
+          // }
+
           bgCtx.drawImage(
             tileset,
             game.tileSize * pos,
