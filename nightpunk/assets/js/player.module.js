@@ -10,7 +10,7 @@ class Player {
     this.playerFall = 0;
     this.playerJumpForce = 20;
     this.onGround = false;
-    this.blocks = "ABCMW";
+    this.inventory = 
   }
 
   initialize() {

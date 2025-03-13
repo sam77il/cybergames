@@ -51,7 +51,7 @@ async function loadSettings() {
   try {
     const settings = JSON.parse(localStorage.getItem("settings"));
     if (settings) {
-      gameSettings = gameConfig.defaultSettings;
+      gameSettings = settings;
     } else {
       gameSettings = gameConfig.defaultSettings;
       localStorage.setItem("settings", JSON.stringify(gameSettings));
