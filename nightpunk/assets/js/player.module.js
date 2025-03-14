@@ -1,5 +1,6 @@
 class Player {
-  constructor(startPosX, startPosY, playerWidth, playerHeight) {
+  constructor(startPosX, startPosY, playerWidth, playerHeight, playerId) {
+    this.playerId = playerId;
     this.playerPosX = startPosX;
     this.playerPosY = startPosY;
     this.playerWidth = playerWidth;
@@ -10,10 +11,16 @@ class Player {
     this.playerFall = 0;
     this.playerJumpForce = 20;
     this.onGround = false;
-    this.inventory = 
+    this.inventory = [];
   }
 
   initialize() {
+    this.inventory = JSON.parse(localStorage.getItem("characters")).find(
+      (char) => {
+        return Number(char.id) === Number(this.playerId);
+      }
+    ).inventory;
+    console.log(this.inventory);
     this.draw();
   }
 

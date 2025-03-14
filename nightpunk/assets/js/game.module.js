@@ -16,5 +16,6 @@ class Game {
     this.level = 1;
     this.tileSize = gameConfig.global.tileSize;
     this.map = gameConfig.levels[this.level].map;
+    this.mapItems = gameConfig.levels[this.level].items;
   }
 }

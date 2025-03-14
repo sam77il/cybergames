@@ -69,12 +69,12 @@ async function initializeGame() {
   if (!characterSelectioned) {
     console.log("Starting game");
     tileset = document.querySelector("#tileset");
-    // if (gameConfig.global.dev) {
-    //   StartGame();
-    // } else {
-    //   ChangeScreen("title-screen");
-    // }
-    StartGame();
+    if (gameConfig.global.dev) {
+      StartGame();
+    } else {
+      ChangeScreen("title-screen");
+    }
+    // StartGame();
   }
 }
 
