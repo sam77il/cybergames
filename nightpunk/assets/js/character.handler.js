@@ -64,7 +64,7 @@ function CharacterItem({ name, type, level, coins, id }) {
       <p>${locales[gameSettings.language].characterSelectionCoins}: ${coins}</p>
       <button class="character-selection-start" data-id="${id}">${
     locales[gameSettings.language].characterSelectionPlayButton
-  } <b>${name}</b></button>
+  } ${name}</button>
       <button class="character-selection-delete" data-id="${id}">${
     locales[gameSettings.language].characterSelectionDeleteButton
   }</button>
@@ -72,9 +72,9 @@ function CharacterItem({ name, type, level, coins, id }) {
   `;
 }
 
-async function StartGame() {
+async function StartGame(event) {
   await ChangeScreen("game-screen");
-  initPlayArea();
+  initPlayArea(event.target.dataset.id);
 }
 
 function handleDeleteCharacter(e) {
@@ -175,7 +175,7 @@ async function handleCreateCharacterSubmit(e) {
       type: charType,
       level: 1,
       coins: 0,
-      items: {},
+      inventory: [],
       perks: [],
     });
   } else {
@@ -185,7 +185,7 @@ async function handleCreateCharacterSubmit(e) {
         name: charName,
         level: 1,
         coins: 0,
-        items: {},
+        inventory: [],
         perks: [],
       },
     ];

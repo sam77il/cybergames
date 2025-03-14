@@ -51,6 +51,16 @@
       "label": "Goon Town",
       "level": 1,
       "enemies": 3,
+      "items": [
+        {
+          "name": "potion",
+          "label": "Potion",
+          "position": {
+            "x": 5,
+            "y": 10
+          }
+        }
+      ],
       "map": [
         "BBBBZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
         "B                                                B",
@@ -87,6 +97,16 @@
       "label": "Lek",
       "level": 2,
       "enemies": 5,
+      "items": [
+        {
+          "name": "potion",
+          "label": "Potion",
+          "position": {
+            "x": 5,
+            "y": 10
+          }
+        }
+      ],
       "map": [
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAAAAAAAAAAAA",
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAARAAAAAAAAA",

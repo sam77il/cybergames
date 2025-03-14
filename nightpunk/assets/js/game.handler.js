@@ -1,4 +1,4 @@
-async function initPlayArea() {
+async function initPlayArea(playerId) {
   GAME_SCREEN.innerHTML = "";
   canvas = document.createElement("canvas");
   canvas.style.backgroundColor = "#333";
@@ -12,8 +12,17 @@ async function initPlayArea() {
 
   game = new Game();
   await loadMap(game.map, game.tileSize);
-  player = new Player(50, 300, 50, 80);
+  console.log(playerId);
+  player = new Player(50, 300, 50, 80, playerId);
   player.initialize();
+  console.log(player.playerPosX, player.playerPosY);
+  for (let item of game.mapItems) {
+    let newItem = new Item(item.name, item.label, {
+      x: 50,
+      y: 300,
+    });
+    newItem.spawn();
+  }
 
   // Initialize camera
   camera = {
