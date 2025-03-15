@@ -59,6 +59,14 @@
             "x": 5,
             "y": 10
           }
+        },
+        {
+          "name": "sword",
+          "label": "Sword",
+          "position": {
+            "x": 10,
+            "y": 10
+          }
         }
       ],
       "map": [
@@ -101,9 +109,23 @@
         {
           "name": "potion",
           "label": "Potion",
+          "amount": 5,
+          "height": 50,
+          "width": 50,
           "position": {
             "x": 5,
-            "y": 10
+            "y": 12
+          }
+        },
+        {
+          "name": "sword",
+          "label": "Sword",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 6,
+            "y": 12
           }
         }
       ],

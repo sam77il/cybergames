@@ -33,3 +33,77 @@ ul {
   width: 100vw;
   height: 100vh;
 }
+
+#game-screen-box {
+  position: relative;
+  display: inline-block;
+}
+
+#game-screen-hud {
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  opacity: 0.5;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+#game-screen-hud-health {
+  height: 50px;
+  width: 200px;
+  background-color: #2b4955;
+  border-radius: 15px;
+}
+
+#game-screen-hud-health-bar {
+  height: 100%;
+  background-color: #008bc2;
+  border-radius: 15px;
+}
+
+#game-screen-helpnotify {
+  width: 200px;
+  height: max-content;
+  padding: 10px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 70%;
+  left: 50%;
+  background-color: #1c2e35;
+  display: flex;
+  flex-direction: column;
+  opacity: 0.7;
+}
+
+.game-screen-helpnotify-item {
+  width: 100%;
+  height: max-content;
+  padding: 5px;
+  color: white;
+  font-weight: 900;
+  background-color: #4b4b4b;
+}
+
+#game-screen-inventory {
+  width: 300px;
+  height: 60px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 90%;
+  left: 50%;
+  background-color: #2b4955;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  opacity: 0.5;
+}
+
+.game-screen-inventory-slot {
+  width: 50px;
+  height: 50px;
+  background-color: #266881;
+}

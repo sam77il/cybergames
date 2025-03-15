@@ -12,10 +12,20 @@ let bgCtx = null;
 let characterSelectioned = false;
 let locales = {};
 let player = null;
+let mapItems = [];
+let spawnedItems = null;
 let game = null;
 let camera = null; // Add camera variable
 let tileset = null;
 let isInPause = false;
+let nearbyItem = null;
+let healtBar = null;
+let helpNotify = null;
+let helpNotifyOpened = false;
+let nearItems = [];
+let displayedItemIds = [];
+let selectedItemIndex = 0;
+let keyListenersAdded = false;
 const controls = {
   left: false,
   right: false,

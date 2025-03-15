@@ -1,14 +1,24 @@
-class Item {
-  constructor(name, label, pos) {
-    this.name = name;
-    this.label = label;
-    this.pos = pos;
+class Items {
+  constructor(items) {
+    this.items = items;
   }
 
-  spawn() {
-    // Draw item
-    ctx.fillStyle = "red";
-    console.log(this.pos.x, this.pos.y);
-    ctx.fillRect(this.pos.x, this.pos.y, 50, 50);
+  initialize() {
+    this.update();
+  }
+
+  update() {
+    for (let item of this.items) {
+      if (!item.collected) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(
+          item.position.x * gameConfig.global.tileSize,
+          item.position.y * gameConfig.global.tileSize,
+          item.width,
+          item.height
+        );
+      }
+    }
+    player.isCollidingWithItem();
   }
 }
