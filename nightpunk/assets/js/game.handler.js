@@ -1,13 +1,34 @@
 async function initPlayArea(playerId) {
-  GAME_SCREEN.innerHTML = "";
-  canvas = document.createElement("canvas");
+  GAME_SCREEN.innerHTML = `
+    <div id="game-screen-box">
+      <div id="game-screen-hud">
+        <div id="game-screen-hud-health">
+          <div id="game-screen-hud-health-bar"></div>
+        </div>
+      </div>
+      <div id="game-screen-helpnotify" style="display: none;">
+        <!-- <div class="game-screen-helpnotify-item">E Sword</div> -->
+      </div>
+      <div id="game-screen-inventory">
+        <div class="game-screen-inventory-slot" id="game-screen-inventory-slot-1"></div>
+        <div class="game-screen-inventory-slot" id="game-screen-inventory-slot-2"></div>
+        <div class="game-screen-inventory-slot" id="game-screen-inventory-slot-3"></div>
+        <div class="game-screen-inventory-slot" id="game-screen-inventory-slot-4"></div>
+      </div>
+      <canvas id="game-screen-canvas"></canvas>
+    </div>
+  `;
+  let gameScreenBox = document.querySelector("#game-screen-box");
+  initializeInteractionSystem();
+  healtBar = document.querySelector("#game-screen-hud-health-bar");
+  helpNotify = document.querySelector("#game-screen-helpnotify");
+  gameScreenBox.style.width = gameConfig.global.width + "px";
+  gameScreenBox.style.height = gameConfig.global.height + "px";
+  canvas = document.querySelector("#game-screen-canvas");
   canvas.style.backgroundColor = "#333";
   ctx = canvas.getContext("2d");
-  GAME_SCREEN.appendChild(canvas);
   canvas.width = gameConfig.global.width;
   canvas.height = gameConfig.global.height;
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
   canvas.style.objectFit = "contain";
 
   game = new Game();
@@ -15,14 +36,15 @@ async function initPlayArea(playerId) {
   console.log(playerId);
   player = new Player(50, 300, 50, 80, playerId);
   player.initialize();
+  healtBar.style.width = player.playerHealth + "%";
   console.log(player.playerPosX, player.playerPosY);
   for (let item of game.mapItems) {
-    let newItem = new Item(item.name, item.label, {
-      x: 50,
-      y: 300,
-    });
-    newItem.spawn();
+    item.collected = false;
+    mapItems.push(item);
   }
+
+  spawnedItems = new Items(mapItems);
+  spawnedItems.initialize();
 
   // Initialize camera
   camera = {
@@ -64,6 +86,9 @@ function handleKeyDown(e) {
       break;
     case "Escape":
       handlePauseMenu();
+      break;
+    case "g":
+      player.updateHealth("remove", 50);
       break;
     case "p":
       handlePauseMenu();
@@ -177,7 +202,7 @@ function startGameLoop(currentTime) {
 
     player.move(controls);
     player.update();
-
+    spawnedItems.update();
     ctx.restore();
   }
 }

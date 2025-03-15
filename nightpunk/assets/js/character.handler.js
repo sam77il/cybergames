@@ -28,7 +28,7 @@ function CharacterSelection_Handler() {
 
 function InitiateCharacters() {
   let characters = localStorage.getItem("characters");
-  console.log(characters);
+  console.log(JSON.parse(characters));
 
   if (characters) {
     characters = JSON.parse(characters);
@@ -175,7 +175,14 @@ async function handleCreateCharacterSubmit(e) {
       type: charType,
       level: 1,
       coins: 0,
-      inventory: [],
+      inventory: [
+        {
+          name: "potion",
+          label: "Potion",
+          amount: 6,
+          slot: 1,
+        },
+      ],
       perks: [],
     });
   } else {
