@@ -20,8 +20,21 @@ async function initPlayArea(playerId) {
   `;
   let gameScreenBox = document.querySelector("#game-screen-box");
   initializeInteractionSystem();
+  setupInventoryControls();
   healtBar = document.querySelector("#game-screen-hud-health-bar");
   helpNotify = document.querySelector("#game-screen-helpnotify");
+  playerInventory.slot1.element = document.querySelector(
+    "#game-screen-inventory-slot-1"
+  );
+  playerInventory.slot2.element = document.querySelector(
+    "#game-screen-inventory-slot-2"
+  );
+  playerInventory.slot3.element = document.querySelector(
+    "#game-screen-inventory-slot-3"
+  );
+  playerInventory.slot4.element = document.querySelector(
+    "#game-screen-inventory-slot-4"
+  );
   gameScreenBox.style.width = gameConfig.global.width + "px";
   gameScreenBox.style.height = gameConfig.global.height + "px";
   canvas = document.querySelector("#game-screen-canvas");
@@ -33,7 +46,6 @@ async function initPlayArea(playerId) {
 
   game = new Game();
   await loadMap(game.map, game.tileSize);
-  console.log(playerId);
   player = new Player(50, 300, 50, 80, playerId);
   player.initialize();
   healtBar.style.width = player.playerHealth + "%";
@@ -87,7 +99,7 @@ function handleKeyDown(e) {
     case "Escape":
       handlePauseMenu();
       break;
-    case "g":
+    case "h":
       player.updateHealth("remove", 50);
       break;
     case "p":

@@ -2,11 +2,17 @@ const KEYS = {
   UP: "ArrowUp",
   DOWN: "ArrowDown",
   INTERACT: "f",
+  FIRST: "1",
+  SECOND: "2",
+  THIRD: "3",
+  FOURTH: "4",
+  DROP: "g",
 };
 
 const gameState = {
   nearItems: [],
   selectedItemIndex: 0,
+  selectedInventoryItemSlot: 0,
   keyHandlerAttached: false,
   helpNotifyRef: null,
 };
@@ -23,6 +29,73 @@ function setupKeyboardControls() {
   document.removeEventListener("keydown", handleKeyNavigation);
   document.addEventListener("keydown", handleKeyNavigation);
   gameState.keyHandlerAttached = true;
+}
+
+function setupInventoryControls() {
+  document.removeEventListener("keydown", handleInventoryNavigation);
+  document.addEventListener("keydown", handleInventoryNavigation);
+}
+
+function handleInventoryNavigation(event) {
+  switch (event.key) {
+    case KEYS.FIRST:
+      gameState.selectedInventoryItemSlot = 1;
+      renderInventoryItemSelection();
+      event.preventDefault();
+      break;
+    case KEYS.SECOND:
+      gameState.selectedInventoryItemSlot = 2;
+      renderInventoryItemSelection();
+      event.preventDefault();
+      break;
+    case KEYS.THIRD:
+      gameState.selectedInventoryItemSlot = 3;
+      renderInventoryItemSelection();
+      event.preventDefault();
+      break;
+    case KEYS.FOURTH:
+      gameState.selectedInventoryItemSlot = 4;
+      renderInventoryItemSelection();
+      event.preventDefault();
+      break;
+    case KEYS.DROP:
+      handleDropInventoryItem();
+      event.preventDefault();
+      break;
+  }
+}
+
+function handleDropInventoryItem() {
+  if (
+    gameState.selectedInventoryItemSlot > 0 &&
+    playerInventory["slot" + gameState.selectedInventoryItemSlot].data?.name
+  ) {
+    console.log(
+      "Dropping Item: " +
+        playerInventory["slot" + gameState.selectedInventoryItemSlot].data?.name
+    );
+    player.dropItem(
+      playerInventory["slot" + gameState.selectedInventoryItemSlot].data
+    );
+  }
+}
+
+function renderInventoryItemSelection() {
+  if (!playerInventory["slot" + gameState.selectedInventoryItemSlot].data?.name)
+    return;
+
+  let inventorySlots = document.querySelectorAll(".game-screen-inventory-slot");
+
+  inventorySlots.forEach((el) => {
+    el.style.backgroundColor = "#266881";
+  });
+
+  playerInventory[
+    "slot" + gameState.selectedInventoryItemSlot
+  ].element.style.backgroundColor = "#43c0ee";
+  console.log(
+    playerInventory["slot" + gameState.selectedInventoryItemSlot].data.name
+  );
 }
 
 function handleKeyNavigation(event) {
@@ -86,7 +159,7 @@ function updateHelpNotifyUI() {
   gameState.nearItems.forEach((item, index) => {
     const itemElement = document.createElement("div");
     itemElement.className = "game-screen-helpnotify-item";
-    itemElement.textContent = `F ${item.label}`;
+    itemElement.textContent = `F ${item.label} ${item.amount}x`;
     itemElement.dataset.index = index;
 
     if (index === gameState.selectedItemIndex) {
@@ -115,7 +188,7 @@ function areItemArraysEqual(items1, items2) {
   return true;
 }
 
-function checkSlot(inventory, newItem) {
+function checkAddSlot(inventory, newItem) {
   const existingItemIndex = inventory.findIndex(
     (item) => item.name === newItem.name
   );
@@ -139,7 +212,6 @@ function checkSlot(inventory, newItem) {
         amount: newItem.amount,
         slot,
       };
-      console.log(itemToAdd);
       inventory.push(itemToAdd);
       console.log(`Item "${newItem.name}" in Slot ${slot} hinzugefügt.`);
       return inventory;

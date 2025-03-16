@@ -26,6 +26,24 @@ let nearItems = [];
 let displayedItemIds = [];
 let selectedItemIndex = 0;
 let keyListenersAdded = false;
+let playerInventory = {
+  slot1: {
+    data: {},
+    element: null,
+  },
+  slot2: {
+    data: {},
+    element: null,
+  },
+  slot3: {
+    data: {},
+    element: null,
+  },
+  slot4: {
+    data: {},
+    element: null,
+  },
+};
 const controls = {
   left: false,
   right: false,

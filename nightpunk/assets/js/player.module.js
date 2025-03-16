@@ -23,6 +23,25 @@ class Player {
     ).inventory;
     // console.log(this.inventory);
     this.draw();
+    this.loadInventory();
+  }
+
+  loadInventory() {
+    let inventorySlots = document.querySelectorAll(
+      ".game-screen-inventory-slot"
+    );
+
+    inventorySlots.forEach((el) => {
+      el.innerHTML = "";
+      el.style.backgroundColor = "#266881";
+    });
+
+    for (let item of this.inventory) {
+      playerInventory["slot" + item.slot].element.innerHTML = `
+        ${item.name.slice(0, 1)} | ${item.amount}
+      `;
+      playerInventory["slot" + item.slot].data = item;
+    }
   }
 
   draw() {
@@ -157,7 +176,7 @@ class Player {
 
   addInventoryItem(newItem) {
     // Prüfen, ob das Item bereits im Inventar vorhanden ist
-    let newInventory = checkSlot(this.inventory, newItem);
+    let newInventory = checkAddSlot(this.inventory, newItem);
 
     let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
       (character) => Number(character.id) === Number(this.playerId)
@@ -168,6 +187,33 @@ class Player {
     );
     newCharacters.push(oldCharacters);
     localStorage.setItem("characters", JSON.stringify(newCharacters));
+    this.loadInventory();
+  }
+
+  dropItem(item) {
+    if (item?.name) {
+      spawnedItems.setItems(item);
+      let newInventory = this.inventory.filter(
+        (invItem) => invItem.name !== item.name
+      );
+
+      let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
+        (character) => Number(character.id) === Number(this.playerId)
+      );
+      oldCharacters.inventory = newInventory;
+      let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
+        (character) => Number(character.id) !== Number(this.playerId)
+      );
+      newCharacters.push(oldCharacters);
+      localStorage.setItem("characters", JSON.stringify(newCharacters));
+      this.inventory = newInventory;
+      playerInventory = Object.fromEntries(
+        Object.entries(playerInventory).filter(
+          ([key, value]) => value !== item.name
+        )
+      );
+      this.loadInventory();
+    }
   }
 
   move(controls) {
