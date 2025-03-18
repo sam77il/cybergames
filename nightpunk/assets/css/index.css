@@ -111,3 +111,30 @@ ul {
   justify-content: center;
   align-items: center;
 }
+
+#perks {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#perks img {
+  height: 20px;
+  width: 80px;
+}
+
+@keyframes Perk {
+  0% {
+    transform: rotate(0) scale(1.5) translate(0, 0);
+  }
+  30% {
+    transform: rotate(0) scale(1.3) translate(0, 0);
+  }
+  60% {
+    transform: rotate(0) scale(1.2) translate(0, 0);
+  }
+  100% {
+    transform: rotate(0) scale(1) translate(0, 0);
+  }
+}

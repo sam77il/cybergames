@@ -5,6 +5,11 @@ async function initPlayArea(playerId) {
         <div id="game-screen-hud-health">
           <div id="game-screen-hud-health-bar"></div>
         </div>
+        <div id="perks">
+          <img id="perk1" src="./assets/img/perk_1.png">
+          <img id="perk2" src="./assets/img/perk_2.png">
+          <img id="perk3" src="./assets/img/perk_3.png">
+        </div>
       </div>
       <div id="game-screen-helpnotify" style="display: none;">
         <!-- <div class="game-screen-helpnotify-item">E Sword</div> -->
@@ -21,6 +26,8 @@ async function initPlayArea(playerId) {
   let gameScreenBox = document.querySelector("#game-screen-box");
   initializeInteractionSystem();
   setupInventoryControls();
+  //Parallax-System
+  initParallaxBackground();
   healtBar = document.querySelector("#game-screen-hud-health-bar");
   helpNotify = document.querySelector("#game-screen-helpnotify");
   playerInventory.slot1.element = document.querySelector(
@@ -78,6 +85,8 @@ async function initPlayArea(playerId) {
         0,
         Math.min(this.y, game.map.length * game.tileSize - this.height)
       );
+      // Parallax-Effekt - Aktualisiere basierend auf der Kamera-Position
+      updateParallaxOffset(this.x);
     },
   };
 
@@ -206,6 +215,9 @@ function startGameLoop(currentTime) {
 
     // Update camera position
     camera.update(player.playerPosX, player.playerPosY);
+
+    updateParallaxLayers();
+    drawParallaxLayers();
 
     // Draw background with camera offset
     ctx.save();
