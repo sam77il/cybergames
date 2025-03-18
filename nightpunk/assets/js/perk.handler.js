@@ -1,13 +1,9 @@
-var cyberPh = {};
-//var speed = 100;
-//var jump = 300;
-var kill = true;
-
-//speedpeark
+let cyberPh = {};
+let kill = true;
 
 function speedperk() {
   let q = true;
-  document.addEventListener("keydown", function () {
+  document.addEventListener("keydown", function (event) {
     if (event.key === "q" && q) {
       let displaied = document.getElementById("perk2");
       console.log("speedperk hat einen cooldown!");
@@ -81,7 +77,7 @@ function jumpboost() {
 
 function instakill() {
   let x = true;
-  document.addEventListener("keydown", function () {
+  document.addEventListener("keydown", function (event) {
     if (event.key === "x" && x) {
       let displaied = document.getElementById("perk3");
       console.log("instakill hat einen cooldown!");
@@ -111,6 +107,7 @@ function instakill() {
     }
   });
 }
+
 instakill();
 jumpboost();
 speedperk();

@@ -1,6 +1,6 @@
 {
   "global": {
-    "dev": false,
+    "dev": true,
     "tileSize": 50,
     "width": 1024,
     "height": 600,
