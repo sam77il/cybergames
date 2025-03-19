@@ -1,5 +1,5 @@
 async function initPlayArea(playerId) {
-  GAME_SCREEN.innerHTML = `
+  SCREENS.GAME.innerHTML = `
     <div id="game-screen-box">
       <div id="game-screen-hud">
         <div id="game-screen-hud-health">
@@ -122,7 +122,7 @@ function handlePauseMenu() {
   isInPause = true;
 
   if (document.querySelector("#pause-menu")?.id === "pause-menu") {
-    GAME_SCREEN.removeChild(document.querySelector("#pause-menu"));
+    SCREENS.GAME.removeChild(document.querySelector("#pause-menu"));
   }
   const pauseMenu = document.createElement("div");
   pauseMenu.setAttribute("id", "pause-menu");
@@ -149,11 +149,11 @@ function handlePauseMenu() {
     }</button>
   `;
 
-  GAME_SCREEN.appendChild(pauseMenu);
+  SCREENS.GAME.appendChild(pauseMenu);
 
   const resumeButton = pauseMenu.querySelector("#resume");
   resumeButton.addEventListener("click", () => {
-    GAME_SCREEN.removeChild(pauseMenu);
+    SCREENS.GAME.removeChild(pauseMenu);
     listenToControls(true);
     isInPause = false;
   });
@@ -161,16 +161,16 @@ function handlePauseMenu() {
   const settingsButton = pauseMenu.querySelector("#settings");
   settingsButton.addEventListener("click", () => {
     pauseMenu.innerHTML = "";
-    SETTINGS = document.createElement("div");
-    SETTINGS.setAttribute("id", "settings");
-    pauseMenu.appendChild(SETTINGS);
+    SCREENS.SETTINGS = document.createElement("div");
+    SCREENS.SETTINGS.setAttribute("id", "settings");
+    pauseMenu.appendChild(SCREENS.SETTINGS);
     Settings_Handler();
   });
 
   const quitButton = pauseMenu.querySelector("#quit");
   quitButton.addEventListener("click", async () => {
     await ChangeScreen("main-menu");
-    GAME_SCREEN.innerHTML = "";
+    SCREENS.GAME.innerHTML = "";
     isInPause = false;
   });
 }

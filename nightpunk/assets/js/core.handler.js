@@ -1,8 +1,8 @@
 async function TitleScreen_Handler() {
-  TITLE_SCREEN.innerHTML = `
-      <h1>${locales[gameSettings.language].gameName}</h1>
-      <p>${locales[gameSettings.language].titleScreenMessage}</p>
-      `;
+  SCREENS.TITLE.innerHTML = `
+    <h1>${locales[gameSettings.language].gameName}</h1>
+    <p>${locales[gameSettings.language].titleScreenMessage}</p>
+  `;
   window.addEventListener("keyup", TitleScreen_Event);
 }
 
@@ -14,7 +14,7 @@ function TitleScreen_Event(e) {
 }
 
 async function MainMenu_Handler() {
-  MAIN_MENU.innerHTML = `
+  SCREENS.MAIN.innerHTML = `
       <h1>${locales[gameSettings.language].gameName}</h1>
   
       <ul>
@@ -29,17 +29,17 @@ async function MainMenu_Handler() {
           }</button></li>
       </ul>
     `;
-  const MAIN_MENU_QUIT = document.querySelector("#main-menu-quit");
-  MAIN_MENU_QUIT.addEventListener("click", () => {
+  const MAIN_QUIT = document.querySelector("#main-menu-quit");
+  const MAIN_START = document.querySelector("#main-menu-start");
+  const MAIN_SETTINGS = document.querySelector("#main-menu-settings");
+  MAIN_QUIT.addEventListener("click", () => {
     window.location.href = "/cybergame/home";
   });
-  const MAIN_MENU_START = document.querySelector("#main-menu-start");
-  MAIN_MENU_START.addEventListener("click", async function () {
+  MAIN_START.addEventListener("click", async function () {
     await ChangeScreen("character-selection");
     //handleActionStart(true);
   });
-  const MAIN_MENU_SETTINGS = document.querySelector("#main-menu-settings");
-  MAIN_MENU_SETTINGS.addEventListener("click", () => {
+  MAIN_SETTINGS.addEventListener("click", () => {
     ChangeScreen("settings");
   });
 }

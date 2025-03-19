@@ -2,7 +2,7 @@ let SETTINGS_CONTENT = null;
 let SETTINGS_TAB = null;
 
 function Settings_Handler() {
-  SETTINGS.innerHTML = `
+  SCREENS.SETTINGS.innerHTML = `
       ${isInPause ? "" : `<h1>Nightpunk</h1>`}
       <h2>${locales[gameSettings.language].settingsTitle}</h2>
       <hr>

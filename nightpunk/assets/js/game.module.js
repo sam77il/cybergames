@@ -1,21 +1,13 @@
-let gameConfig = {};
-
-async function loadConfig() {
-  try {
-    const respone = await fetch("config.json");
-    const json = await respone.json();
-    gameConfig = json;
-    if (respone.ok) console.log("Successfully loaded config.json");
-  } catch (error) {}
-}
-
-loadConfig();
-
 class Game {
   constructor() {
-    this.level = 1;
+    console.log(gameConfig);
+    this.currentLevel = 1;
+    this.level = gameConfig.levels.find(
+      (map) => map.level === this.currentLevel
+    );
     this.tileSize = gameConfig.global.tileSize;
-    this.map = gameConfig.levels[this.level].map;
-    this.mapItems = gameConfig.levels[this.level].items;
+
+    this.map = this.level.map;
+    this.mapItems = this.level.items;
   }
 }

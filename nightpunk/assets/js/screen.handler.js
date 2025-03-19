@@ -12,39 +12,39 @@ function ChangeScreen(screen) {
 
       switch (screen) {
         case "title-screen":
-          TITLE_SCREEN = document.createElement("div");
-          TITLE_SCREEN.setAttribute("id", "title-screen");
-          content.appendChild(TITLE_SCREEN);
+          SCREENS.TITLE = document.createElement("div");
+          SCREENS.TITLE.setAttribute("id", "title-screen");
+          content.appendChild(SCREENS.TITLE);
           TitleScreen_Handler();
           break;
         case "main-menu":
-          MAIN_MENU = document.createElement("div");
-          MAIN_MENU.setAttribute("id", "main-menu");
-          content.appendChild(MAIN_MENU);
+          SCREENS.MAIN = document.createElement("div");
+          SCREENS.MAIN.setAttribute("id", "main-menu");
+          content.appendChild(SCREENS.MAIN);
           MainMenu_Handler();
           break;
         case "settings":
-          SETTINGS = document.createElement("div");
-          SETTINGS.setAttribute("id", "settings");
-          content.appendChild(SETTINGS);
+          SCREENS.SETTINGS = document.createElement("div");
+          SCREENS.SETTINGS.setAttribute("id", "settings");
+          content.appendChild(SCREENS.SETTINGS);
           Settings_Handler();
           break;
         case "character-selection":
-          CHARACTER_SELECTION = document.createElement("div");
-          CHARACTER_SELECTION.setAttribute("id", "character-selection");
-          content.appendChild(CHARACTER_SELECTION);
+          SCREENS.CHARACTER_SELECTION = document.createElement("div");
+          SCREENS.CHARACTER_SELECTION.setAttribute("id", "character-selection");
+          content.appendChild(SCREENS.CHARACTER_SELECTION);
           CharacterSelection_Handler();
           break;
         case "character-creation":
-          CHARACTER_CREATION = document.createElement("div");
-          CHARACTER_CREATION.setAttribute("id", "character-creation");
-          content.appendChild(CHARACTER_CREATION);
+          SCREENS.CHARACTER_CREATION = document.createElement("div");
+          SCREENS.CHARACTER_CREATION.setAttribute("id", "character-creation");
+          content.appendChild(SCREENS.CHARACTER_CREATION);
           CharacterCreation_Handler();
           break;
         case "game-screen":
-          GAME_SCREEN = document.createElement("div");
-          GAME_SCREEN.setAttribute("id", "game-screen");
-          content.appendChild(GAME_SCREEN);
+          SCREENS.GAME = document.createElement("div");
+          SCREENS.GAME.setAttribute("id", "game-screen");
+          content.appendChild(SCREENS.GAME);
           break;
       }
 

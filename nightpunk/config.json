@@ -47,64 +47,38 @@
   },
   "levels": [
     {
-      "name": "goontown",
-      "label": "Goon Town",
+      "name": "tutorial",
+      "label": "Tutorial Map",
       "level": 1,
-      "enemies": 3,
-      "items": [
+      "enemies": [
         {
-          "name": "potion",
-          "label": "Potion",
-          "position": {
-            "x": 5,
-            "y": 10
-          }
+          "type": "bot",
+          "items": [
+            {
+              "name": "potion",
+              "amount": 1
+            }
+          ]
         },
         {
-          "name": "sword",
-          "label": "Sword",
-          "position": {
-            "x": 10,
-            "y": 10
-          }
+          "type": "mutated",
+          "items": [
+            {
+              "name": "potion",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "type": "cyberpsycho",
+          "items": [
+            {
+              "name": "potion",
+              "amount": 3
+            }
+          ]
         }
       ],
-      "map": [
-        "BBBBZZBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-        "B                                                B",
-        "B                                                B",
-        "B    PPPPPPP             PPPPP         T         B",
-        "B                                     PPPP       B",
-        "B              PPPPPPP                           B",
-        "B                        PPPPPPP                 B",
-        "B         T                    T      PPPPP      B",
-        "B       PPPPP                  PPPPP           T B",
-        "B                   PPPPPPP                  PPPPB",
-        "B                                                B",
-        "B    PPPPPPP             PPPPP         T         B",
-        "B                                     PPPP       B",
-        "B              PPPPPPP                           B",
-        "B                        PPPPPPP                 B",
-        "B         T                    T      PPPPP      B",
-        "B       PPPPP                  PPPPP           T B",
-        "B                   PPPPPPP                  PPPPB",
-        "B                                                B",
-        "B    PPPPPPP             PPPPP         T         B",
-        "B                                     PPPP       B",
-        "B              PPPPPPP                           B",
-        "B                        PPPPPPP                 B",
-        "B         T                    T      PPPPP      B",
-        "B       PPPPP                  PPPPP           T B",
-        "B                   PPPPPPP                  PPPPB",
-        "B                                                B",
-        "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
-      ]
-    },
-    {
-      "name": "lek",
-      "label": "Lek",
-      "level": 2,
-      "enemies": 5,
       "items": [
         {
           "name": "potion",

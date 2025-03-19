@@ -1,10 +1,12 @@
 // Initializing all global variables
-let TITLE_SCREEN = null;
-let MAIN_MENU = null;
-let CHARACTER_SELECTION = null;
-let CHARACTER_CREATION = null;
-let GAME_SCREEN = null;
-let SETTINGS = null;
+let SCREENS = {
+  TITLE: null,
+  MAIN: null,
+  CHARACTER_SELECTION: null,
+  CHARACTER_CREATION: null,
+  GAME: null,
+  SETTINGS: null,
+};
 let canvas = null;
 let ctx = null;
 let bgCanvas = null;
@@ -26,6 +28,7 @@ let nearItems = [];
 let displayedItemIds = [];
 let selectedItemIndex = 0;
 let keyListenersAdded = false;
+let gameConfig = {};
 let playerInventory = {
   slot1: {
     data: {},
@@ -60,7 +63,6 @@ async function loadConfig() {
     if (respone.ok) console.log("Successfully loaded config.json");
   } catch (error) {}
 }
-loadConfig();
 
 // Loading locales.json (different languages)
 async function loadLocales() {
@@ -92,8 +94,10 @@ async function loadSettings() {
 
 // Game Initializing
 async function initializeGame() {
+  await loadConfig();
   await loadLocales();
   await loadSettings();
+
   if (!characterSelectioned) {
     console.log("Starting game");
     tileset = document.querySelector("#tileset");

@@ -1,7 +1,7 @@
 let CHARACTERS_LIST = null;
 
 function CharacterSelection_Handler() {
-  CHARACTER_SELECTION.innerHTML = `
+  SCREENS.CHARACTER_SELECTION.innerHTML = `
     <button id="character-selection-createchar" type="button">${
       locales[gameSettings.language].characterSelectionCreateCharButton
     }</button>
@@ -96,7 +96,7 @@ async function CharacterCreation_Handler() {
     return;
   }
 
-  CHARACTER_CREATION.innerHTML = `
+  SCREENS.CHARACTER_CREATION.innerHTML = `
         <h2>${locales[gameSettings.language].characterCreationTitle}</h2>
         <form id="character-creation-form">
             <label for="character-creation-form-name">${
