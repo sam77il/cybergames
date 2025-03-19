@@ -1,68 +1,63 @@
 // Initializing all global variables
-let SCREENS = {
-  TITLE: null,
-  MAIN: null,
-  CHARACTER_SELECTION: null,
-  CHARACTER_CREATION: null,
-  GAME: null,
-  SETTINGS: null,
+let screens = {
+  title: null,
+  main: null,
+  character_selection: null,
+  character_creation: null,
+  game: null,
+  settings: null,
 };
-let canvas = null;
-let ctx = null;
-let bgCanvas = null;
-let bgCtx = null;
-let characterSelectioned = false;
-let locales = {};
-let player = null;
-let mapItems = [];
-let spawnedItems = null;
-let game = null;
-let camera = null; // Add camera variable
-let tileset = null;
-let isInPause = false;
-let nearbyItem = null;
-let healtBar = null;
-let helpNotify = null;
-let helpNotifyOpened = false;
-let nearItems = [];
-let displayedItemIds = [];
-let selectedItemIndex = 0;
-let keyListenersAdded = false;
-let gameConfig = {};
-let CHARACTERS_LIST = null;
 
-let playerInventory = {
-  slot1: {
-    data: {},
-    element: null,
+let game = {
+  canvas: {
+    main: null,
+    mainCtx: null,
+
+    bg: null,
+    bgCtx: null,
   },
-  slot2: {
-    data: {},
-    element: null,
+  core: null,
+  player: null,
+  camera: null,
+  paused: false,
+  map: {
+    items: {},
+    itemsOnFloor: null,
+    tileset: null,
   },
-  slot3: {
-    data: {},
-    element: null,
-  },
-  slot4: {
-    data: {},
-    element: null,
+  ui: {
+    healthBar: null,
+    helpNotify: null,
+    inventory: {
+      slot1: null,
+      slot2: null,
+      slot3: null,
+      slot4: null,
+    },
   },
 };
-const controls = {
-  left: false,
-  right: false,
-  up: false,
-};
-let gameSettings = {};
+
+let locales = {};
+let items = {};
+let config = {};
+let settings = {};
 
 // Loading config.json
 async function loadConfig() {
   try {
     const respone = await fetch("config.json");
     const json = await respone.json();
-    gameConfig = json;
+    config = json;
     if (respone.ok) console.log("Successfully loaded config.json");
+  } catch (error) {}
+}
+
+async function loadItems() {
+  try {
+    const respone = await fetch("items.json");
+    const json = await respone.json();
+    items = json;
+    if (respone.ok) console.log("Successfully loaded items.json");
   } catch (error) {}
 }
 
@@ -81,12 +76,12 @@ async function loadLocales() {
 // Loading settings from localStorage
 async function loadSettings() {
   try {
-    const settings = JSON.parse(localStorage.getItem("settings"));
-    if (settings) {
-      gameSettings = settings;
+    const playerSettings = JSON.parse(localStorage.getItem("settings"));
+    if (playerSettings) {
+      settings = playerSettings;
     } else {
-      gameSettings = gameConfig.defaultSettings;
-      localStorage.setItem("settings", JSON.stringify(gameSettings));
+      playerSettings = config.defaultSettings;
+      localStorage.setItem("settings", JSON.stringify(playerSettings));
     }
     console.log("Successfully loaded settings");
   } catch {
@@ -99,15 +94,14 @@ async function initializeGame() {
   await loadConfig();
   await loadLocales();
   await loadSettings();
+  await loadItems();
 
-  if (!characterSelectioned) {
-    console.log("Starting game");
-    tileset = document.querySelector("#tileset");
-    if (gameConfig.global.dev) {
-      StartGame();
-    } else {
-      ChangeScreen("title-screen");
-    }
+  console.log("Started game");
+  game.map.tileset = document.querySelector("#tileset");
+  if (config.global.dev) {
+    StartGame();
+  } else {
+    ChangeScreen("title-screen");
   }
 }
 

@@ -1,7 +1,7 @@
 async function TitleScreen_Handler() {
-  SCREENS.TITLE.innerHTML = `
-    <h1>${locales[gameSettings.language].gameName}</h1>
-    <p>${locales[gameSettings.language].titleScreenMessage}</p>
+  screens.title.innerHTML = `
+    <h1>${locales[settings.language].gameName}</h1>
+    <p>${locales[settings.language].titleScreenMessage}</p>
   `;
   window.addEventListener("keyup", TitleScreen_Event);
 }
@@ -14,18 +14,18 @@ function TitleScreen_Event(e) {
 }
 
 async function MainMenu_Handler() {
-  SCREENS.MAIN.innerHTML = `
-      <h1>${locales[gameSettings.language].gameName}</h1>
+  screens.main.innerHTML = `
+      <h1>${locales[settings.language].gameName}</h1>
   
       <ul>
           <li><button id="main-menu-start" type="button">${
-            locales[gameSettings.language].mainMenuStartButton
+            locales[settings.language].mainMenuStartButton
           }</button></li>
           <li><button id="main-menu-settings" type="button">${
-            locales[gameSettings.language].mainMenuSettingsButton
+            locales[settings.language].mainMenuSettingsButton
           }</button></li>
           <li><button id="main-menu-quit" type="button">${
-            locales[gameSettings.language].mainMenuQuitButton
+            locales[settings.language].mainMenuQuitButton
           }</button></li>
       </ul>
     `;

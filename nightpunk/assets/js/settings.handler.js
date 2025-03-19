@@ -2,28 +2,28 @@ let SETTINGS_CONTENT = null;
 let SETTINGS_TAB = null;
 
 function Settings_Handler() {
-  SCREENS.SETTINGS.innerHTML = `
-      ${isInPause ? "" : `<h1>Nightpunk</h1>`}
-      <h2>${locales[gameSettings.language].settingsTitle}</h2>
+  screens.settings.innerHTML = `
+      ${game.paused ? "" : `<h1>Nightpunk</h1>`}
+      <h2>${locales[settings.language].settingsTitle}</h2>
       <hr>
       <br>
       <ul style="display: flex; flex-direction: row; justify-content: space-around;">
           <li><button id="settings-back" type="button">${
-            locales[gameSettings.language].settingsBackButton
+            locales[settings.language].settingsBackButton
           }</button></li>
           ${
-            isInPause
+            game.paused
               ? ""
               : `<li><button id="settings-language" type="button">${
-                  locales[gameSettings.language].settingsLanguageButton
+                  locales[settings.language].settingsLanguageButton
                 }</button></li>`
           }
           
           <li><button id="settings-sound" type="button">${
-            locales[gameSettings.language].settingsSoundButton
+            locales[settings.language].settingsSoundButton
           }</button></li>
           <li><button id="settings-controls" type="button">${
-            locales[gameSettings.language].settingsControlsButton
+            locales[settings.language].settingsControlsButton
           }</button></li>
       </ul>
 
@@ -33,13 +33,14 @@ function Settings_Handler() {
 
   const SETTINGS_BACK = document.querySelector("#settings-back");
   SETTINGS_BACK.addEventListener("click", () => {
-    if (isInPause) {
+    if (game.paused) {
       handlePauseMenu();
     } else {
       ChangeScreen("main-menu");
     }
   });
-  if (!isInPause) {
+
+  if (!game.paused) {
     const SETTINGS_LANGUAGE = document.querySelector("#settings-language");
     SETTINGS_LANGUAGE.addEventListener("click", () => {
       ChangeSettingsScreen("settings-language");
@@ -57,69 +58,69 @@ function Settings_Handler() {
 
 function ChangeSettingsScreen(screen) {
   SETTINGS_CONTENT.innerHTML = "";
-  console.log(gameSettings);
+  console.log(settings);
   SETTINGS_TAB = screen;
 
   switch (screen) {
     case "settings-language":
       SETTINGS_CONTENT.innerHTML = `
-              <h3>${locales[gameSettings.language].settingsLanguageTitle}</h3>
+              <h3>${locales[settings.language].settingsLanguageTitle}</h3>
               <input type="radio" id="language-de" name="language" value="de" ${
-                gameSettings.language === "de" ? "checked" : ""
+                settings.language === "de" ? "checked" : ""
               }>
               <label for="language-de">${
-                locales[gameSettings.language].settingsLanguageGerman
+                locales[settings.language].settingsLanguageGerman
               }</label>
               <input type="radio" id="language-en" name="language" value="en" ${
-                gameSettings.language === "en" ? "checked" : ""
+                settings.language === "en" ? "checked" : ""
               }>
               <label for="language-en">${
-                locales[gameSettings.language].settingsLanguageEnglish
+                locales[settings.language].settingsLanguageEnglish
               }</label>
             `;
       break;
     case "settings-controls":
       SETTINGS_CONTENT.innerHTML = `
-              <h3>${locales[gameSettings.language].settingsControlsTitle}</h3>
+              <h3>${locales[settings.language].settingsControlsTitle}</h3>
               <input type="text" id="controls-walk-left" maxlength="1" value="${
-                gameSettings.controls.walkLeft
+                settings.controls.walkLeft
               }">
               <label for="controls-walk-left">${
-                locales[gameSettings.language].settingsControlsWalkLeft
+                locales[settings.language].settingsControlsWalkLeft
               }</label>
               <br>
               <input type="text" id="controls-walk-right" maxlength="1" value="${
-                gameSettings.controls.walkRight
+                settings.controls.walkRight
               }">
               <label for="controls-walk-right">${
-                locales[gameSettings.language].settingsControlsWalkRight
+                locales[settings.language].settingsControlsWalkRight
               }</label>
               <br>
               <input type="text" id="controls-jump" maxlength="1" value="${
-                gameSettings.controls.jump
+                settings.controls.jump
               }">
               <label for="controls-jump">${
-                locales[gameSettings.language].settingsControlsJump
+                locales[settings.language].settingsControlsJump
               }</label>
             `;
       break;
     case "settings-sound":
       SETTINGS_CONTENT.innerHTML = `
-                <h3>${locales[gameSettings.language].settingsSoundTitle}</h3>
+                <h3>${locales[settings.language].settingsSoundTitle}</h3>
                 <input type="range" id="sound-volume" min="0" step="5" max="100" value="${
-                  gameSettings.sound.volume
+                  settings.sound.volume
                 }">
                 <label for="sound-volume">${
-                  locales[gameSettings.language].settingsSoundVolume
+                  locales[settings.language].settingsSoundVolume
                 } <span id="sound-volume-text">${
-        gameSettings.sound.volume
+        settings.sound.volume
       }</span>%</label>
       <input type="range" id="sound-music" min="0" step="5" max="100" value="${
-        gameSettings.sound.music
+        settings.sound.music
       }">
       <label for="sound-music">${
-        locales[gameSettings.language].settingsMusicVolume
-      } <span id="sound-music-text">${gameSettings.sound.music}</span>%</label>
+        locales[settings.language].settingsMusicVolume
+      } <span id="sound-music-text">${settings.sound.music}</span>%</label>
               `;
 
       setTimeout(() => {
@@ -141,14 +142,14 @@ function ChangeSettingsScreen(screen) {
       console.log("Unbekannter Einstellungsbildschirm");
       // Hier könntest du einen Standard-Inhalt einfügen, wenn kein gültiger Bildschirm ausgewählt wurde
       SETTINGS_CONTENT.innerHTML = `
-            <p>${locales[gameSettings.language].settingsDefaultMessage}</p>
+            <p>${locales[settings.language].settingsDefaultMessage}</p>
           `;
       break;
   }
 
   SETTINGS_CONTENT.innerHTML += `
       <button id="settings-save" type="button">${
-        locales[gameSettings.language].settingsSaveButton
+        locales[settings.language].settingsSaveButton
       }</button>
     `;
 
@@ -159,35 +160,34 @@ function ChangeSettingsScreen(screen) {
 }
 
 async function SaveSettings() {
-  if (!isInPause) {
+  if (!game.paused) {
     const languageValue =
       document.querySelector("input[name='language']:checked")?.value ||
-      gameSettings.language;
-    gameSettings.language = languageValue;
+      settings.language;
+    settings.language = languageValue;
   }
   const walkLeftValue =
     document.querySelector("#controls-walk-left")?.value ||
-    gameSettings.controls.walkLeft;
+    settings.controls.walkLeft;
   const walkRightValue =
     document.querySelector("#controls-walk-right")?.value ||
-    gameSettings.controls.walkRight;
+    settings.controls.walkRight;
   const jumpValue =
-    document.querySelector("#controls-jump")?.value ||
-    gameSettings.controls.jump;
-  gameSettings.controls = {
+    document.querySelector("#controls-jump")?.value || settings.controls.jump;
+  settings.controls = {
     walkLeft: walkLeftValue,
     walkRight: walkRightValue,
     jump: jumpValue,
   };
   const soundVolume =
-    document.querySelector("#sound-volume")?.value || gameSettings.sound.volume;
+    document.querySelector("#sound-volume")?.value || settings.sound.volume;
   const soundMusic =
-    document.querySelector("#sound-music")?.value || gameSettings.sound.music;
-  gameSettings.sound.music = soundMusic;
-  gameSettings.sound.volume = soundVolume;
+    document.querySelector("#sound-music")?.value || settings.sound.music;
+  settings.sound.music = soundMusic;
+  settings.sound.volume = soundVolume;
   console.log("Saved");
-  localStorage.setItem("settings", JSON.stringify(gameSettings));
-  if (isInPause) {
+  localStorage.setItem("settings", JSON.stringify(settings));
+  if (game.paused) {
     handlePauseMenu();
   } else {
     await ChangeScreen("settings");

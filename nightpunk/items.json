@@ -1,0 +1,22 @@
+{
+  "katana": {
+    "name": "katana",
+    "label": "Katana"
+  },
+  "railgun": {
+    "name": "railgun",
+    "label": "Railgun"
+  },
+  "mantisblade": {
+    "name": "mantisblade",
+    "label": "Mantisblade"
+  },
+  "hdd": {
+    "name": "hdd",
+    "label": "HDD Card"
+  },
+  "ssd": {
+    "name": "ssd",
+    "label": "SSD Card"
+  }
+}

@@ -68,7 +68,7 @@ class Npc {
     const sourceX = this.currentFrame * this.frameWidth;
     const sourceY = 0;
 
-    ctx.drawImage(
+    game.canvas.mainCtx.drawImage(
       this.npc,
       sourceX,
       sourceY,
@@ -94,7 +94,7 @@ class Npc {
     const dialogY = this.npcPosY + this.dialogOffsetY;
 
     // Dialogbild mit benutzerdefinierter Größe zeichnen
-    ctx.drawImage(
+    game.canvas.mainCtx.drawImage(
       this.dialogImage,
       0,
       0,
@@ -107,9 +107,9 @@ class Npc {
     );
 
     // Text im Dialog zeichnen
-    ctx.font = "14px Arial";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "left"; // Von zentriert auf linksbündig geändert
+    game.canvas.mainCtx.font = "14px Arial";
+    game.canvas.mainCtx.fillStyle = "white";
+    game.canvas.mainCtx.textAlign = "left"; // Von zentriert auf linksbündig geändert
 
     // Position für den Text berechnen
     const textX = dialogX + 20; // Abstand vom linken Rand des Dialogs
@@ -120,16 +120,20 @@ class Npc {
     const lineHeight = 16; // Zeilenhöhe
 
     lines.forEach((line, index) => {
-      ctx.fillText(line.trim(), textX, textY + index * lineHeight);
+      game.canvas.mainCtx.fillText(
+        line.trim(),
+        textX,
+        textY + index * lineHeight
+      );
     });
 
     // "Drücke Enter" Hinweis am unteren Rand des Dialogs
-    ctx.font = "12px Arial";
+    game.canvas.mainCtx.font = "12px Arial";
     const enterText =
       this.enterCount === 4
         ? "   Drücke Enter zum Schließen"
         : "   Drücke Enter für mehr...";
-    ctx.fillText(enterText, textX, dialogY + dialogHeight - 30);
+    game.canvas.mainCtx.fillText(enterText, textX, dialogY + dialogHeight - 30);
   }
 
   updateAnimation() {

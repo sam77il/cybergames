@@ -33,15 +33,21 @@ class Layer {
   }
 
   draw() {
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    ctx.drawImage(
+    game.canvas.mainCtx.drawImage(
+      this.image,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    );
+    game.canvas.mainCtx.drawImage(
       this.image,
       this.x + this.width,
       this.y,
       this.width,
       this.height
     );
-    ctx.drawImage(
+    game.canvas.mainCtx.drawImage(
       this.image,
       this.x - this.width,
       this.y,
@@ -60,18 +66,10 @@ function initParallaxBackground() {
   gameObjects = [hintergrund_1, hintergrund_2, hintergrund_3, hintergrund_4];
 }
 
-function updateParallaxOffset(cameraX) {
-  const cameraSpeed = cameraX - previousCameraX;
-  previousCameraX = cameraX;
+function updateParallaxOffset(currentCameraX, previousCameraX) {
+  const cameraMovement = currentCameraX - previousCameraX;
 
-  // Alternative: Bewegungsgeschwindigkeit basierend auf Tastatureingaben
-  if (controls.right) {
-    gameSpeed = 5;
-  } else if (controls.left) {
-    gameSpeed = -5;
-  } else {
-    gameSpeed = cameraSpeed;
-  }
+  gameSpeed = cameraMovement;
 }
 
 function updateParallaxLayers() {

@@ -5,7 +5,6 @@ class Player {
     this.playerPosY = startPosY;
     this.playerWidth = playerWidth;
     this.playerHeight = playerHeight;
-    this.tileSize = game.tileSize;
     this.playerSpeed = 5;
     this.gravity = 1;
     this.playerFall = 0;
@@ -13,6 +12,11 @@ class Player {
     this.onGround = false;
     this.inventory = [];
     this.playerHealth = 100;
+    this.controls = {
+      left: false,
+      right: false,
+      up: false,
+    };
   }
 
   initialize() {
@@ -37,16 +41,15 @@ class Player {
     });
 
     for (let item of this.inventory) {
-      playerInventory["slot" + item.slot].element.innerHTML = `
+      game.ui.inventory["slot" + item.slot].innerHTML = `
         ${item.name.slice(0, 1)} | ${item.amount}
       `;
-      playerInventory["slot" + item.slot].data = item;
     }
   }
 
   draw() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(
+    game.canvas.mainCtx.fillStyle = "black";
+    game.canvas.mainCtx.fillRect(
       this.playerPosX,
       this.playerPosY,
       this.playerWidth,
@@ -67,24 +70,24 @@ class Player {
       this.playerHealth -= amount;
     }
     console.log("New Playerhealth: " + this.playerHealth);
-    healtBar.style.width = this.playerHealth + "%";
+    game.ui.healthBar.style.width = this.playerHealth + "%";
 
     if (this.playerHealth <= 0) {
       // Game Over!!!
-      healtBar.style.width = "0%";
+      game.ui.healthBar.style.width = "0%";
     }
   }
 
   getTileAt(x, y) {
-    const col = Math.floor(x / this.tileSize);
-    const row = Math.floor(y / this.tileSize);
+    const col = Math.floor(x / game.core.tileSize);
+    const row = Math.floor(y / game.core.tileSize);
     if (
       row >= 0 &&
-      row < game.map.length &&
+      row < game.core.map.length &&
       col >= 0 &&
-      col < game.map[0].length
+      col < game.core.map[0].length
     ) {
-      return game.map[row][col];
+      return game.core.map[row][col];
     }
     return null;
   }
@@ -101,16 +104,16 @@ class Player {
     }
 
     const collides =
-      gameConfig.global.blocker.includes(this.getTileAt(x, topY)) ||
-      gameConfig.global.blocker.includes(
+      config.global.blocker.includes(this.getTileAt(x, topY)) ||
+      config.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, topY)
       ) ||
-      gameConfig.global.blocker.includes(this.getTileAt(x, middleY)) ||
-      gameConfig.global.blocker.includes(
+      config.global.blocker.includes(this.getTileAt(x, middleY)) ||
+      config.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, middleY)
       ) ||
-      gameConfig.global.blocker.includes(this.getTileAt(x, bottomY)) ||
-      gameConfig.global.blocker.includes(
+      config.global.blocker.includes(this.getTileAt(x, bottomY)) ||
+      config.global.blocker.includes(
         this.getTileAt(x + this.playerWidth - 1, bottomY)
       );
 
@@ -120,13 +123,13 @@ class Player {
   isNearItem(item, range = 20) {
     return (
       this.playerPosX <
-        item.position.x * gameConfig.global.tileSize + item.width + range &&
+        item.position.x * config.global.tileSize + item.width + range &&
       this.playerPosX + this.playerWidth >
-        item.position.x * gameConfig.global.tileSize - range &&
+        item.position.x * config.global.tileSize - range &&
       this.playerPosY <
-        item.position.y * gameConfig.global.tileSize + item.height + range &&
+        item.position.y * config.global.tileSize + item.height + range &&
       this.playerPosY + this.playerHeight >
-        item.position.y * gameConfig.global.tileSize - range
+        item.position.y * config.global.tileSize - range
     );
   }
 
@@ -139,7 +142,7 @@ class Player {
 
     let currentNearItems = [];
     try {
-      currentNearItems = mapItems.filter((item) => {
+      currentNearItems = game.core.mapItems.filter((item) => {
         if (!item.collected) return this.isNearItem(item);
       });
     } catch (error) {
@@ -192,7 +195,7 @@ class Player {
 
   dropItem(item) {
     if (item?.name) {
-      spawnedItems.setItems(item);
+      game.map.itemsOnFloor.setItems(item);
       let newInventory = this.inventory.filter(
         (invItem) => invItem.name !== item.name
       );
@@ -207,11 +210,6 @@ class Player {
       newCharacters.push(oldCharacters);
       localStorage.setItem("characters", JSON.stringify(newCharacters));
       this.inventory = newInventory;
-      playerInventory = Object.fromEntries(
-        Object.entries(playerInventory).filter(
-          ([key, value]) => value !== item.name
-        )
-      );
       this.loadInventory();
     }
   }
@@ -264,8 +262,8 @@ class Player {
         this.onGround = true;
         this.playerFall = 0;
         nextY =
-          Math.floor((nextY + this.playerHeight) / this.tileSize) *
-            this.tileSize -
+          Math.floor((nextY + this.playerHeight) / game.core.tileSize) *
+            game.core.tileSize -
           this.playerHeight;
       } else {
         this.onGround = false;
@@ -274,7 +272,7 @@ class Player {
       const collision = this.isColliding(nextX, nextY);
       if (collision.collides) {
         this.playerFall = 0;
-        nextY = Math.ceil(nextY / this.tileSize) * this.tileSize;
+        nextY = Math.ceil(nextY / game.core.tileSize) * game.core.tileSize;
       }
     }
 

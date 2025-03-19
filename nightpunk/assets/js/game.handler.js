@@ -1,5 +1,5 @@
 async function initiateGameCanvas(playerId) {
-  SCREENS.GAME.innerHTML = `
+  screens.game.innerHTML = `
     <div id="game-screen-box">
       <div id="game-screen-hud">
         <div id="game-screen-hud-health">
@@ -27,65 +27,72 @@ async function initiateGameCanvas(playerId) {
   initializeInteractionSystem();
   setupInventoryControls();
   initParallaxBackground();
-  healtBar = document.querySelector("#game-screen-hud-health-bar");
-  helpNotify = document.querySelector("#game-screen-helpnotify");
-  playerInventory.slot1.element = document.querySelector(
+  game.ui.healthBar = document.querySelector("#game-screen-hud-health-bar");
+  game.ui.helpNotify = document.querySelector("#game-screen-helpnotify");
+  game.ui.inventory;
+  game.ui.inventory.slot1 = document.querySelector(
     "#game-screen-inventory-slot-1"
   );
-  playerInventory.slot2.element = document.querySelector(
+  game.ui.inventory.slot2 = document.querySelector(
     "#game-screen-inventory-slot-2"
   );
-  playerInventory.slot3.element = document.querySelector(
+  game.ui.inventory.slot3 = document.querySelector(
     "#game-screen-inventory-slot-3"
   );
-  playerInventory.slot4.element = document.querySelector(
+  game.ui.inventory.slot4 = document.querySelector(
     "#game-screen-inventory-slot-4"
   );
-  gameScreenBox.style.width = gameConfig.global.width + "px";
-  gameScreenBox.style.height = gameConfig.global.height + "px";
-  canvas = document.querySelector("#game-screen-canvas");
-  canvas.style.backgroundColor = "#333";
-  ctx = canvas.getContext("2d");
-  canvas.width = gameConfig.global.width;
-  canvas.height = gameConfig.global.height;
-  canvas.style.objectFit = "contain";
+  gameScreenBox.style.width = config.global.width + "px";
+  gameScreenBox.style.height = config.global.height + "px";
+  game.canvas.main = document.querySelector("#game-screen-canvas");
+  game.canvas.main.style.backgroundColor = "#333";
+  game.canvas.mainCtx = game.canvas.main.getContext("2d");
+  game.canvas.main.width = config.global.width;
+  game.canvas.main.height = config.global.height;
+  game.canvas.main.style.objectFit = "contain";
 
-  game = new Game();
-  await loadMap(game.map, game.tileSize);
-  player = new Player(50, 300, 50, 80, playerId);
-  player.initialize();
-  healtBar.style.width = player.playerHealth + "%";
-  console.log(player.playerPosX, player.playerPosY);
-  for (let item of game.mapItems) {
+  game.core = new Game();
+  await loadMap(game.core.map, game.core.tileSize);
+  game.player = new Player(50, 300, 50, 80, playerId);
+  game.player.initialize();
+  game.ui.healthBar.style.width = game.player.playerHealth + "%";
+  console.log(game.player.playerPosX, game.player.playerPosY);
+  for (let item of game.core.mapItems) {
     item.collected = false;
-    mapItems.push(item);
   }
-
-  spawnedItems = new Items(mapItems);
-  spawnedItems.initialize();
+  game.map.itemsOnFloor = new Items(game.core.mapItems);
+  game.map.itemsOnFloor.initialize();
 
   // Initialize camera
-  camera = {
+  game.camera = {
     x: 0,
     y: 0,
-    width: canvas.width,
-    height: canvas.height,
+    width: game.canvas.main.width,
+    height: game.canvas.main.height,
     update: function (playerX, playerY) {
       // Center the camera on the player
-      this.x = playerX - this.width / 2 + player.playerWidth / 2;
-      this.y = playerY - this.height / 2 + player.playerHeight / 2;
+      this.previousX = this.x;
+
+      this.x = playerX - this.width / 2 + game.player.playerWidth / 2;
+      this.y = playerY - this.height / 2 + game.player.playerHeight / 2;
 
       // Constrain camera to map boundaries
       this.x = Math.max(
         0,
-        Math.min(this.x, game.map[0].length * game.tileSize - this.width)
+        Math.min(
+          this.x,
+          game.core.map[0].length * game.core.tileSize - this.width
+        )
       );
       this.y = Math.max(
         0,
-        Math.min(this.y, game.map.length * game.tileSize - this.height)
+        Math.min(
+          this.y,
+          game.core.map.length * game.core.tileSize - this.height
+        )
       );
       // Parallax-Effekt - Aktualisiere basierend auf der Kamera-Position
-      updateParallaxOffset(this.x);
+      updateParallaxOffset(this.x, this.previousX);
     },
   };
 
@@ -95,20 +102,20 @@ async function initiateGameCanvas(playerId) {
 
 function handleKeyDown(e) {
   switch (e.key) {
-    case gameSettings.controls.walkRight:
-      controls.right = true;
+    case settings.controls.walkRight:
+      game.player.controls.right = true;
       break;
-    case gameSettings.controls.walkLeft:
-      controls.left = true;
+    case settings.controls.walkLeft:
+      game.player.controls.left = true;
       break;
-    case gameSettings.controls.jump:
-      controls.up = true;
+    case settings.controls.jump:
+      game.player.controls.up = true;
       break;
     case "Escape":
       handlePauseMenu();
       break;
     case "h":
-      player.updateHealth("remove", 50);
+      game.player.updateHealth("remove", 50);
       break;
     case "p":
       handlePauseMenu();
@@ -118,62 +125,60 @@ function handleKeyDown(e) {
 
 function handlePauseMenu() {
   listenToControls(false);
-  isInPause = true;
+  game.paused = true;
 
   if (document.querySelector("#pause-menu")?.id === "pause-menu") {
-    SCREENS.GAME.removeChild(document.querySelector("#pause-menu"));
+    screens.game.removeChild(document.querySelector("#pause-menu"));
   }
   const pauseMenu = document.createElement("div");
   pauseMenu.setAttribute("id", "pause-menu");
   pauseMenu.innerHTML = `
-    <h1>${locales[gameSettings.language].pauseMenuTitle}</h1>
+    <h1>${locales[settings.language].pauseMenuTitle}</h1>
     <button id="resume">${
-      locales[gameSettings.language].pauseMenuResumeButton
+      locales[settings.language].pauseMenuResumeButton
     }</button>
     <button id="settings">${
-      locales[gameSettings.language].pauseMenuSettingsButton
+      locales[settings.language].pauseMenuSettingsButton
     }</button>
-    <button id="quit">${
-      locales[gameSettings.language].pauseMenuQuitButton
-    }</button>
+    <button id="quit">${locales[settings.language].pauseMenuQuitButton}</button>
   `;
 
-  SCREENS.GAME.appendChild(pauseMenu);
+  screens.game.appendChild(pauseMenu);
 
   const resumeButton = pauseMenu.querySelector("#resume");
   resumeButton.addEventListener("click", () => {
-    SCREENS.GAME.removeChild(pauseMenu);
+    screens.game.removeChild(pauseMenu);
     listenToControls(true);
-    isInPause = false;
+    game.paused = false;
   });
 
   const settingsButton = pauseMenu.querySelector("#settings");
   settingsButton.addEventListener("click", () => {
     pauseMenu.innerHTML = "";
-    SCREENS.SETTINGS = document.createElement("div");
-    SCREENS.SETTINGS.setAttribute("id", "settings");
-    pauseMenu.appendChild(SCREENS.SETTINGS);
+    screens.settings = document.createElement("div");
+    screens.settings.setAttribute("id", "settings");
+    pauseMenu.appendChild(screens.settings);
     Settings_Handler();
   });
 
   const quitButton = pauseMenu.querySelector("#quit");
   quitButton.addEventListener("click", async () => {
     await ChangeScreen("main-menu");
-    SCREENS.GAME.innerHTML = "";
-    isInPause = false;
+    screens.game.innerHTML = "";
+    game.paused = false;
   });
 }
 
 function handleKeyUp(e) {
   switch (e.key) {
-    case gameSettings.controls.walkRight:
-      controls.right = false;
+    case settings.controls.walkRight:
+      game.player.controls.right = false;
       break;
-    case gameSettings.controls.walkLeft:
-      controls.left = false;
+    case settings.controls.walkLeft:
+      game.player.controls.left = false;
       break;
-    case gameSettings.controls.jump:
-      controls.up = false;
+    case settings.controls.jump:
+      game.player.controls.up = false;
       break;
   }
 }
@@ -197,44 +202,49 @@ function startGameLoop(currentTime) {
   requestAnimationFrame(startGameLoop);
   const deltaTime = currentTime - lastTime;
 
-  if (deltaTime >= frameDuration && !isInPause) {
+  if (deltaTime >= frameDuration && !game.paused) {
     lastTime = currentTime - (deltaTime % frameDuration);
 
-    ctx.clearRect(0, 0, gameConfig.global.width, gameConfig.global.height);
+    game.canvas.mainCtx.clearRect(
+      0,
+      0,
+      config.global.width,
+      config.global.height
+    );
 
     // Update camera position
-    camera.update(player.playerPosX, player.playerPosY);
+    game.camera.update(game.player.playerPosX, game.player.playerPosY);
 
     updateParallaxLayers();
     drawParallaxLayers();
 
     // Draw background with camera offset
-    ctx.save();
-    ctx.translate(-camera.x, -camera.y);
-    ctx.drawImage(bgCanvas, 0, 0);
+    game.canvas.mainCtx.save();
+    game.canvas.mainCtx.translate(-game.camera.x, -game.camera.y);
+    game.canvas.mainCtx.drawImage(game.canvas.bg, 0, 0);
 
-    player.move(controls);
-    player.update();
-    spawnedItems.update();
-    ctx.restore();
+    game.player.move(game.player.controls);
+    game.player.update();
+    game.map.itemsOnFloor.update();
+    game.canvas.mainCtx.restore();
   }
 }
 
 function loadMap(map, size) {
   return new Promise((resolve, reject) => {
-    bgCanvas = document.createElement("canvas");
-    bgCanvas.width = map[0].length * size; // Total map width
-    bgCanvas.height = map.length * size; // Total map height
-    bgCtx = bgCanvas.getContext("2d");
+    game.canvas.bg = document.createElement("canvas");
+    game.canvas.bg.width = map[0].length * size; // Total map width
+    game.canvas.bg.height = map.length * size; // Total map height
+    game.canvas.bgCtx = game.canvas.bg.getContext("2d");
 
     for (let row = 0; row < map.length; row++) {
       for (let col = 0; col < map[row].length; col++) {
-        let pos = gameConfig.global.tiles.indexOf(map[row].charAt(col));
+        let pos = config.global.tiles.indexOf(map[row].charAt(col));
 
         if (pos >= 0) {
           // if (
-          //   gameConfig.global.tiles[pos] === "G" ||
-          //   gameConfig.global.tiles[pos] === "H"
+          //   config.global.tiles[pos] === "G" ||
+          //   config.global.tiles[pos] === "H"
           // ) {
           //   bgCtx.shadowColor = "red";
           //   bgCtx.shadowOffsetX = 0;
@@ -244,16 +254,16 @@ function loadMap(map, size) {
           //   bgCtx.shadowColor = "transparent";
           // }
 
-          bgCtx.drawImage(
-            tileset,
-            game.tileSize * pos,
+          game.canvas.bgCtx.drawImage(
+            game.map.tileset,
+            game.core.tileSize * pos,
             0,
-            game.tileSize,
-            game.tileSize,
-            game.tileSize * col,
-            game.tileSize * row,
-            game.tileSize,
-            game.tileSize
+            game.core.tileSize,
+            game.core.tileSize,
+            game.core.tileSize * col,
+            game.core.tileSize * row,
+            game.core.tileSize,
+            game.core.tileSize
           );
         }
       }

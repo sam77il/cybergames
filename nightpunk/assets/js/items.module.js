@@ -16,11 +16,12 @@ class Items {
       width: 50,
       position: {
         x: Math.floor(
-          (player.playerPosX + player.playerWidth) / gameConfig.global.tileSize
+          (game.player.playerPosX + game.player.playerWidth) /
+            config.global.tileSize
         ),
         y: Math.floor(
-          (player.playerPosY + player.playerHeight) /
-            gameConfig.global.tileSize -
+          (game.player.playerPosY + game.player.playerHeight) /
+            config.global.tileSize -
             1
         ),
       },
@@ -30,15 +31,15 @@ class Items {
   update() {
     for (let item of this.items) {
       if (!item.collected) {
-        ctx.fillStyle = "red";
-        ctx.fillRect(
-          item.position.x * gameConfig.global.tileSize,
-          item.position.y * gameConfig.global.tileSize,
+        game.canvas.mainCtx.fillStyle = "red";
+        game.canvas.mainCtx.fillRect(
+          item.position.x * config.global.tileSize,
+          item.position.y * config.global.tileSize,
           item.width,
           item.height
         );
       }
     }
-    player.isCollidingWithItem();
+    game.player.isCollidingWithItem();
   }
 }

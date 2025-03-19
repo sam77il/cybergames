@@ -68,33 +68,46 @@ function handleInventoryNavigation(event) {
 function handleDropInventoryItem() {
   if (
     gameState.selectedInventoryItemSlot > 0 &&
-    playerInventory["slot" + gameState.selectedInventoryItemSlot].data?.name
+    game.player.inventory.find(
+      (item) => item.slot === gameState.selectedInventoryItemSlot
+    )?.name
   ) {
     console.log(
       "Dropping Item: " +
-        playerInventory["slot" + gameState.selectedInventoryItemSlot].data?.name
+        game.player.inventory.find(
+          (item) => item.slot === gameState.selectedInventoryItemSlot
+        )?.name
     );
-    player.dropItem(
-      playerInventory["slot" + gameState.selectedInventoryItemSlot].data
+    game.player.dropItem(
+      game.player.inventory.find(
+        (item) => item.slot === gameState.selectedInventoryItemSlot
+      )
     );
   }
 }
 
 function renderInventoryItemSelection() {
-  if (!playerInventory["slot" + gameState.selectedInventoryItemSlot].data?.name)
+  if (
+    !game.player.inventory.find(
+      (item) => item.slot === gameState.selectedInventoryItemSlot
+    )?.name
+  ) {
     return;
+  }
 
   let inventorySlots = document.querySelectorAll(".game-screen-inventory-slot");
 
   inventorySlots.forEach((el) => {
     el.style.backgroundColor = "#266881";
   });
-
-  playerInventory[
+  console.log(game.ui.inventory);
+  game.ui.inventory[
     "slot" + gameState.selectedInventoryItemSlot
-  ].element.style.backgroundColor = "#43c0ee";
+  ].style.backgroundColor = "#43c0ee";
   console.log(
-    playerInventory["slot" + gameState.selectedInventoryItemSlot].data.name
+    game.player.inventory.find(
+      (item) => item.slot === gameState.selectedInventoryItemSlot
+    ).name
   );
 }
 
@@ -119,7 +132,7 @@ function handleKeyNavigation(event) {
       if (gameState.nearItems.length > 0) {
         const selectedItem = gameState.nearItems[gameState.selectedItemIndex];
         selectedItem.collected = true;
-        player.addInventoryItem(selectedItem);
+        game.player.addInventoryItem(selectedItem);
         console.log(`Du hast aktiviert: ${selectedItem.name}`);
       }
       break;
