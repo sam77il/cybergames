@@ -1,4 +1,4 @@
-async function initPlayArea(playerId) {
+async function initiateGameCanvas(playerId) {
   SCREENS.GAME.innerHTML = `
     <div id="game-screen-box">
       <div id="game-screen-hud">
@@ -26,7 +26,6 @@ async function initPlayArea(playerId) {
   let gameScreenBox = document.querySelector("#game-screen-box");
   initializeInteractionSystem();
   setupInventoryControls();
-  //Parallax-System
   initParallaxBackground();
   healtBar = document.querySelector("#game-screen-hud-health-bar");
   helpNotify = document.querySelector("#game-screen-helpnotify");
@@ -126,16 +125,6 @@ function handlePauseMenu() {
   }
   const pauseMenu = document.createElement("div");
   pauseMenu.setAttribute("id", "pause-menu");
-  pauseMenu.style.position = "absolute";
-  pauseMenu.style.top = "50%";
-  pauseMenu.style.left = "50%";
-  pauseMenu.style.transform = "translate(-50%, -50%)";
-  pauseMenu.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-  pauseMenu.style.color = "#fff";
-  pauseMenu.style.padding = "20px";
-  pauseMenu.style.borderRadius = "10px";
-  pauseMenu.style.zIndex = "2";
-  pauseMenu.style.textAlign = "center";
   pauseMenu.innerHTML = `
     <h1>${locales[gameSettings.language].pauseMenuTitle}</h1>
     <button id="resume">${

@@ -1,5 +1,3 @@
-let CHARACTERS_LIST = null;
-
 function CharacterSelection_Handler() {
   SCREENS.CHARACTER_SELECTION.innerHTML = `
     <button id="character-selection-createchar" type="button">${
@@ -16,6 +14,7 @@ function CharacterSelection_Handler() {
   let CHARACTER_SELECTION_BACK = document.querySelector(
     "#character-selection-back"
   );
+
   CHARACTERS_LIST = document.querySelector("#characters-list");
   CHARACTER_SELECTION_BACK.addEventListener("click", async () => {
     await ChangeScreen("main-menu");
@@ -74,7 +73,7 @@ function CharacterItem({ name, type, level, coins, id }) {
 
 async function StartGame(event) {
   await ChangeScreen("game-screen");
-  initPlayArea(event.target.dataset.id);
+  initiateGameCanvas(event.target.dataset.id);
 }
 
 function handleDeleteCharacter(e) {

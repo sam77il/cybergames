@@ -29,6 +29,8 @@ let displayedItemIds = [];
 let selectedItemIndex = 0;
 let keyListenersAdded = false;
 let gameConfig = {};
+let CHARACTERS_LIST = null;
+
 let playerInventory = {
   slot1: {
     data: {},
@@ -106,7 +108,6 @@ async function initializeGame() {
     } else {
       ChangeScreen("title-screen");
     }
-    // StartGame();
   }
 }
 
