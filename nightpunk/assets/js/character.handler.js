@@ -2,13 +2,17 @@ let CHARACTERS_LIST = null;
 
 function CharacterSelection_Handler() {
   screens.character_selection.innerHTML = `
-    <button id="character-selection-createchar" type="button">${
-      locales[settings.language].characterSelectionCreateCharButton
-    }</button>
-    <button id="character-selection-back" type="button">${
-      locales[settings.language].characterSelectionBackButton
-    }</button>
-    <div id="characters-list"></div>
+    <div class="menus-background"></div>
+    <div class="menus-content">
+      <h2 class="characters-selection-title">Characters</h2>
+
+      <div id="characters-list"></div>
+
+      <div class="character-selection-actions">
+        <img class="img-btn" id="character-selection-createchar" src="./assets/img/de_imgs/Neuer_charakter_Bttn.png">
+        <img class="img-btn" id="character-selection-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+      </div>
+    </div>
   `;
   let CHARACTER_SELECTION_CREATECHAR = document.querySelector(
     "#character-selection-createchar"
@@ -56,19 +60,23 @@ function InitiateCharacters() {
 
 function CharacterItem({ name, type, level, coins, id }) {
   CHARACTERS_LIST.innerHTML += `
-    <div>
-      <p>${locales[settings.language].characterSelectionName}: ${name}</p>
-      <p>${locales[settings.language].characterSelectionType}: ${
-    type || "Normalo"
-  }</p>
-      <p>${locales[settings.language].characterSelectionLevel}: ${level}</p>
-      <p>${locales[settings.language].characterSelectionCoins}: ${coins}</p>
-      <button class="character-selection-start" data-id="${id}">${
-    locales[settings.language].characterSelectionPlayButton
-  } ${name}</button>
-      <button class="character-selection-delete" data-id="${id}">${
-    locales[settings.language].characterSelectionDeleteButton
-  }</button>
+    <div class="character-selection-item">
+      <p>${
+        locales[settings.language].characterSelectionName
+      }: <b>${name}</b></p>
+      <p>${
+        locales[settings.language].characterSelectionType
+      }: <b>${type}</b></p>
+      <p>${
+        locales[settings.language].characterSelectionLevel
+      }: <b>${level}</b></p>
+      <p>${
+        locales[settings.language].characterSelectionCoins
+      }: <b>${coins}</b></p>
+      <div class="character-selection-item-actions">
+        <img class="character-selection-start img-btn small-btn" src="./assets/img/de_imgs/Spielen_Bttn.png" data-id="${id}">
+        <img class="character-selection-delete img-btn small-btn" src="./assets/img/de_imgs/Loeschen_Bttn.png" data-id="${id}">
+      </div>
     </div>
   `;
 }
@@ -78,14 +86,14 @@ async function StartGame(event) {
   initiateGameCanvas(event.target.dataset.id);
 }
 
-function handleDeleteCharacter(e) {
+function handleDeleteCharacter(event) {
   const oldCharacters = JSON.parse(localStorage.getItem("characters"));
   const newCharacters = oldCharacters.filter(
-    (character) => Number(character.id) !== Number(e.target.dataset.id)
+    (character) => Number(character.id) !== Number(event.target.dataset.id)
   );
 
   localStorage.setItem("characters", JSON.stringify(newCharacters));
-  e.target.parentElement.remove();
+  event.target.parentElement.parentElement.remove();
 }
 
 async function CharacterCreation_Handler() {
@@ -98,45 +106,58 @@ async function CharacterCreation_Handler() {
   }
 
   screens.character_creation.innerHTML = `
-        <h2>${locales[settings.language].characterCreationTitle}</h2>
-        <form id="character-creation-form">
+    <div class="menus-background"></div>
+    <div class="menus-content">
+      <h2 class="characters-selection-title">${
+        locales[settings.language].characterCreationTitle
+      }</h2>
+    
+      <form id="character-creation-form">
+        <div class="character-creation-form-content">
+          <div>
             <label for="character-creation-form-name">${
               locales[settings.language].characterCreationName
             }: </label>
             <input id="character-creation-form-name" type="text" placeholder="${
               locales[settings.language].characterCreationName
             }..." name="name" required />
-            <br>
-            <p>${locales[settings.language].characterCreationType}: </p>
+          </div>
+          
+          <p>${locales[settings.language].characterCreationType}: </p>
+          <div>
             <input type="radio" id="character-creation-form-type-punk" name="type" value="${
               locales[settings.language].characterCreationTypePunk
             }" required>
             <label for="character-creation-form-type-punk">${
               locales[settings.language].characterCreationTypePunk
             } </label>
-            <br />
+          </div>
+          <div>
             <input type="radio" id="character-creation-form-type-net" name="type" value="${
               locales[settings.language].characterCreationTypeNet
             }" required>
             <label for="character-creation-form-type-net">${
               locales[settings.language].characterCreationTypeNet
             } </label>
-            <br />
+          </div>
+          <div>
             <input type="radio" id="character-creation-form-type-psycho" name="type" value="${
               locales[settings.language].characterCreationTypePsycho
             }" required>
             <label for="character-creation-form-type-psycho">${
               locales[settings.language].characterCreationTypePsycho
             } </label>
-            <br />
-            <button type="submit">${
-              locales[settings.language].characterCreationSubmitButton
-            }</button>
-            <button id="character-creation-form-back" type="button">${
-              locales[settings.language].characterCreationBackButton
-            }</button>
-        </form>
-      `;
+          </div>
+        </div>
+        
+        <div class="character-creation-actions">
+          <button type="submit"><img class="img-btn" src="./assets/img/de_imgs/Erstellen_Bttn.png"></button>
+          <img id="character-creation-form-back" class="img-btn" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+        </div>
+      </form>
+    </div>
+  `;
+
   const CHARACTER_CREATION_FORM_BACK = document.querySelector(
     "#character-creation-form-back"
   );

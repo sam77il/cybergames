@@ -24,9 +24,9 @@ async function MainMenu_Handler() {
     <div class="menus-content">
       <img class="menus-logo small" src="./assets/img/logo_game.png">
       <ul class="main-menu-selection">
-          <li><img class="main-menu-btn" id="main-menu-start" src="./assets/img/de_imgs/Start_Bttn.png"></li>
-          <li><img class="main-menu-btn" id="main-menu-settings" src="./assets/img/de_imgs/Einstellungen_Bttn.png"></li>
-          <li><img class="main-menu-btn" id="main-menu-quit" src="./assets/img/de_imgs/Verlassen_Bttn.png"></li>
+          <li><img class="img-btn" id="main-menu-start" src="./assets/img/de_imgs/Start_Bttn.png"></li>
+          <li><img class="img-btn" id="main-menu-settings" src="./assets/img/de_imgs/Einstellungen_Bttn.png"></li>
+          <li><img class="img-btn" id="main-menu-quit" src="./assets/img/de_imgs/Verlassen_Bttn.png"></li>
       </ul>
     </div>
   `;

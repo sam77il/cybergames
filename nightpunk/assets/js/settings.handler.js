@@ -15,19 +15,19 @@ function Settings_Handler() {
           ${
             game.paused
               ? ""
-              : `<li><img class="settings-menu-btn small-btn" id="settings-language" src="./assets/img/de_imgs/Sprache_bttn.png"></li>`
+              : `<li><img class="img-btn small-btn" id="settings-language" src="./assets/img/de_imgs/Sprache_bttn.png"></li>`
           }
       
-          <li><img class="settings-menu-btn small-btn" id="settings-sound" src="./assets/img/de_imgs/Audio_Bttn.png"></li>
-          <li><img class="settings-menu-btn small-btn" id="settings-controls" src="./assets/img/de_imgs/Steuerung_Bttn.png"></li>
+          <li><img class="img-btn small-btn" id="settings-sound" src="./assets/img/de_imgs/Audio_Bttn.png"></li>
+          <li><img class="img-btn small-btn" id="settings-controls" src="./assets/img/de_imgs/Steuerung_Bttn.png"></li>
         </ul>
       </div>
 
       <div id="settings-content"></div>
       
       <div class="settings-menu-footer">
-        <img class="settings-menu-btn small-btn" id="settings-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
-        <img id="settings-save" class="settings-menu-btn small-btn" src="./assets/img/de_imgs/Speichern_Bttn.png">
+        <img class="img-btn small-btn" id="settings-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+        <img id="settings-save" class="img-btn small-btn" src="./assets/img/de_imgs/Speichern_Bttn.png">
       </div>
     </div>
   `;
@@ -75,6 +75,7 @@ function ChangeSettingsScreen(screen) {
     case "language":
       settingsMenu.content.innerHTML = `
         <h3>${locales[settings.language].settingsLanguageTitle}</h3>
+
         <div class="select-container">
           <select>
             <option value="de">${
@@ -116,18 +117,28 @@ function ChangeSettingsScreen(screen) {
       settingsMenu.content.innerHTML = `
         <h3>${locales[settings.language].settingsSoundTitle}</h3>
         
-        <input type="range" id="sound-volume" min="0" step="5" max="100" value="${
-          settings.sound.volume
-        }">
-        <label for="sound-volume">${
-          locales[settings.language].settingsSoundVolume
-        } <span id="sound-volume-text">${settings.sound.volume}</span>%</label>
-        <input type="range" id="sound-music" min="0" step="5" max="100" value="${
-          settings.sound.music
-        }">
-        <label for="sound-music">${
-          locales[settings.language].settingsMusicVolume
-        } <span id="sound-music-text">${settings.sound.music}</span>%</label>
+        <div class="settings-sound-container">
+          <div>
+            <input type="range" id="sound-volume" min="0" step="5" max="100" value="${
+              settings.sound.volume
+            }">
+            <label for="sound-volume">${
+              locales[settings.language].settingsSoundVolume
+            } <span id="sound-volume-text">${
+        settings.sound.volume
+      }</span>%</label>
+          </div>
+          <div>
+            <input type="range" id="sound-music" min="0" step="5" max="100" value="${
+              settings.sound.music
+            }">
+            <label for="sound-music">${
+              locales[settings.language].settingsMusicVolume
+            } <span id="sound-music-text">${
+        settings.sound.music
+      }</span>%</label>
+          </div>
+        </div>
       `;
 
       setTimeout(() => {
