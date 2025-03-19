@@ -1,7 +1,12 @@
 async function TitleScreen_Handler() {
   screens.title.innerHTML = `
-    <h1>${locales[settings.language].gameName}</h1>
-    <p>${locales[settings.language].titleScreenMessage}</p>
+    <div class="menus-background"></div>
+    <div class="menus-content">
+      <img class="menus-logo" src="./assets/img/logo_game.png">
+      <p class="title-screen-text">${
+        locales[settings.language].titleScreenMessage
+      }</p>
+    </div>
   `;
   window.addEventListener("keyup", TitleScreen_Event);
 }
@@ -15,20 +20,16 @@ function TitleScreen_Event(e) {
 
 async function MainMenu_Handler() {
   screens.main.innerHTML = `
-      <h1>${locales[settings.language].gameName}</h1>
-  
-      <ul>
-          <li><button id="main-menu-start" type="button">${
-            locales[settings.language].mainMenuStartButton
-          }</button></li>
-          <li><button id="main-menu-settings" type="button">${
-            locales[settings.language].mainMenuSettingsButton
-          }</button></li>
-          <li><button id="main-menu-quit" type="button">${
-            locales[settings.language].mainMenuQuitButton
-          }</button></li>
+    <div class="menus-background"></div>
+    <div class="menus-content">
+      <img class="menus-logo small" src="./assets/img/logo_game.png">
+      <ul class="main-menu-selection">
+          <li><img class="main-menu-btn" id="main-menu-start" src="./assets/img/de_imgs/Start_Bttn.png"></li>
+          <li><img class="main-menu-btn" id="main-menu-settings" src="./assets/img/de_imgs/Einstellungen_Bttn.png"></li>
+          <li><img class="main-menu-btn" id="main-menu-quit" src="./assets/img/de_imgs/Verlassen_Bttn.png"></li>
       </ul>
-    `;
+    </div>
+  `;
   const MAIN_QUIT = document.querySelector("#main-menu-quit");
   const MAIN_START = document.querySelector("#main-menu-start");
   const MAIN_SETTINGS = document.querySelector("#main-menu-settings");

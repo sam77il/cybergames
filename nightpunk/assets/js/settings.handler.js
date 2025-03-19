@@ -3,32 +3,25 @@ let SETTINGS_TAB = null;
 
 function Settings_Handler() {
   screens.settings.innerHTML = `
-      ${game.paused ? "" : `<h1>Nightpunk</h1>`}
+    <div class="menus-background"></div>
+    <div class="menus-content">
       <h2>${locales[settings.language].settingsTitle}</h2>
-      <hr>
-      <br>
-      <ul style="display: flex; flex-direction: row; justify-content: space-around;">
-          <li><button id="settings-back" type="button">${
-            locales[settings.language].settingsBackButton
-          }</button></li>
+
+      <ul>
+          <li><img class="settings-menu-btn" id="settings-back" src="./assets/img/de_imgs/Zurueck_Bttn.png"></li>
           ${
             game.paused
               ? ""
-              : `<li><button id="settings-language" type="button">${
-                  locales[settings.language].settingsLanguageButton
-                }</button></li>`
+              : `<li><img class="settings-menu-btn" id="settings-language" src="./assets/img/de_imgs/Sprache_bttn.png"></li>`
           }
           
-          <li><button id="settings-sound" type="button">${
-            locales[settings.language].settingsSoundButton
-          }</button></li>
-          <li><button id="settings-controls" type="button">${
-            locales[settings.language].settingsControlsButton
-          }</button></li>
+          <li><img class="settings-menu-btn" id="settings-sound" src="./assets/img/de_imgs/Audio_Bttn.png"></li>
+          <li><img class="settings-menu-btn" id="settings-controls" src="./assets/img/de_imgs/Steuerung_Bttn.png"></li>
       </ul>
 
       <div id="settings-content"></div>
-    `;
+    </div>
+  `;
   SETTINGS_CONTENT = document.querySelector("#settings-content");
 
   const SETTINGS_BACK = document.querySelector("#settings-back");
@@ -148,9 +141,7 @@ function ChangeSettingsScreen(screen) {
   }
 
   SETTINGS_CONTENT.innerHTML += `
-      <button id="settings-save" type="button">${
-        locales[settings.language].settingsSaveButton
-      }</button>
+      <img id="settings-save" class="settings-menu-btn" src="./assets/img/de_imgs/Speichern_Bttn.png">
     `;
 
   const SETTINGS_SAVE = document.querySelector("#settings-save");
