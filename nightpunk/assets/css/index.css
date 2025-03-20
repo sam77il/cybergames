@@ -334,6 +334,7 @@ select option:hover {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  opacity: 0.7;
 }
 
 #game-screen-hud-health {
@@ -381,7 +382,7 @@ select option:hover {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .game-screen-inventory-slot {
@@ -404,6 +405,7 @@ select option:hover {
   right: 5px;
   top: 5px;
   font-size: 0.8rem;
+  color: white;
 }
 
 #perks {
@@ -448,4 +450,48 @@ select option:hover {
 
 ::-webkit-scrollbar {
   width: 0;
+}
+
+#notifys {
+  position: absolute;
+  right: 50px;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 250px;
+}
+
+.notify {
+  background-color: rgba(36, 36, 36, 0.8);
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  min-width: 250px;
+  max-width: 250px;
+}
+
+.notify-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.notify-icon i {
+  font-size: 2rem;
+}
+
+.notify-header {
+  font-weight: 900;
+}
+
+.notify-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: white;
+  font-weight: 300;
 }

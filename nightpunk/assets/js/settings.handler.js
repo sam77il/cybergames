@@ -77,7 +77,7 @@ function ChangeSettingsScreen(screen) {
         <h3>${locales[settings.language].settingsLanguageTitle}</h3>
 
         <div class="select-container">
-          <select>
+          <select id="settings-tab-language">
             <option value="de">${
               locales[settings.language].settingsLanguageGerman
             }</option>
@@ -196,11 +196,12 @@ async function SaveSettings() {
     settings.sound.volume = soundVolume;
   }
 
-  console.log("Saved");
+  Notify("Settings", "Einstellungen erfolgreich gespeichert", "success", 3000);
   localStorage.setItem("settings", JSON.stringify(settings));
 
   if (!game.paused) {
     await ChangeScreen("settings");
+    console.log(settingsMenu.tab);
     ChangeSettingsScreen(settingsMenu.tab);
   }
 }

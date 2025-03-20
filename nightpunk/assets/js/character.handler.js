@@ -95,6 +95,7 @@ function handleDeleteCharacter(event) {
 
   localStorage.setItem("characters", JSON.stringify(newCharacters));
   event.target.parentElement.parentElement.remove();
+  Notify("Charakter", "Charakter erfolgreich gelöscht", "success", 3000);
 }
 
 async function CharacterCreation_Handler() {
@@ -224,7 +225,7 @@ async function handleCreateCharacterSubmit(e) {
       },
     ];
   }
-  console.log(newCharacters);
+  Notify("Charakter", "Charakter erfolgreich erstellt", "success", 3000);
   localStorage.setItem("characters", JSON.stringify(newCharacters));
   await ChangeScreen("character-selection");
 }

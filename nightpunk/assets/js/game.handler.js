@@ -54,6 +54,8 @@ async function initiateGameCanvas(id, level) {
   game.core = new Game(level);
   await loadMap(game.core.map, game.core.tileSize);
   game.player = new Player(50, 300, 50, 80, id);
+  game.npc = new Npc(400, 550, 50, 100);
+  game.npc.initialize();
   game.player.initialize();
   game.player.updateHealth("set", 100);
   game.ui.healthBar.style.width = game.player.health + "%";
@@ -226,6 +228,7 @@ function startGameLoop(currentTime) {
     game.canvas.mainCtx.drawImage(game.canvas.bg, 0, 0);
 
     game.player.update();
+    game.npc.update();
 
     for (let enemy of game.enemies) {
       enemy.update();

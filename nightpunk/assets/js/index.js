@@ -19,6 +19,7 @@ let game = {
   },
   core: null,
   player: null,
+  npc: null,
   enemies: [],
   camera: null,
   paused: false,
@@ -78,16 +79,18 @@ async function loadLocales() {
 // Loading settings from localStorage
 async function loadSettings() {
   try {
-    const playerSettings = JSON.parse(localStorage.getItem("settings"));
+    let playerSettings = JSON.parse(localStorage.getItem("settings"));
+
     if (playerSettings) {
       settings = playerSettings;
     } else {
       playerSettings = config.defaultSettings;
       localStorage.setItem("settings", JSON.stringify(playerSettings));
+      settings = playerSettings;
     }
     console.log("Successfully loaded settings");
-  } catch {
-    console.error("Failed loading settings");
+  } catch (e) {
+    console.error("Failed loading settings", e);
   }
 }
 
@@ -100,6 +103,7 @@ async function initializeGame() {
 
   console.log("Started game");
   game.map.tileset = document.querySelector("#tileset");
+  npc = document.querySelector("#npc");
   if (config.global.dev) {
     StartGame();
   } else {
