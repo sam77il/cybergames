@@ -6,6 +6,7 @@ let screens = {
   character_creation: null,
   game: null,
   settings: null,
+  level_selection: null,
 };
 
 let game = {
@@ -18,6 +19,7 @@ let game = {
   },
   core: null,
   player: null,
+  enemies: [],
   camera: null,
   paused: false,
   map: {

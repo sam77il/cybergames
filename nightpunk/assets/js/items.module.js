@@ -1,6 +1,25 @@
 class Items {
   constructor(items) {
     this.items = items;
+    this.itemImgs = {
+      katana: new Image(),
+      mantisblade: new Image(),
+      railgun: new Image(),
+    };
+    this.loadImages();
+  }
+
+  loadImages() {
+    this.itemImgs.katana.src = "./assets/img/items/katana.png";
+    this.itemImgs.mantisblade.src = "./assets/img/items/mantisblade.png";
+    this.itemImgs.railgun.src = "./assets/img/items/railgun.png";
+
+    this.itemImgs.katana.onload =
+      this.itemImgs.mantisblade.onload =
+      this.itemImgs.railgun.onload =
+        () => {
+          this.update();
+        };
   }
 
   initialize() {
@@ -30,9 +49,15 @@ class Items {
 
   update() {
     for (let item of this.items) {
-      if (!item.collected) {
-        game.canvas.mainCtx.fillStyle = "red";
-        game.canvas.mainCtx.fillRect(
+      let characters = JSON.parse(localStorage.getItem("characters"));
+      let character = characters.find((c) => c.id === game.player.id);
+      let level = character.levels.find(
+        (l) => l.level === game.core.currentLevel
+      );
+
+      if (!item.collected && !level.itemsCollected.includes(item.id)) {
+        game.canvas.mainCtx.drawImage(
+          this.itemImgs[item.name],
           item.position.x * config.global.tileSize,
           item.position.y * config.global.tileSize,
           item.width,

@@ -8,7 +8,6 @@ function speedperk() {
       let displaied = document.getElementById("perk2");
       console.log("speedperk hat einen cooldown!");
       game.player.settings.speed = 12;
-      console.log(displaied);
       displaied.style.animation = "none";
       displaied.offsetHeight; // Reflow erzwingen
       displaied.style.opacity = "0.5";
@@ -89,11 +88,9 @@ function instakill() {
 
       if (kill === true && event.key === "x" && x) {
         setTimeout(() => {
-          console.log(kill);
           kill = false;
         }, 1); //boostzeit in millisekunden
       }
-      console.log(kill);
       x = false;
 
       setTimeout(() => {

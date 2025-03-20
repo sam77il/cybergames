@@ -1,6 +1,6 @@
 class Player {
   constructor(startPosX, startPosY, width, height, id) {
-    this.id = id;
+    this.id = Number(id);
     this.posX = startPosX;
     this.posY = startPosY;
     this.inventory = [];
@@ -43,8 +43,10 @@ class Player {
     });
 
     for (let item of this.inventory) {
+      console.log(item.name);
       game.ui.inventory["slot" + item.slot].innerHTML = `
-        ${item.name.slice(0, 1)} | ${item.amount}
+        <img src="./assets/img/items/${item.name}.png" alt="item image">
+        <p>${item.amount}</p>
       `;
     }
   }
@@ -61,6 +63,7 @@ class Player {
 
   update() {
     this.draw();
+    this.move();
   }
 
   updateHealth(type, amount) {
@@ -71,13 +74,31 @@ class Player {
     } else if (type === "remove") {
       this.health -= amount;
     }
-    console.log("New Playerhealth: " + this.health);
-    game.ui.healthBar.style.width = this.health + "%";
+    console.log("New health: " + this.health);
 
-    if (this.health <= 0) {
-      // Game Over!!!
-      game.ui.healthBar.style.width = "0%";
+    if (this.health >= 100) {
+      game.ui.healthBar.style.background =
+        "url('./assets/img/Health.png') no-repeat center";
+    } else if (this.health >= 80) {
+      game.ui.healthBar.style.background =
+        "url('./assets/img/health2.png') no-repeat center";
+    } else if (this.health >= 60) {
+      game.ui.healthBar.style.background =
+        "url('./assets/img/health3.png') no-repeat center";
+    } else if (this.health >= 40) {
+      game.ui.healthBar.style.background =
+        "url('./assets/img/health4.png') no-repeat center";
+    } else if (this.health >= 20) {
+      game.ui.healthBar.style.background =
+        "url('./assets/img/health5.png') no-repeat center";
+    } else if (this.health >= 1) {
+      game.ui.healthBar.style.background =
+        "url('./assets/img/health6.png') no-repeat center";
+    } else if (this.health <= 0) {
+      game.ui.healthBar.style.background =
+        "url('./assets/img/health7.png') no-repeat center";
     }
+    game.ui.healthBar.style.backgroundSize = "cover";
   }
 
   getTileAt(x, y) {
@@ -145,7 +166,13 @@ class Player {
     let currentNearItems = [];
     try {
       currentNearItems = game.core.mapItems.filter((item) => {
-        if (!item.collected) return this.isNearItem(item);
+        let characters = JSON.parse(localStorage.getItem("characters"));
+        let character = characters.find((c) => c.id === game.player.id);
+        let level = character.levels.find(
+          (l) => l.level === game.core.currentLevel
+        );
+        if (!item.collected && !level.itemsCollected.includes(item.id))
+          return this.isNearItem(item);
       });
     } catch (error) {
       console.error("Fehler beim Filtern der nahen Items:", error);
@@ -191,6 +218,13 @@ class Player {
       (character) => Number(character.id) !== Number(this.id)
     );
     newCharacters.push(oldCharacters);
+    console.log(
+      newCharacters
+        .find((c) => c.id === this.id)
+        .levels.find((l) => l.level === game.core.currentLevel)
+        .itemsCollected.push(newItem.id)
+    );
+    console.log(newCharacters);
     localStorage.setItem("characters", JSON.stringify(newCharacters));
     this.loadInventory();
   }
@@ -216,12 +250,12 @@ class Player {
     }
   }
 
-  move(controls) {
+  move() {
     let nextX = this.posX;
     let nextY = this.posY;
 
     // Horizontale Bewegung mit Seitenkollision
-    if (controls.left) {
+    if (this.controls.left) {
       const collision = this.isColliding(
         nextX - this.settings.speed,
         this.posY
@@ -235,7 +269,7 @@ class Player {
       }
     }
 
-    if (controls.right) {
+    if (this.controls.right) {
       const collision = this.isColliding(
         nextX + this.settings.speed,
         this.posY
@@ -249,7 +283,7 @@ class Player {
     }
 
     // Sprunglogik
-    if (this.settings.onGround && controls.up) {
+    if (this.settings.onGround && this.controls.up) {
       this.settings.onGround = false;
       this.settings.fall = -this.settings.jumpForce;
     }

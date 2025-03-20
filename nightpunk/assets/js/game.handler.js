@@ -1,4 +1,4 @@
-async function initiateGameCanvas(id) {
+async function initiateGameCanvas(id, level) {
   screens.game.innerHTML = `
     <div id="game-screen-box">
       <div id="game-screen-hud">
@@ -51,19 +51,21 @@ async function initiateGameCanvas(id) {
   game.canvas.main.height = config.global.height;
   game.canvas.main.style.objectFit = "contain";
 
-  game.core = new Game();
+  game.core = new Game(level);
   await loadMap(game.core.map, game.core.tileSize);
   game.player = new Player(50, 300, 50, 80, id);
   game.player.initialize();
+  game.player.updateHealth("set", 100);
   game.ui.healthBar.style.width = game.player.health + "%";
-  console.log(game.player.posX, game.player.posY);
+  game.enemies = [];
+  game.core.loadEnemies();
   for (let item of game.core.mapItems) {
     item.collected = false;
   }
+
   game.map.itemsOnFloor = new Items(game.core.mapItems);
   game.map.itemsOnFloor.initialize();
 
-  // Initialize camera
   game.camera = {
     x: 0,
     y: 0,
@@ -115,7 +117,7 @@ function handleKeyDown(e) {
       handlePauseMenu();
       break;
     case "h":
-      game.player.updateHealth("remove", 50);
+      game.player.updateHealth("remove", 10);
       break;
     case "p":
       handlePauseMenu();
@@ -165,7 +167,7 @@ function handlePauseMenu() {
   quitButton.addEventListener("click", async () => {
     await ChangeScreen("main-menu");
     screens.game.innerHTML = "";
-    game.paused = false;
+    game.paused = true;
   });
 }
 
@@ -223,8 +225,12 @@ function startGameLoop(currentTime) {
     game.canvas.mainCtx.translate(-game.camera.x, -game.camera.y);
     game.canvas.mainCtx.drawImage(game.canvas.bg, 0, 0);
 
-    game.player.move(game.player.controls);
     game.player.update();
+
+    for (let enemy of game.enemies) {
+      enemy.update();
+    }
+
     game.map.itemsOnFloor.update();
     game.canvas.mainCtx.restore();
   }

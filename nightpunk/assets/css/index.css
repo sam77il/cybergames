@@ -17,6 +17,18 @@ ul {
   height: 10%;
 }
 
+.level-selection-title {
+  height: 10%;
+}
+
+.level-selection-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 10%;
+}
+
 .character-selection-actions {
   display: flex;
   flex-direction: row;
@@ -154,7 +166,25 @@ ul {
   height: 80%;
 }
 
+#level-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  overflow-y: auto;
+  height: 80%;
+}
+
 .character-selection-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.level-selection-item {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -169,6 +199,12 @@ ul {
   gap: 10px;
 }
 
+.level-selection-item-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .character-selection-item-actions img {
   opacity: 0.5;
   transition: 0.2s;
@@ -178,7 +214,16 @@ ul {
   opacity: 1;
 }
 
-.small-btn {
+.level-selection-start {
+  opacity: 1;
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+}
+
+.level-selection-start-disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
   width: 200px;
   height: 40px;
 }
@@ -292,16 +337,13 @@ select option:hover {
 }
 
 #game-screen-hud-health {
-  height: 50px;
-  width: 200px;
-  background-color: #2b4955;
-  border-radius: 15px;
+  height: 57px;
+  width: 174px;
 }
 
 #game-screen-hud-health-bar {
   height: 100%;
-  background-color: #008bc2;
-  border-radius: 15px;
+  position: relative;
 }
 
 #game-screen-helpnotify {
@@ -343,13 +385,25 @@ select option:hover {
 }
 
 .game-screen-inventory-slot {
+  position: relative;
   width: 50px;
   height: 50px;
-  background-color: #266881;
+  background-image: url("../img/Inv.png");
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.game-screen-inventory-slot img {
+  height: 30px;
+}
+
+.game-screen-inventory-slot p {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 0.8rem;
 }
 
 #perks {

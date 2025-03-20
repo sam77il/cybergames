@@ -98,12 +98,12 @@ function renderInventoryItemSelection() {
   let inventorySlots = document.querySelectorAll(".game-screen-inventory-slot");
 
   inventorySlots.forEach((el) => {
-    el.style.backgroundColor = "#266881";
+    el.style.backgroundImage = 'url("./assets/img/Inv.png")';
   });
   console.log(game.ui.inventory);
   game.ui.inventory[
     "slot" + gameState.selectedInventoryItemSlot
-  ].style.backgroundColor = "#43c0ee";
+  ].style.backgroundImage = 'url("./assets/img/Inv_ausgewählt.png")';
   console.log(
     game.player.inventory.find(
       (item) => item.slot === gameState.selectedInventoryItemSlot
@@ -148,7 +148,7 @@ function renderItemSelection() {
 
   itemElements.forEach((el) => {
     el.classList.remove("selected");
-    el.style.backgroundColor = "";
+    el.style.backgroundImage = 'url("../nightpunk/assets/img/Inv.png")';
     el.style.color = "";
   });
 
@@ -158,7 +158,8 @@ function renderItemSelection() {
   ) {
     const selectedElement = itemElements[gameState.selectedItemIndex];
     selectedElement.classList.add("selected");
-    selectedElement.style.backgroundColor = "#4a89dc";
+    selectedElement.style.backgroundImage =
+      'url("../nightpunk/assets/img/Inv_ausgewählt.png")';
     selectedElement.style.color = "white";
   }
 }

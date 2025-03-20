@@ -26,7 +26,14 @@ class Enemy {
   }
 
   draw() {
-    game.canvas.mainCtx.fillStyle = "black";
+    if (this.settings.type === "bot") {
+      game.canvas.mainCtx.fillStyle = "blue";
+    } else if (this.settings.type === "mutated") {
+      game.canvas.mainCtx.fillStyle = "green";
+    } else if (this.settings.type === "cyberpsycho") {
+      game.canvas.mainCtx.fillStyle = "red";
+    }
+
     game.canvas.mainCtx.fillRect(
       this.posX,
       this.posY,
@@ -37,6 +44,7 @@ class Enemy {
 
   update() {
     this.draw();
+    this.move();
   }
 
   updateHealth(type, amount) {
@@ -98,12 +106,12 @@ class Enemy {
     return { collides: collides, type: collides ? "block" : null };
   }
 
-  move(controls) {
+  move() {
     let nextX = this.posX;
     let nextY = this.posY;
 
     // Horizontale Bewegung mit Seitenkollision
-    if (controls.left) {
+    if (this.controls.left) {
       const collision = this.isColliding(
         nextX - this.settings.speed,
         this.posY
@@ -117,7 +125,7 @@ class Enemy {
       }
     }
 
-    if (controls.right) {
+    if (this.controls.right) {
       const collision = this.isColliding(
         nextX + this.settings.speed,
         this.posY
@@ -131,7 +139,7 @@ class Enemy {
     }
 
     // Sprunglogik
-    if (this.settings.onGround && controls.up) {
+    if (this.settings.onGround && this.controls.up) {
       this.settings.onGround = false;
       this.settings.fall = -this.settings.jumpForce;
     }

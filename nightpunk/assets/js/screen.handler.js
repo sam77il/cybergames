@@ -46,6 +46,11 @@ function ChangeScreen(screen) {
           screens.game.setAttribute("id", "game-screen");
           content.appendChild(screens.game);
           break;
+        case "level-selection":
+          screens.level_selection = document.createElement("div");
+          screens.level_selection.setAttribute("id", "level-selection");
+          content.appendChild(screens.level_selection);
+          break;
       }
 
       resolve();
