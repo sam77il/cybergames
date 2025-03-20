@@ -12,6 +12,7 @@ function speedperk() {
       displaied.offsetHeight; // Reflow erzwingen
       displaied.style.opacity = "0.5";
       displaied.style.animation = "Perk 3s ease-in";
+      Notify("Perks", "Speedboost ist aktiv", "info", 3000);
 
       if (game.player.settings.speed === 12 && event.key === "q" && q) {
         setTimeout(() => {
@@ -46,6 +47,7 @@ function jumpboost() {
       displaied.offsetHeight; // Reflow erzwingen
       displaied.style.animation = "Perk 2s ease-in";
       displaied.style.opacity = "0.5";
+      Notify("Perks", "Jumpboost ist aktiv", "info", 3000);
 
       if (game.player.settings.jumpForce === 25 && event.key === "e" && e) {
         setTimeout(() => {
@@ -85,6 +87,7 @@ function instakill() {
       displaied.offsetHeight; // Reflow erzwingen
       displaied.style.animation = "Perk 2s ease-in";
       displaied.style.opacity = "0.5";
+      Notify("Perks", "Instakill ist aktiv", "info", 3000);
 
       if (kill === true && event.key === "x" && x) {
         setTimeout(() => {
