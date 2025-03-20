@@ -53,6 +53,7 @@
       "enemies": [
         {
           "type": "bot",
+          "health": 200,
           "position": {
             "x": 200,
             "y": 300
@@ -66,9 +67,10 @@
         },
         {
           "type": "mutated",
+          "health": 150,
           "position": {
-            "x": 250,
-            "y": 300
+            "x": 270,
+            "y": 320
           },
           "items": [
             {
@@ -79,9 +81,10 @@
         },
         {
           "type": "cyberpsycho",
+          "health": 300,
           "position": {
-            "x": 300,
-            "y": 300
+            "x": 320,
+            "y": 350
           },
           "items": [
             {
@@ -93,9 +96,10 @@
       ],
       "items": [
         {
-          "name": "potion",
-          "label": "Potion",
-          "amount": 5,
+          "id": 1,
+          "name": "katana",
+          "label": "Katana",
+          "amount": 1,
           "height": 50,
           "width": 50,
           "position": {
@@ -104,8 +108,9 @@
           }
         },
         {
-          "name": "sword",
-          "label": "Sword",
+          "id": 2,
+          "name": "mantisblade",
+          "label": "Mantisblade",
           "amount": 1,
           "height": 50,
           "width": 50,
@@ -132,6 +137,88 @@
         "AAACABAAAW   VACABAAAFG        HI           STTU   NAADAM           NA",
         "ADDAAEAAAM   NDAAEAAAAAFG    HIAJK   JK            NAAAAM  JLLLLK   NA",
         "AAAAAAAAAAAABAAAAAAAAAAAAAAAABBCAAAACBAAAACAAAAAAAAAAAAAABCAAAACAAADAAA"
+      ]
+    },
+    {
+      "name": "goontown",
+      "label": "Goontown",
+      "level": 2,
+      "enemies": [
+        {
+          "type": "bot",
+          "health": 200,
+          "position": {
+            "x": 200,
+            "y": 300
+          },
+          "items": [
+            {
+              "name": "potion",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "mutated",
+          "health": 150,
+          "position": {
+            "x": 270,
+            "y": 320
+          },
+          "items": [
+            {
+              "name": "potion",
+              "amount": 2
+            }
+          ]
+        },
+        {
+          "type": "cyberpsycho",
+          "health": 300,
+          "position": {
+            "x": 320,
+            "y": 350
+          },
+          "items": [
+            {
+              "name": "potion",
+              "amount": 3
+            }
+          ]
+        }
+      ],
+      "items": [
+        {
+          "id": 1,
+          "name": "potion",
+          "label": "Potion",
+          "amount": 5,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 5,
+            "y": 12
+          }
+        }
+      ],
+      "map": [
+        "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAM             NAAAAAAAAAAAM        VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA         VAAAAAAAA",
+        "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAM             NALLLLLLLLLAM        VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA          VAAAAAAAA",
+        "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAM             NATTTTTTTTTAM               NAAAAAAAAAAAAAAAAAAAAAAAAA                  A",
+        "AAAAAAAAA                AAAAAAAAAAAAAAAAAAM             NALLLLLLLLLAM               NAAAAAAAAAAAAAAAAAAAAAAAAA                  A",
+        "ALLLLLLLA                      AAAAAAAAAAAAM             OAAAAAAAAAAAw               PAAAW          VAAAAAAAAAAW                 A",
+        "AAAAAAAAA                      VAAAAAAAAAAAW                                                                                     R",
+        "A                                                                                                                                A",
+        "A                                                                                                                STTU            A",
+        "F                                                                                                                                Q",
+        "A                                                                                                                       JLK      A",
+        "AW                                                  JLLLLK                                 VAAAAW                      VAAAW     A",
+        "AM                                                 VAAACCAAAAFG             JK JK    STU   NAAAAM             HIACCBAAAAAAABCBCAAA",
+        "AM    JLLLLK                              STTTTU   NAAAAAAAAAAAFG          VAAAAAW         NAARAM           HIAAAAAAAARAAAAAAAAAAA",
+        "AAAAAAAABBCBAAABAAAFG                              NAAAAAAFAAAAAAFG        NAAAAAM         NAAAAAABACAACCAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "AAAAAAAAAAFAAAAAAAAAAFG         VAAAAAW            NAADAAAAAAAAAAAAFG      NAAAAAM  JLLLK  NAAAAAAAAFAAAAAAAAAAFAAAAAAAAARAAAAAAAA",
+        "AAAAAEAAAAAAAADAAEAAAAAFG       NAAAAAM            NAAAAAAAAAAAAAAAAAAABCAAAAAAAAAACCAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAFAAAAAAA",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAABBCAAAAAAAAAACAAAAAAAAAAAAAABCAAAACAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAA"
       ]
     }
   ]

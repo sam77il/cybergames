@@ -50,7 +50,7 @@ function InitiateCharacters() {
     );
 
     for (let button of CHARACTER_SELECTION_START) {
-      button.addEventListener("click", StartGame);
+      button.addEventListener("click", handleLevelSelection);
     }
     for (let button of CHARACTER_SELECTION_DELETE) {
       button.addEventListener("click", handleDeleteCharacter);
@@ -58,7 +58,7 @@ function InitiateCharacters() {
   }
 }
 
-function CharacterItem({ name, type, level, coins, id }) {
+function CharacterItem({ name, type, levels, coins, id }) {
   CHARACTERS_LIST.innerHTML += `
     <div class="character-selection-item">
       <p>${
@@ -67,9 +67,9 @@ function CharacterItem({ name, type, level, coins, id }) {
       <p>${
         locales[settings.language].characterSelectionType
       }: <b>${type}</b></p>
-      <p>${
-        locales[settings.language].characterSelectionLevel
-      }: <b>${level}</b></p>
+      <p>${locales[settings.language].characterSelectionLevel}: <b>${
+    levels.length
+  }</b></p>
       <p>${
         locales[settings.language].characterSelectionCoins
       }: <b>${coins}</b></p>
@@ -81,9 +81,10 @@ function CharacterItem({ name, type, level, coins, id }) {
   `;
 }
 
-async function StartGame(event) {
-  await ChangeScreen("game-screen");
-  initiateGameCanvas(event.target.dataset.id);
+async function handleLevelSelection(event) {
+  await ChangeScreen("level-selection");
+  LevelSelection_Handler(event.target.dataset.id);
+  // initiateGameCanvas(event.target.dataset.id);
 }
 
 function handleDeleteCharacter(event) {
@@ -195,16 +196,14 @@ async function handleCreateCharacterSubmit(e) {
       id: Date.now(),
       name: charName,
       type: charType,
-      level: 1,
-      coins: 0,
-      inventory: [
+      levels: [
         {
-          name: "potion",
-          label: "Potion",
-          amount: 6,
-          slot: 1,
+          level: 1,
+          itemsCollected: [],
         },
       ],
+      coins: 0,
+      inventory: [],
       perks: [],
     });
   } else {
@@ -212,7 +211,13 @@ async function handleCreateCharacterSubmit(e) {
       {
         id: Date.now(),
         name: charName,
-        level: 1,
+        type: charType,
+        levels: [
+          {
+            level: 1,
+            itemsCollected: [],
+          },
+        ],
         coins: 0,
         inventory: [],
         perks: [],
