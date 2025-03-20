@@ -1,4 +1,4 @@
-async function initiateGameCanvas(playerId) {
+async function initiateGameCanvas(id) {
   screens.game.innerHTML = `
     <div id="game-screen-box">
       <div id="game-screen-hud">
@@ -53,10 +53,10 @@ async function initiateGameCanvas(playerId) {
 
   game.core = new Game();
   await loadMap(game.core.map, game.core.tileSize);
-  game.player = new Player(50, 300, 50, 80, playerId);
+  game.player = new Player(50, 300, 50, 80, id);
   game.player.initialize();
-  game.ui.healthBar.style.width = game.player.playerHealth + "%";
-  console.log(game.player.playerPosX, game.player.playerPosY);
+  game.ui.healthBar.style.width = game.player.health + "%";
+  console.log(game.player.posX, game.player.posY);
   for (let item of game.core.mapItems) {
     item.collected = false;
   }
@@ -73,8 +73,8 @@ async function initiateGameCanvas(playerId) {
       // Center the camera on the player
       this.previousX = this.x;
 
-      this.x = playerX - this.width / 2 + game.player.playerWidth / 2;
-      this.y = playerY - this.height / 2 + game.player.playerHeight / 2;
+      this.x = playerX - this.width / 2 + game.player.settings.width / 2;
+      this.y = playerY - this.height / 2 + game.player.settings.height / 2;
 
       // Constrain camera to map boundaries
       this.x = Math.max(
@@ -213,7 +213,7 @@ function startGameLoop(currentTime) {
     );
 
     // Update camera position
-    game.camera.update(game.player.playerPosX, game.player.playerPosY);
+    game.camera.update(game.player.posX, game.player.posY);
 
     updateParallaxLayers();
     drawParallaxLayers();

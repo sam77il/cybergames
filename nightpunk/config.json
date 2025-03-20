@@ -53,6 +53,10 @@
       "enemies": [
         {
           "type": "bot",
+          "position": {
+            "x": 200,
+            "y": 300
+          },
           "items": [
             {
               "name": "potion",
@@ -62,6 +66,10 @@
         },
         {
           "type": "mutated",
+          "position": {
+            "x": 250,
+            "y": 300
+          },
           "items": [
             {
               "name": "potion",
@@ -71,6 +79,10 @@
         },
         {
           "type": "cyberpsycho",
+          "position": {
+            "x": 300,
+            "y": 300
+          },
           "items": [
             {
               "name": "potion",

@@ -7,16 +7,16 @@ function speedperk() {
     if (event.key === "q" && q) {
       let displaied = document.getElementById("perk2");
       console.log("speedperk hat einen cooldown!");
-      game.player.playerSpeed = 12;
+      game.player.settings.speed = 12;
       console.log(displaied);
       displaied.style.animation = "none";
       displaied.offsetHeight; // Reflow erzwingen
       displaied.style.opacity = "0.5";
       displaied.style.animation = "Perk 3s ease-in";
 
-      if (game.player.playerSpeed === 12 && event.key === "q" && q) {
+      if (game.player.settings.speed === 12 && event.key === "q" && q) {
         setTimeout(() => {
-          game.player.playerSpeed = 5;
+          game.player.settings.speed = 5;
         }, 6000); //boostzeit in millisekunden
       }
       q = false;
@@ -24,7 +24,7 @@ function speedperk() {
       setTimeout(() => {
         q = true;
         console.log("speedperk ist nutzbar!");
-        game.player.playerSpeed = 5;
+        game.player.settings.speed = 5;
         displaied.style.opacity = "1";
       }, 15000); //cooldown in millisekunden
     } else if (event.key === "q") {
@@ -42,15 +42,15 @@ function jumpboost() {
     if (event.key === "e" && e) {
       let displaied = document.getElementById("perk1");
       console.log("jumpboost hat einen cooldown!");
-      game.player.playerJumpForce = 25;
+      game.player.settings.jumpForce = 25;
       displaied.style.animation = "none";
       displaied.offsetHeight; // Reflow erzwingen
       displaied.style.animation = "Perk 2s ease-in";
       displaied.style.opacity = "0.5";
 
-      if (game.player.playerJumpForce === 25 && event.key === "e" && e) {
+      if (game.player.settings.jumpForce === 25 && event.key === "e" && e) {
         setTimeout(() => {
-          game.player.playerJumpForce = 20;
+          game.player.settings.jumpForce = 20;
         }, 5000); // Boostzeit in Millisekunden
       }
 
@@ -65,7 +65,7 @@ function jumpboost() {
         if (displaied.style.opacity === "1") {
           displaied = null;
         }
-        game.player.playerJumpForce = 20;
+        game.player.settings.jumpForce = 20;
       }, 10000); // Cooldown in Millisekunden
     } else if (event.key === "e") {
       console.log("jumpboost hat einen cooldown...");

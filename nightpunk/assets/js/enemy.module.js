@@ -1,11 +1,11 @@
-class Player {
-  constructor(startPosX, startPosY, width, height, id) {
-    this.id = id;
+class Enemy {
+  constructor(startPosX, startPosY, width, height, health, items, type) {
     this.posX = startPosX;
     this.posY = startPosY;
-    this.inventory = [];
-    this.health = 100;
+    this.items = items;
+    this.health = health;
     this.settings = {
+      type: type,
       width: width,
       height: height,
       speed: 5,
@@ -22,31 +22,7 @@ class Player {
   }
 
   initialize() {
-    this.inventory = JSON.parse(localStorage.getItem("characters")).find(
-      (char) => {
-        return Number(char.id) === Number(this.id);
-      }
-    ).inventory;
-    // console.log(this.inventory);
     this.draw();
-    this.loadInventory();
-  }
-
-  loadInventory() {
-    let inventorySlots = document.querySelectorAll(
-      ".game-screen-inventory-slot"
-    );
-
-    inventorySlots.forEach((el) => {
-      el.innerHTML = "";
-      el.style.backgroundColor = "#266881";
-    });
-
-    for (let item of this.inventory) {
-      game.ui.inventory["slot" + item.slot].innerHTML = `
-        ${item.name.slice(0, 1)} | ${item.amount}
-      `;
-    }
   }
 
   draw() {
@@ -120,100 +96,6 @@ class Player {
       );
 
     return { collides: collides, type: collides ? "block" : null };
-  }
-
-  isNearItem(item, range = 20) {
-    return (
-      this.posX <
-        item.position.x * config.global.tileSize + item.width + range &&
-      this.posX + this.settings.width >
-        item.position.x * config.global.tileSize - range &&
-      this.posY <
-        item.position.y * config.global.tileSize + item.height + range &&
-      this.posY + this.settings.height >
-        item.position.y * config.global.tileSize - range
-    );
-  }
-
-  isCollidingWithItem() {
-    if (!gameState.helpNotifyRef) {
-      gameState.helpNotifyRef = document.getElementById(
-        "game-screen-helpnotify"
-      );
-    }
-
-    let currentNearItems = [];
-    try {
-      currentNearItems = game.core.mapItems.filter((item) => {
-        if (!item.collected) return this.isNearItem(item);
-      });
-    } catch (error) {
-      console.error("Fehler beim Filtern der nahen Items:", error);
-      return;
-    }
-
-    const itemsChanged = !areItemArraysEqual(
-      currentNearItems,
-      gameState.nearItems
-    );
-
-    if (currentNearItems.length === 0) {
-      if (gameState.nearItems.length > 0) {
-        gameState.helpNotifyRef.style.display = "none";
-        gameState.helpNotifyRef.innerHTML = "";
-        gameState.nearItems = [];
-        gameState.selectedItemIndex = 0;
-      }
-      return;
-    }
-
-    if (itemsChanged) {
-      gameState.nearItems = [...currentNearItems];
-
-      gameState.selectedItemIndex = Math.min(
-        gameState.selectedItemIndex,
-        currentNearItems.length - 1
-      );
-
-      updateHelpNotifyUI();
-    }
-  }
-
-  addInventoryItem(newItem) {
-    // Prüfen, ob das Item bereits im Inventar vorhanden ist
-    let newInventory = checkAddSlot(this.inventory, newItem);
-
-    let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
-      (character) => Number(character.id) === Number(this.id)
-    );
-    oldCharacters.inventory = newInventory;
-    let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
-      (character) => Number(character.id) !== Number(this.id)
-    );
-    newCharacters.push(oldCharacters);
-    localStorage.setItem("characters", JSON.stringify(newCharacters));
-    this.loadInventory();
-  }
-
-  dropItem(item) {
-    if (item?.name) {
-      game.map.itemsOnFloor.setItems(item);
-      let newInventory = this.inventory.filter(
-        (invItem) => invItem.name !== item.name
-      );
-
-      let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
-        (character) => Number(character.id) === Number(this.id)
-      );
-      oldCharacters.inventory = newInventory;
-      let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
-        (character) => Number(character.id) !== Number(this.id)
-      );
-      newCharacters.push(oldCharacters);
-      localStorage.setItem("characters", JSON.stringify(newCharacters));
-      this.inventory = newInventory;
-      this.loadInventory();
-    }
   }
 
   move(controls) {

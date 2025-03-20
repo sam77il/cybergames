@@ -16,11 +16,11 @@ class Items {
       width: 50,
       position: {
         x: Math.floor(
-          (game.player.playerPosX + game.player.playerWidth) /
+          (game.player.posX + game.player.settings.width) /
             config.global.tileSize
         ),
         y: Math.floor(
-          (game.player.playerPosY + game.player.playerHeight) /
+          (game.player.posY + game.player.settings.height) /
             config.global.tileSize -
             1
         ),
