@@ -5,6 +5,7 @@ class Player {
     this.posY = startPosY;
     this.inventory = [];
     this.health = 100;
+    this.pauseMenu = false;
     this.settings = {
       width: width,
       height: height,
@@ -78,25 +79,25 @@ class Player {
 
     if (this.health >= 100) {
       game.ui.healthBar.style.background =
-        "url('./assets/img/Health.png') no-repeat center";
+        "url('./assets/img/health/health_6.png') no-repeat center";
     } else if (this.health >= 80) {
       game.ui.healthBar.style.background =
-        "url('./assets/img/health2.png') no-repeat center";
+        "url('./assets/img/health/health_5.png') no-repeat center";
     } else if (this.health >= 60) {
       game.ui.healthBar.style.background =
-        "url('./assets/img/health3.png') no-repeat center";
+        "url('./assets/img/health/health_4.png') no-repeat center";
     } else if (this.health >= 40) {
       game.ui.healthBar.style.background =
-        "url('./assets/img/health4.png') no-repeat center";
+        "url('./assets/img/health/health_3.png') no-repeat center";
     } else if (this.health >= 20) {
       game.ui.healthBar.style.background =
-        "url('./assets/img/health5.png') no-repeat center";
+        "url('./assets/img/health/health_2.png') no-repeat center";
     } else if (this.health >= 1) {
       game.ui.healthBar.style.background =
-        "url('./assets/img/health6.png') no-repeat center";
+        "url('./assets/img/health/health_1.png') no-repeat center";
     } else if (this.health <= 0) {
       game.ui.healthBar.style.background =
-        "url('./assets/img/health7.png') no-repeat center";
+        "url('./assets/img/health/health_0.png') no-repeat center";
     }
     game.ui.healthBar.style.backgroundSize = "cover";
   }

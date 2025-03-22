@@ -6,9 +6,9 @@ async function initiateGameCanvas(id, level) {
           <div id="game-screen-hud-health-bar"></div>
         </div>
         <div id="perks">
-          <img id="perk1" src="./assets/img/perk_1.png">
-          <img id="perk2" src="./assets/img/perk_2.png">
-          <img id="perk3" src="./assets/img/perk_3.png">
+          <img id="perk1" src="./assets/img/perks/perk_1.png">
+          <img id="perk2" src="./assets/img/perks/perk_2.png">
+          <img id="perk3" src="./assets/img/perks/perk_3.png">
         </div>
       </div>
       <div id="game-screen-helpnotify" style="display: none;">
@@ -127,14 +127,33 @@ function handleKeyDown(e) {
   }
 }
 
+function handleResume(e) {
+  switch (e.key) {
+    case "Escape":
+      handlePauseMenu();
+      break;
+    case "p":
+      handlePauseMenu();
+      break;
+  }
+}
+
 function handlePauseMenu() {
   listenToControls(false);
+  if (game.player.pauseMenu) {
+    const pauseMenu = document.querySelector("#pause-menu");
+    screens.game.removeChild(pauseMenu);
+    resumeGame();
+    listenToControls(true);
+    return;
+  }
   game.paused = true;
-
+  game.player.pauseMenu = true;
   if (document.querySelector("#pause-menu")?.id === "pause-menu") {
     screens.game.removeChild(document.querySelector("#pause-menu"));
   }
   const pauseMenu = document.createElement("div");
+  screens.game.appendChild(pauseMenu);
   pauseMenu.setAttribute("id", "pause-menu");
   pauseMenu.innerHTML = `
     <h1>${locales[settings.language].pauseMenuTitle}</h1>
@@ -147,13 +166,10 @@ function handlePauseMenu() {
     <button id="quit">${locales[settings.language].pauseMenuQuitButton}</button>
   `;
 
-  screens.game.appendChild(pauseMenu);
-
   const resumeButton = pauseMenu.querySelector("#resume");
   resumeButton.addEventListener("click", () => {
     screens.game.removeChild(pauseMenu);
-    listenToControls(true);
-    game.paused = false;
+    resumeGame();
   });
 
   const settingsButton = pauseMenu.querySelector("#settings");
@@ -171,6 +187,12 @@ function handlePauseMenu() {
     screens.game.innerHTML = "";
     game.paused = true;
   });
+}
+
+function resumeGame() {
+  listenToControls(true);
+  game.paused = false;
+  game.player.pauseMenu = false;
 }
 
 function handleKeyUp(e) {
@@ -191,9 +213,11 @@ function listenToControls(state) {
   if (state) {
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+    window.removeEventListener("keydown", handleResume);
   } else {
     window.removeEventListener("keydown", handleKeyDown);
     window.removeEventListener("keyup", handleKeyUp);
+    window.addEventListener("keydown", handleResume);
   }
 }
 

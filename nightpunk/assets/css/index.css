@@ -101,15 +101,16 @@ ul {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url("../img/NP_startbildschirm.gif");
+  background-image: url("../img/main_background.gif");
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   filter: blur(5px) brightness(80%) contrast(120%);
   z-index: -1;
 }
 
 .menus-content {
-  width: 700px;
+  min-width: 700px;
   height: 500px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 25px;
@@ -389,7 +390,7 @@ select option:hover {
   position: relative;
   width: 50px;
   height: 50px;
-  background-image: url("../img/Inv.png");
+  background-image: url("../img/inventory/empty.png");
   display: flex;
   flex-direction: column;
   justify-content: center;

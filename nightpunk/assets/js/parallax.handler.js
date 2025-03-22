@@ -4,13 +4,13 @@ let previousCameraX = 0;
 
 // Bilder für Parallax-Hintergründe
 const backgroundLayer1 = new Image();
-backgroundLayer1.src = "./assets/img/hintergrund_1.png";
+backgroundLayer1.src = "./assets/img/parallax/background_4.png";
 const backgroundLayer2 = new Image();
-backgroundLayer2.src = "./assets/img/hintergrund_2.png";
+backgroundLayer2.src = "./assets/img/parallax/background_3.png";
 const backgroundLayer3 = new Image();
-backgroundLayer3.src = "./assets/img/hintergrund_3.png";
+backgroundLayer3.src = "./assets/img/parallax/background_2.png";
 const backgroundLayer4 = new Image();
-backgroundLayer4.src = "./assets/img/hintergrund_4.png";
+backgroundLayer4.src = "./assets/img/parallax/background_1.png";
 
 class Layer {
   constructor(image, speedModifier) {

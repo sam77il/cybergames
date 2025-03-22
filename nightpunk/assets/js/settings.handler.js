@@ -26,8 +26,8 @@ function Settings_Handler() {
       <div id="settings-content"></div>
       
       <div class="settings-menu-footer">
-        <img class="img-btn small-btn" id="settings-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
         <img id="settings-save" class="img-btn small-btn" src="./assets/img/de_imgs/Speichern_Bttn.png">
+        <img class="img-btn small-btn" id="settings-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
       </div>
     </div>
   `;
