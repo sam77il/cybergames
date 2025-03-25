@@ -120,6 +120,18 @@
           }
         }
       ],
+      "coins": [
+        {
+          "id": 1,
+          "amount": 1,
+          "height": 40,
+          "width": 50,
+          "position": {
+            "x": 15,
+            "y": 12
+          }
+        }
+      ],
       "map": [
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAAAAAAAAAAAA",
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAARAAAAAAAAA",

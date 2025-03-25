@@ -2,8 +2,14 @@ async function initiateGameCanvas(id, level) {
   screens.game.innerHTML = `
     <div id="game-screen-box">
       <div id="game-screen-hud">
-        <div id="game-screen-hud-health">
-          <div id="game-screen-hud-health-bar"></div>
+        <div class="game-screen-hud-left">
+          <div id="game-screen-hud-health">
+            <div id="game-screen-hud-health-bar"></div>
+          </div>
+          <div class="game-screen-hud-coin">
+            <img src="./assets/img/items/coin.png" alt="coin img">
+            <p id="game-screen-hud-coin-amount">Loading...</p>
+          </div>
         </div>
         <div id="perks">
           <img id="perk1" src="./assets/img/perks/perk_1.png">
@@ -11,9 +17,7 @@ async function initiateGameCanvas(id, level) {
           <img id="perk3" src="./assets/img/perks/perk_3.png">
         </div>
       </div>
-      <div id="game-screen-helpnotify" style="display: none;">
-        <!-- <div class="game-screen-helpnotify-item">E Sword</div> -->
-      </div>
+      <div id="game-screen-helpnotify" style="display: none;"></div>
       <div id="game-screen-inventory">
         <div class="game-screen-inventory-slot" id="game-screen-inventory-slot-1"></div>
         <div class="game-screen-inventory-slot" id="game-screen-inventory-slot-2"></div>
@@ -54,8 +58,10 @@ async function initiateGameCanvas(id, level) {
   game.core = new Game(level);
   await loadMap(game.core.map, game.core.tileSize);
   game.player = new Player(50, 300, 50, 80, id);
-  game.npc = new Npc(400, 550, 50, 100);
-  game.npc.initialize();
+  if (game.core.currentLevel === 1) {
+    game.npc = new Npc(400, 550, 50, 100, level);
+    game.npc.initialize();
+  }
   game.player.initialize();
   game.player.updateHealth("set", 100);
   game.ui.healthBar.style.width = game.player.health + "%";
@@ -64,9 +70,14 @@ async function initiateGameCanvas(id, level) {
   for (let item of game.core.mapItems) {
     item.collected = false;
   }
+  for (let coin of game.core.mapCoins) {
+    coin.collected = false;
+  }
 
   game.map.itemsOnFloor = new Items(game.core.mapItems);
   game.map.itemsOnFloor.initialize();
+  game.map.coinsOnFloor = new Coins(game.core.mapCoins);
+  game.map.coinsOnFloor.initialize();
 
   game.camera = {
     x: 0,
@@ -252,13 +263,16 @@ function startGameLoop(currentTime) {
     game.canvas.mainCtx.drawImage(game.canvas.bg, 0, 0);
 
     game.player.update();
-    game.npc.update();
+    if (game.core.currentLevel === 1) {
+      game.npc.update();
+    }
 
     for (let enemy of game.enemies) {
       enemy.update();
     }
 
     game.map.itemsOnFloor.update();
+    game.map.coinsOnFloor.update();
     game.canvas.mainCtx.restore();
   }
 }

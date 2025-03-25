@@ -201,6 +201,7 @@ async function handleCreateCharacterSubmit(e) {
         {
           level: 1,
           itemsCollected: [],
+          coinsCollected: [],
         },
       ],
       coins: 0,
@@ -217,6 +218,7 @@ async function handleCreateCharacterSubmit(e) {
           {
             level: 1,
             itemsCollected: [],
+            coinsCollected: [],
           },
         ],
         coins: 0,

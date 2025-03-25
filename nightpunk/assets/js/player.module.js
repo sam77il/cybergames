@@ -4,6 +4,7 @@ class Player {
     this.posX = startPosX;
     this.posY = startPosY;
     this.inventory = [];
+    this.coins = 0;
     this.health = 100;
     this.pauseMenu = false;
     this.settings = {
@@ -23,14 +24,16 @@ class Player {
   }
 
   initialize() {
-    this.inventory = JSON.parse(localStorage.getItem("characters")).find(
+    const character = JSON.parse(localStorage.getItem("characters")).find(
       (char) => {
         return Number(char.id) === Number(this.id);
       }
-    ).inventory;
-    // console.log(this.inventory);
+    );
+    this.inventory = character.inventory;
+    this.coins = character.coins;
     this.draw();
     this.loadInventory();
+    this.loadCoins();
   }
 
   loadInventory() {
@@ -50,6 +53,12 @@ class Player {
         <p>${item.amount}</p>
       `;
     }
+  }
+
+  loadCoins() {
+    const coinText = document.querySelector("#game-screen-hud-coin-amount");
+
+    coinText.innerHTML = this.coins + "x";
   }
 
   draw() {
@@ -157,6 +166,39 @@ class Player {
     );
   }
 
+  isNearCoin(coin, range = 0) {
+    return (
+      this.posX <
+        coin.position.x * config.global.tileSize + coin.width + range &&
+      this.posX + this.settings.width >
+        coin.position.x * config.global.tileSize - range &&
+      this.posY <
+        coin.position.y * config.global.tileSize + coin.height + range &&
+      this.posY + this.settings.height >
+        coin.position.y * config.global.tileSize - range
+    );
+  }
+
+  isCollidingWithCoin() {
+    let currentNearCoins = [];
+    try {
+      currentNearCoins = game.core.mapCoins.filter((coin) => {
+        let characters = JSON.parse(localStorage.getItem("characters"));
+        let character = characters.find((c) => c.id === game.player.id);
+        let level = character.levels.find(
+          (l) => l.level === game.core.currentLevel
+        );
+        if (!coin.collected && !level.coinsCollected.includes(coin.id))
+          if (this.isNearCoin(coin)) {
+            this.addCoin(coin);
+          }
+      });
+    } catch (error) {
+      console.error("Fehler beim Filtern der nahen Items:", error);
+      return;
+    }
+  }
+
   isCollidingWithItem() {
     if (!gameState.helpNotifyRef) {
       gameState.helpNotifyRef = document.getElementById(
@@ -219,15 +261,43 @@ class Player {
       (character) => Number(character.id) !== Number(this.id)
     );
     newCharacters.push(oldCharacters);
-    console.log(
-      newCharacters
-        .find((c) => c.id === this.id)
-        .levels.find((l) => l.level === game.core.currentLevel)
-        .itemsCollected.push(newItem.id)
-    );
-    console.log(newCharacters);
+    newCharacters
+      .find((c) => c.id === this.id)
+      .levels.find((l) => l.level === game.core.currentLevel)
+      .itemsCollected.push(newItem.id);
+
     localStorage.setItem("characters", JSON.stringify(newCharacters));
     this.loadInventory();
+    Notify(
+      "Inventar",
+      `Du hast ${newItem.label} ${newItem.amount}x aufgehoben`,
+      "info",
+      3500
+    );
+  }
+
+  addCoin(newCoin) {
+    let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
+      (character) => Number(character.id) === Number(this.id)
+    );
+    oldCharacters.coins += newCoin.amount;
+    let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
+      (character) => Number(character.id) !== Number(this.id)
+    );
+    newCharacters.push(oldCharacters);
+
+    newCharacters
+      .find((c) => c.id === this.id)
+      .levels.find((l) => l.level === game.core.currentLevel)
+      .coinsCollected.push(newCoin.id);
+    localStorage.setItem("characters", JSON.stringify(newCharacters));
+    this.loadCoins();
+    Notify(
+      "Coins",
+      `Du hast ${newCoin.amount}x Coins eingesammelt`,
+      "info",
+      3500
+    );
   }
 
   dropItem(item) {

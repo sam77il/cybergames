@@ -1,16 +1,19 @@
 class Npc {
-  constructor(startPosX, startPosY, npcWidth, npcHeight) {
-    this.npcPosX = startPosX;
-    this.npcPosY = startPosY;
-    this.npcWidth = npcWidth;
-    this.npcHeight = npcHeight;
-    this.npc = document.getElementById("npc");
+  constructor(startPosX, startPosY, width, height, level) {
+    this.posX = startPosX;
+    this.posY = startPosY;
+    this.settings = {
+      width: width,
+      height: height,
+      sprite: document.getElementById("npc"),
+      level: level,
+    };
 
     // Dialog Eigenschaften
     this.dialogImage = document.getElementById("dialog"); // Das Bild für den Dialog
     this.showDialog = true;
     this.dialogTexts = [
-      `W, A, S, D zum bewegen
+      `A, D, W zum bewegen
        und 1-4 um
        die Items auszuwählen
       `,
@@ -28,56 +31,54 @@ class Npc {
 
     this.frameCount = 4;
     this.currentFrame = 0;
-    this.frameWidth = this.npc.width / this.frameCount;
-    this.frameHeight = this.npc.height;
+    this.frameWidth = this.settings.sprite.width / this.frameCount;
+    this.frameHeight = this.settings.sprite.height;
     this.frameTimer = 0;
     this.frameInterval = 25;
-    this.initialize();
-
     this.enterCount = 0;
   }
 
   initialize() {
-    this.draw();
-    // Event-Listener für Enter-Taste hinzufügen
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" && this.showDialog) {
-        this.enterCount++;
-        console.log("Enter gedrückt:", this.enterCount, "mal");
+    if (this.settings.level === game.core.currentLevel) {
+      this.draw();
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && this.showDialog) {
+          this.enterCount++;
+          console.log("Enter gedrückt:", this.enterCount, "mal");
 
-        if (this.enterCount >= 5) {
-          // Nach 3 Mal Enter Dialog ausblenden
-          this.showDialog = false;
-          console.log("Dialog ausgeblendet");
-        } else {
-          // Sonst zum nächsten Text wechseln
-          this.nextDialogText();
+          if (this.enterCount >= 5) {
+            // Nach 3 Mal Enter Dialog ausblenden
+            this.showDialog = false;
+            console.log("Dialog ausgeblendet");
+          } else {
+            // Sonst zum nächsten Text wechseln
+            this.nextDialogText();
+          }
         }
-      }
-    });
+      });
+    }
   }
+
   nextDialogText() {
-    // Zum nächsten Text wechseln
     this.currentTextIndex =
       (this.currentTextIndex + 1) % this.dialogTexts.length;
     this.dialogText = this.dialogTexts[this.currentTextIndex];
   }
 
   draw() {
-    // NPC zeichnen
     const sourceX = this.currentFrame * this.frameWidth;
     const sourceY = 0;
 
     game.canvas.mainCtx.drawImage(
-      this.npc,
+      this.settings.sprite,
       sourceX,
       sourceY,
       this.frameWidth,
       this.frameHeight,
-      this.npcPosX,
-      this.npcPosY,
-      this.npcWidth,
-      this.npcHeight
+      this.posX,
+      this.posY,
+      this.settings.width,
+      this.settings.height
     );
 
     // Dialog zeichnen
@@ -90,8 +91,8 @@ class Npc {
     const dialogWidth = 300; // Breite des Dialogfensters
     const dialogHeight = 150; // Höhe des Dialogfensters
 
-    const dialogX = this.npcPosX + this.npcWidth / 3 - dialogWidth / 3;
-    const dialogY = this.npcPosY + this.dialogOffsetY;
+    const dialogX = this.posX + this.settings.width / 3 - dialogWidth / 3;
+    const dialogY = this.posY + this.dialogOffsetY;
 
     // Dialogbild mit benutzerdefinierter Größe zeichnen
     game.canvas.mainCtx.drawImage(
@@ -150,10 +151,9 @@ class Npc {
   }
 
   update() {
-    // this.showDialog = true;
-    this.updateAnimation();
-
-    // Zeichne den NPC
-    this.draw();
+    if (this.settings.level === game.core.currentLevel) {
+      this.updateAnimation();
+      this.draw();
+    }
   }
 }

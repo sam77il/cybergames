@@ -26,6 +26,8 @@ let game = {
   map: {
     items: {},
     itemsOnFloor: null,
+    coins: {},
+    coinsOnFloor: null,
     tileset: null,
   },
   ui: {

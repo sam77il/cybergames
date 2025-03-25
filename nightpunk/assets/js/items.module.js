@@ -13,13 +13,6 @@ class Items {
     this.itemImgs.katana.src = "./assets/img/items/katana.png";
     this.itemImgs.mantisblade.src = "./assets/img/items/mantisblade.png";
     this.itemImgs.railgun.src = "./assets/img/items/railgun.png";
-
-    this.itemImgs.katana.onload =
-      this.itemImgs.mantisblade.onload =
-      this.itemImgs.railgun.onload =
-        () => {
-          this.update();
-        };
   }
 
   initialize() {

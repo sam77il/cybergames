@@ -6,6 +6,7 @@ class Game {
 
     this.map = this.level.map;
     this.mapItems = this.level.items;
+    this.mapCoins = this.level.coins;
   }
 
   loadEnemies() {
