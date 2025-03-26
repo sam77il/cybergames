@@ -1,0 +1,14 @@
+{
+  "speed": {
+    "name": "speed",
+    "label": "Speedboost"
+  },
+  "jump": {
+    "name": "jump",
+    "label": "Jumpboost"
+  },
+  "instakill": {
+    "name": "instakill",
+    "label": "Instakill"
+  }
+}

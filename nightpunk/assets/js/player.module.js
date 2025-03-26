@@ -190,7 +190,7 @@ class Player {
         );
         if (!coin.collected && !level.coinsCollected.includes(coin.id))
           if (this.isNearCoin(coin)) {
-            this.addCoin(coin);
+            this.updateCoins("add", coin);
           }
       });
     } catch (error) {
@@ -249,7 +249,7 @@ class Player {
     }
   }
 
-  addInventoryItem(newItem) {
+  addInventoryItem(newItem, from = "normal") {
     // Prüfen, ob das Item bereits im Inventar vorhanden ist
     let newInventory = checkAddSlot(this.inventory, newItem);
 
@@ -261,43 +261,93 @@ class Player {
       (character) => Number(character.id) !== Number(this.id)
     );
     newCharacters.push(oldCharacters);
-    newCharacters
-      .find((c) => c.id === this.id)
-      .levels.find((l) => l.level === game.core.currentLevel)
-      .itemsCollected.push(newItem.id);
+    if (from !== "shop") {
+      newCharacters
+        .find((c) => c.id === this.id)
+        .levels.find((l) => l.level === game.core.currentLevel)
+        .itemsCollected.push(newItem.id);
+    }
 
     localStorage.setItem("characters", JSON.stringify(newCharacters));
     this.loadInventory();
-    Notify(
-      "Inventar",
-      `Du hast ${newItem.label} ${newItem.amount}x aufgehoben`,
-      "info",
-      3500
-    );
+    if (from === "shop") {
+      Notify(
+        "Inventar",
+        `Du hast ${newItem.label} ${newItem.amount}x für ${newItem.price} Coins gekauft`,
+        "info",
+        3500
+      );
+    } else {
+      Notify(
+        "Inventar",
+        `Du hast ${newItem.label} ${newItem.amount}x aufgehoben`,
+        "info",
+        3500
+      );
+    }
   }
 
-  addCoin(newCoin) {
+  addPerk(perk) {
     let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
       (character) => Number(character.id) === Number(this.id)
     );
-    oldCharacters.coins += newCoin.amount;
+    if (oldCharacters.perks.includes(perk)) {
+      Notify("Perks", "Du besitzt bereits dieses Perk", "info", 3500);
+      return;
+    }
+
+    oldCharacters.perks.push(perk);
     let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
       (character) => Number(character.id) !== Number(this.id)
     );
     newCharacters.push(oldCharacters);
-
-    newCharacters
-      .find((c) => c.id === this.id)
-      .levels.find((l) => l.level === game.core.currentLevel)
-      .coinsCollected.push(newCoin.id);
     localStorage.setItem("characters", JSON.stringify(newCharacters));
-    this.loadCoins();
     Notify(
-      "Coins",
-      `Du hast ${newCoin.amount}x Coins eingesammelt`,
-      "info",
+      "Perks",
+      "Der Perk " + perks[perk].label + " wurde installiert",
+      "success",
       3500
     );
+  }
+
+  updateCoins(type, newCoin, from = "normal") {
+    let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
+      (character) => Number(character.id) === Number(this.id)
+    );
+    if (type === "add") {
+      oldCharacters.coins += newCoin.amount;
+      this.coins += newCoin.amount;
+    } else if (type === "remove") {
+      oldCharacters.coins -= newCoin.amount;
+      this.coins -= newCoin.amount;
+    } else if (type === "set") {
+      oldCharacters.coins = newCoin.amount;
+      this.coins = newCoin.amount;
+    }
+
+    let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
+      (character) => Number(character.id) !== Number(this.id)
+    );
+
+    newCharacters.push(oldCharacters);
+
+    if (from !== "shop") {
+      newCharacters
+        .find((c) => c.id === this.id)
+        .levels.find((l) => l.level === game.core.currentLevel)
+        .coinsCollected.push(newCoin.id);
+    }
+
+    localStorage.setItem("characters", JSON.stringify(newCharacters));
+    this.loadCoins();
+    if (from === "normal") {
+      Notify(
+        "Coins",
+        `Du hast ${newCoin.amount}x Coins eingesammelt`,
+        "info",
+        3500
+      );
+    }
   }
 
   dropItem(item) {

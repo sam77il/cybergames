@@ -6,6 +6,7 @@ let screens = {
   character_creation: null,
   game: null,
   settings: null,
+  shop: null,
   level_selection: null,
 };
 
@@ -44,6 +45,7 @@ let game = {
 
 let locales = {};
 let items = {};
+let perks = {};
 let config = {};
 let settings = {};
 
@@ -63,6 +65,15 @@ async function loadItems() {
     const json = await respone.json();
     items = json;
     if (respone.ok) console.log("Successfully loaded items.json");
+  } catch (error) {}
+}
+
+async function loadPerks() {
+  try {
+    const respone = await fetch("perks.json");
+    const json = await respone.json();
+    perks = json;
+    if (respone.ok) console.log("Successfully loaded perks.json");
   } catch (error) {}
 }
 
@@ -102,6 +113,7 @@ async function initializeGame() {
   await loadLocales();
   await loadSettings();
   await loadItems();
+  await loadPerks();
 
   console.log("Started game");
   game.map.tileset = document.querySelector("#tileset");

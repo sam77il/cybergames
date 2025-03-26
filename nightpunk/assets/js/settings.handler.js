@@ -7,7 +7,7 @@ function Settings_Handler() {
   settingsMenu.tab = null;
   screens.settings.innerHTML = `
     <div class="menus-background"></div>
-    <div class="menus-content">
+    <header class="menus-content ${game.paused ? "pause-menu" : ""}">
       <h2>${locales[settings.language].settingsTitle}</h2>
 
       <div class="settings-menu-header">
@@ -29,7 +29,7 @@ function Settings_Handler() {
         <img id="settings-save" class="img-btn small-btn" src="./assets/img/de_imgs/Speichern_Bttn.png">
         <img class="img-btn small-btn" id="settings-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
       </div>
-    </div>
+    </header>
   `;
 
   settingsMenu.content = document.querySelector("#settings-content");

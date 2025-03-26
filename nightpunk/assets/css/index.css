@@ -13,6 +13,20 @@ ul {
   list-style: none;
 }
 
+.shop-menu-list {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.shop-menu-list li {
+  opacity: 0.5;
+}
+
+.shop-menu-selected {
+  opacity: 1;
+}
+
 .characters-selection-title {
   height: 10%;
 }
@@ -229,11 +243,19 @@ ul {
   height: 40px;
 }
 
-settings-menu-footer {
+.settings-menu-footer {
   height: 10%;
 }
 
 .settings-menu-header {
+  height: 10%;
+}
+
+.shop-menu-footer {
+  height: 10%;
+}
+
+.shop-menu-header {
   height: 10%;
 }
 
@@ -298,6 +320,17 @@ select option:hover {
 
 #settings-content {
   height: 80%;
+}
+
+#shop-content {
+  height: 80%;
+}
+
+.shop-menu-items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 #cache {
@@ -459,17 +492,18 @@ select option:hover {
   }
 }
 
-#pause-menu {
+.pause-menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pause-menu {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  padding: 20px;
-  border-radius: 10px;
   z-index: 2;
-  text-align: center;
 }
 
 ::-webkit-scrollbar {

@@ -234,6 +234,11 @@ function checkAddSlot(inventory, newItem) {
   }
 
   // Alle Slots sind besetzt
-  console.log("Alle Slots sind besetzt. Item konnte nicht hinzugefügt werden.");
+  Notify(
+    "Inventar",
+    "Alle Slots sind besetzt. Item konnte nicht hinzugefügt werden.",
+    "error",
+    3500
+  );
   return;
 }

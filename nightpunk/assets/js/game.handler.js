@@ -12,9 +12,9 @@ async function initiateGameCanvas(id, level) {
           </div>
         </div>
         <div id="perks">
-          <img id="perk1" src="./assets/img/perks/perk_1.png">
-          <img id="perk2" src="./assets/img/perks/perk_2.png">
-          <img id="perk3" src="./assets/img/perks/perk_3.png">
+          <img id="perk-jump" src="./assets/img/perks/jump.png">
+          <img id="perk-speed" src="./assets/img/perks/speed.png">
+          <img id="perk-instakill" src="./assets/img/perks/instakill.png">
         </div>
       </div>
       <div id="game-screen-helpnotify" style="display: none;"></div>
@@ -135,6 +135,15 @@ function handleKeyDown(e) {
     case "p":
       handlePauseMenu();
       break;
+    case "q":
+      Perks_Jumphandler();
+      break;
+    case "e":
+      Perks_Speedhandler();
+      break;
+    case "x":
+      Perks_Instakillhandler();
+      break;
   }
 }
 
@@ -167,15 +176,26 @@ function handlePauseMenu() {
   screens.game.appendChild(pauseMenu);
   pauseMenu.setAttribute("id", "pause-menu");
   pauseMenu.innerHTML = `
-    <h1>${locales[settings.language].pauseMenuTitle}</h1>
-    <button id="resume">${
-      locales[settings.language].pauseMenuResumeButton
-    }</button>
-    <button id="settings">${
-      locales[settings.language].pauseMenuSettingsButton
-    }</button>
-    <button id="quit">${locales[settings.language].pauseMenuQuitButton}</button>
+    <div class="menus-content pause-menu">
+      <h2>${locales[settings.language].pauseMenuTitle}</h2>
+
+      <div class="pause-menu-actions">
+        <img id="resume" class="img-btn small-btn" src="./assets/img/de_imgs/Weiter_bttn.png">
+        <img id="shop" class="img-btn small-btn" src="./assets/img/de_imgs/Shop_Bttn.png">
+        <img id="settings" class="img-btn small-btn" src="./assets/img/de_imgs/Einstellungen_Bttn.png">
+        <img id="quit" class="img-btn small-btn" src="./assets/img/de_imgs/Verlassen_Bttn.png">
+      </div>
+    </div>
   `;
+
+  const shopButton = pauseMenu.querySelector("#shop");
+  shopButton.addEventListener("click", () => {
+    pauseMenu.innerHTML = "";
+    screens.shop = document.createElement("div");
+    screens.shop.setAttribute("id", "shop");
+    pauseMenu.appendChild(screens.shop);
+    Shop_Handler();
+  });
 
   const resumeButton = pauseMenu.querySelector("#resume");
   resumeButton.addEventListener("click", () => {

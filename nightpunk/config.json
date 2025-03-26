@@ -45,6 +45,34 @@
     },
     "language": "de"
   },
+  "shop": {
+    "items": [
+      {
+        "item": "katana",
+        "amount": 1,
+        "price": 50
+      },
+      {
+        "item": "hdd",
+        "amount": 1,
+        "price": 5
+      }
+    ],
+    "perks": [
+      {
+        "perk": "speed",
+        "price": 200
+      },
+      {
+        "perk": "jump",
+        "price": 150
+      },
+      {
+        "perk": "instakill",
+        "price": 225
+      }
+    ]
+  },
   "levels": [
     {
       "name": "tutorial",
