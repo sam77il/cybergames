@@ -9,8 +9,8 @@ function CharacterSelection_Handler() {
       <div id="characters-list"></div>
 
       <div class="character-selection-actions">
-        <img class="img-btn" id="character-selection-createchar" src="./assets/img/de_imgs/Neuer_charakter_Bttn.png">
-        <img class="img-btn" id="character-selection-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+        <img class="img-btn" id="character-selection-createchar" src="./assets/img/de_imgs/newchar_btn.png">
+        <img class="img-btn" id="character-selection-back" src="./assets/img/de_imgs/back_btn.png">
       </div>
     </div>
   `;
@@ -58,7 +58,7 @@ function InitiateCharacters() {
   }
 }
 
-function CharacterItem({ name, type, levels, coins, id }) {
+function CharacterItem({ name, type, levels, coins, deaths, kills, id }) {
   CHARACTERS_LIST.innerHTML += `
     <div class="character-selection-item">
       <p>${
@@ -73,9 +73,10 @@ function CharacterItem({ name, type, levels, coins, id }) {
       <p>${
         locales[settings.language].characterSelectionCoins
       }: <b>${coins}</b></p>
+      <p>Stats: <b>${kills}K/${deaths}D</b></p>
       <div class="character-selection-item-actions">
-        <img class="character-selection-start img-btn small-btn" src="./assets/img/de_imgs/Spielen_Bttn.png" data-id="${id}">
-        <img class="character-selection-delete img-btn small-btn" src="./assets/img/de_imgs/Loeschen_Bttn.png" data-id="${id}">
+        <img class="character-selection-start img-btn small-btn" src="./assets/img/de_imgs/play_btn.png" data-id="${id}">
+        <img class="character-selection-delete img-btn small-btn" src="./assets/img/de_imgs/delete_btn.png" data-id="${id}">
       </div>
     </div>
   `;
@@ -153,8 +154,8 @@ async function CharacterCreation_Handler() {
         </div>
         
         <div class="character-creation-actions">
-          <button type="submit"><img class="img-btn" src="./assets/img/de_imgs/Erstellen_Bttn.png"></button>
-          <img id="character-creation-form-back" class="img-btn" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+          <button type="submit"><img class="img-btn" src="./assets/img/de_imgs/create_btn.png"></button>
+          <img id="character-creation-form-back" class="img-btn" src="./assets/img/de_imgs/back_btn.png">
         </div>
       </form>
     </div>
@@ -205,6 +206,8 @@ async function handleCreateCharacterSubmit(e) {
         },
       ],
       coins: 0,
+      deaths: 0,
+      kills: 0,
       inventory: [],
       perks: [],
     });
@@ -222,6 +225,8 @@ async function handleCreateCharacterSubmit(e) {
           },
         ],
         coins: 0,
+        deaths: 0,
+        kills: 0,
         inventory: [],
         perks: [],
       },

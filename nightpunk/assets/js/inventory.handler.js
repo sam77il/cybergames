@@ -1,12 +1,6 @@
 const KEYS = {
   UP: "ArrowUp",
   DOWN: "ArrowDown",
-  INTERACT: "f",
-  FIRST: "1",
-  SECOND: "2",
-  THIRD: "3",
-  FOURTH: "4",
-  DROP: "g",
 };
 
 const gameState = {
@@ -38,27 +32,32 @@ function setupInventoryControls() {
 
 function handleInventoryNavigation(event) {
   switch (event.key) {
-    case KEYS.FIRST:
+    case settings.controls.itemslot1:
+      if (game.player.dead) return;
       gameState.selectedInventoryItemSlot = 1;
       renderInventoryItemSelection();
       event.preventDefault();
       break;
-    case KEYS.SECOND:
+    case settings.controls.itemslot2:
+      if (game.player.dead) return;
       gameState.selectedInventoryItemSlot = 2;
       renderInventoryItemSelection();
       event.preventDefault();
       break;
-    case KEYS.THIRD:
+    case settings.controls.itemslot3:
+      if (game.player.dead) return;
       gameState.selectedInventoryItemSlot = 3;
       renderInventoryItemSelection();
       event.preventDefault();
       break;
-    case KEYS.FOURTH:
+    case settings.controls.itemslot4:
+      if (game.player.dead) return;
       gameState.selectedInventoryItemSlot = 4;
       renderInventoryItemSelection();
       event.preventDefault();
       break;
-    case KEYS.DROP:
+    case settings.controls.drop:
+      if (game.player.dead) return;
       handleDropInventoryItem();
       event.preventDefault();
       break;
@@ -116,6 +115,7 @@ function handleKeyNavigation(event) {
 
   switch (event.key) {
     case KEYS.UP:
+      if (game.player.dead) return;
       gameState.selectedItemIndex =
         (gameState.selectedItemIndex - 1 + gameState.nearItems.length) %
         gameState.nearItems.length;
@@ -123,12 +123,14 @@ function handleKeyNavigation(event) {
       event.preventDefault();
       break;
     case KEYS.DOWN:
+      if (game.player.dead) return;
       gameState.selectedItemIndex =
         (gameState.selectedItemIndex + 1) % gameState.nearItems.length;
       renderItemSelection();
       event.preventDefault();
       break;
-    case KEYS.INTERACT:
+    case settings.controls.interact:
+      if (game.player.dead) return;
       if (gameState.nearItems.length > 0) {
         const selectedItem = gameState.nearItems[gameState.selectedItemIndex];
         selectedItem.collected = true;
@@ -148,9 +150,7 @@ function renderItemSelection() {
 
   itemElements.forEach((el) => {
     el.classList.remove("selected");
-    el.style.backgroundImage =
-      'url("../nightpunk/assets/img/inventory/empty.png")';
-    el.style.color = "";
+    el.style.backgroundColor = "#4b4b4b";
   });
 
   if (
@@ -159,9 +159,7 @@ function renderItemSelection() {
   ) {
     const selectedElement = itemElements[gameState.selectedItemIndex];
     selectedElement.classList.add("selected");
-    selectedElement.style.backgroundImage =
-      'url("../nightpunk/assets/img/inventory/selected.png")';
-    selectedElement.style.color = "white";
+    selectedElement.style.backgroundColor = "#4a89dc";
   }
 }
 

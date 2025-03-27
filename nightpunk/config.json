@@ -41,7 +41,17 @@
     "controls": {
       "walkLeft": "a",
       "walkRight": "d",
-      "jump": "w"
+      "jump": "w",
+      "attack": " ",
+      "itemslot1": "1",
+      "itemslot2": "2",
+      "itemslot3": "3",
+      "itemslot4": "4",
+      "interact": "f",
+      "drop": "g",
+      "jumpperk": "q",
+      "speedperk": "e",
+      "instakillperk": "x"
     },
     "language": "de"
   },
@@ -88,36 +98,8 @@
           },
           "items": [
             {
-              "name": "potion",
+              "name": "katana",
               "amount": 1
-            }
-          ]
-        },
-        {
-          "type": "mutated",
-          "health": 150,
-          "position": {
-            "x": 270,
-            "y": 320
-          },
-          "items": [
-            {
-              "name": "potion",
-              "amount": 2
-            }
-          ]
-        },
-        {
-          "type": "cyberpsycho",
-          "health": 300,
-          "position": {
-            "x": 320,
-            "y": 350
-          },
-          "items": [
-            {
-              "name": "potion",
-              "amount": 3
             }
           ]
         }

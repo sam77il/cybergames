@@ -24,6 +24,7 @@ let game = {
   enemies: [],
   camera: null,
   paused: false,
+  pauseMenu: false,
   map: {
     items: {},
     itemsOnFloor: null,
@@ -32,6 +33,11 @@ let game = {
     tileset: null,
   },
   ui: {
+    stats: {
+      kills: null,
+      deaths: null,
+      kd: null,
+    },
     healthBar: null,
     helpNotify: null,
     inventory: {

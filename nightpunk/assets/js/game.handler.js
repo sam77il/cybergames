@@ -11,10 +11,27 @@ async function initiateGameCanvas(id, level) {
             <p id="game-screen-hud-coin-amount">Loading...</p>
           </div>
         </div>
-        <div id="perks">
-          <img id="perk-jump" src="./assets/img/perks/jump.png">
-          <img id="perk-speed" src="./assets/img/perks/speed.png">
-          <img id="perk-instakill" src="./assets/img/perks/instakill.png">
+        <div class="game-screen-hud-right">
+          <div id="perks">
+            <img id="perk-jump" src="./assets/img/perks/jump.png">
+            <img id="perk-speed" src="./assets/img/perks/speed.png">
+            <img id="perk-instakill" src="./assets/img/perks/instakill.png">
+          </div>
+
+          <div class="stats">
+            <div>
+              <p>Kills:</p>
+              <span id="stat-kills"></span>
+            </div>
+            <div>
+              <p>Deaths:</p>
+              <span id="stat-deaths"></span>
+            </div>
+            <div>
+              <p>KD:</p>
+              <span id="stat-kd"></span>
+            </div>            
+          </div>
         </div>
       </div>
       <div id="game-screen-helpnotify" style="display: none;"></div>
@@ -28,6 +45,9 @@ async function initiateGameCanvas(id, level) {
     </div>
   `;
   let gameScreenBox = document.querySelector("#game-screen-box");
+  game.ui.stats.kills = document.querySelector("#stat-kills");
+  game.ui.stats.deaths = document.querySelector("#stat-deaths");
+  game.ui.stats.kd = document.querySelector("#stat-kd");
   initializeInteractionSystem();
   setupInventoryControls();
   initParallaxBackground();
@@ -67,6 +87,7 @@ async function initiateGameCanvas(id, level) {
   game.ui.healthBar.style.width = game.player.health + "%";
   game.enemies = [];
   game.core.loadEnemies();
+
   for (let item of game.core.mapItems) {
     item.collected = false;
   }
@@ -115,16 +136,24 @@ async function initiateGameCanvas(id, level) {
   startGameLoop();
 }
 
+function calculateKD(kills, deaths) {
+  if (deaths === 0) return kills.toFixed(2); // Falls keine Tode, KD = Kills (keine Division durch 0)
+  return (Math.ceil((kills / deaths) * 100) / 100).toFixed(2);
+}
+
 function handleKeyDown(e) {
   switch (e.key) {
     case settings.controls.walkRight:
-      game.player.controls.right = true;
+      game.player.controls.right = game.player.dead ? false : true;
       break;
     case settings.controls.walkLeft:
-      game.player.controls.left = true;
+      game.player.controls.left = game.player.dead ? false : true;
       break;
     case settings.controls.jump:
-      game.player.controls.up = true;
+      game.player.controls.up = game.player.dead ? false : true;
+      break;
+    case " ":
+      game.player.controls.shoot = true;
       break;
     case "Escape":
       handlePauseMenu();
@@ -135,14 +164,14 @@ function handleKeyDown(e) {
     case "p":
       handlePauseMenu();
       break;
-    case "q":
-      Perks_Jumphandler();
+    case settings.controls.jumpperk:
+      if (!game.player.dead) Perks_Jumphandler();
       break;
-    case "e":
-      Perks_Speedhandler();
+    case settings.controls.speedperk:
+      if (!game.player.dead) Perks_Speedhandler();
       break;
-    case "x":
-      Perks_Instakillhandler();
+    case settings.controls.instakillperk:
+      if (!game.player.dead) Perks_Instakillhandler();
       break;
   }
 }
@@ -160,7 +189,7 @@ function handleResume(e) {
 
 function handlePauseMenu() {
   listenToControls(false);
-  if (game.player.pauseMenu) {
+  if (game.pauseMenu) {
     const pauseMenu = document.querySelector("#pause-menu");
     screens.game.removeChild(pauseMenu);
     resumeGame();
@@ -168,7 +197,7 @@ function handlePauseMenu() {
     return;
   }
   game.paused = true;
-  game.player.pauseMenu = true;
+  game.pauseMenu = true;
   if (document.querySelector("#pause-menu")?.id === "pause-menu") {
     screens.game.removeChild(document.querySelector("#pause-menu"));
   }
@@ -180,10 +209,10 @@ function handlePauseMenu() {
       <h2>${locales[settings.language].pauseMenuTitle}</h2>
 
       <div class="pause-menu-actions">
-        <img id="resume" class="img-btn small-btn" src="./assets/img/de_imgs/Weiter_bttn.png">
-        <img id="shop" class="img-btn small-btn" src="./assets/img/de_imgs/Shop_Bttn.png">
-        <img id="settings" class="img-btn small-btn" src="./assets/img/de_imgs/Einstellungen_Bttn.png">
-        <img id="quit" class="img-btn small-btn" src="./assets/img/de_imgs/Verlassen_Bttn.png">
+        <img id="resume" class="img-btn small-btn" src="./assets/img/de_imgs/continue_btn.png">
+        <img id="shop" class="img-btn small-btn" src="./assets/img/de_imgs/shop_btn.png">
+        <img id="settings" class="img-btn small-btn" src="./assets/img/de_imgs/settings_btn.png">
+        <img id="quit" class="img-btn small-btn" src="./assets/img/de_imgs/leave_btn.png">
       </div>
     </div>
   `;
@@ -216,6 +245,7 @@ function handlePauseMenu() {
   quitButton.addEventListener("click", async () => {
     await ChangeScreen("main-menu");
     screens.game.innerHTML = "";
+    game.pauseMenu = false;
     game.paused = true;
   });
 }
@@ -223,10 +253,12 @@ function handlePauseMenu() {
 function resumeGame() {
   listenToControls(true);
   game.paused = false;
-  game.player.pauseMenu = false;
+  game.pauseMenu = false;
 }
 
 function handleKeyUp(e) {
+  if (game.player.dead) return;
+
   switch (e.key) {
     case settings.controls.walkRight:
       game.player.controls.right = false;
@@ -236,6 +268,10 @@ function handleKeyUp(e) {
       break;
     case settings.controls.jump:
       game.player.controls.up = false;
+      break;
+    case " ":
+      game.player.controls.shoot = false;
+
       break;
   }
 }

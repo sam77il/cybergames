@@ -13,6 +13,57 @@ ul {
   list-style: none;
 }
 
+.game-screen-hud-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.stats {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 10px;
+  min-width: 150px;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  color: white;
+}
+
+.settings-controls-list {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  height: 220px;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.settings-controls-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+.settings-controls-list-item button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
 .shop-menu-list {
   display: flex;
   flex-direction: row;
@@ -362,11 +413,11 @@ select option:hover {
 #game-screen-hud {
   position: absolute;
   width: 100%;
-  height: 100px;
+  height: max-content;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 10px;
   opacity: 0.7;
 }
@@ -466,7 +517,6 @@ select option:hover {
 }
 
 #perks {
-  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;

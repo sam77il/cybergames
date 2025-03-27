@@ -5,8 +5,10 @@ class Player {
     this.posY = startPosY;
     this.inventory = [];
     this.coins = 0;
-    this.health = 100;
-    this.pauseMenu = false;
+    this.deaths = 0;
+    this.kills = 0;
+    this.health = 1000;
+    this.dead = false;
     this.settings = {
       width: width,
       height: height,
@@ -21,6 +23,11 @@ class Player {
       right: false,
       up: false,
     };
+    this.projectiles = [];
+    this.shootCooldown = 0;
+    this.maxCooldown = 60;
+    this.damage = 500;
+    this.lastDirectionRight = true;
   }
 
   initialize() {
@@ -31,9 +38,18 @@ class Player {
     );
     this.inventory = character.inventory;
     this.coins = character.coins;
+    this.deaths = character.deaths;
+    this.kills = character.kills;
     this.draw();
     this.loadInventory();
     this.loadCoins();
+    this.loadStats();
+  }
+
+  loadStats() {
+    game.ui.stats.kills.innerHTML = this.kills;
+    game.ui.stats.deaths.innerHTML = this.deaths;
+    game.ui.stats.kd.innerHTML = calculateKD(this.kills, this.deaths);
   }
 
   loadInventory() {
@@ -69,11 +85,74 @@ class Player {
       this.settings.width,
       this.settings.height
     );
+
+    this.projectiles.forEach((projectile) => projectile.draw());
+  }
+
+  shoot() {
+    if (this.shootCooldown === 0) {
+      const direction = this.lastDirectionRight ? 1 : -1;
+      const projectileX =
+        direction > 0 ? this.posX + this.settings.width : this.posX;
+      const projectileY = this.posY + this.settings.height / 2;
+
+      const projectile = new Projectile(
+        projectileX,
+        projectileY,
+        direction,
+        "player",
+        this.damage
+      );
+      this.projectiles.push(projectile);
+      this.shootCooldown = this.maxCooldown;
+    }
+  }
+
+  handleShooting() {
+    if (this.shootCooldown > 0) {
+      this.shootCooldown--;
+    }
+
+    if (this.controls.shoot && this.shootCooldown === 0) {
+      this.shoot();
+    }
+  }
+
+  updateProjectiles() {
+    this.projectiles = this.projectiles.filter((projectile) =>
+      projectile.update()
+    );
   }
 
   update() {
     this.draw();
     this.move();
+    this.handleShooting();
+    if (this.shootCooldown > 0) {
+      this.shootCooldown--;
+    }
+    this.updateProjectiles();
+  }
+
+  updateStats(stat, type, amount) {
+    if (stat === "kills") {
+      if (type === "add") {
+        this.kills += amount;
+      } else if (type === "remove") {
+        this.kills -= amount;
+      } else if (type === "set") {
+        this.kills = amount;
+      }
+    } else if (stat === "deaths") {
+      if (type === "add") {
+        this.deaths += amount;
+      } else if (type === "remove") {
+        this.deaths -= amount;
+      } else if (type === "set") {
+        this.deaths = amount;
+      }
+    }
+    this.loadStats();
   }
 
   updateHealth(type, amount) {
@@ -109,6 +188,14 @@ class Player {
         "url('./assets/img/health/health_0.png') no-repeat center";
     }
     game.ui.healthBar.style.backgroundSize = "cover";
+
+    if (this.health <= 0) {
+      this.dead = true;
+    }
+
+    if (this.dead) {
+      this.updateStats("deaths", "add", 1);
+    }
   }
 
   getTileAt(x, y) {
@@ -250,7 +337,6 @@ class Player {
   }
 
   addInventoryItem(newItem, from = "normal") {
-    // Prüfen, ob das Item bereits im Inventar vorhanden ist
     let newInventory = checkAddSlot(this.inventory, newItem);
 
     let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
@@ -375,8 +461,8 @@ class Player {
     let nextX = this.posX;
     let nextY = this.posY;
 
-    // Horizontale Bewegung mit Seitenkollision
     if (this.controls.left) {
+      this.lastDirectionRight = false;
       const collision = this.isColliding(
         nextX - this.settings.speed,
         this.posY
@@ -391,6 +477,8 @@ class Player {
     }
 
     if (this.controls.right) {
+      this.lastDirectionRight = true;
+
       const collision = this.isColliding(
         nextX + this.settings.speed,
         this.posY
@@ -403,13 +491,11 @@ class Player {
       }
     }
 
-    // Sprunglogik
     if (this.settings.onGround && this.controls.up) {
       this.settings.onGround = false;
       this.settings.fall = -this.settings.jumpForce;
     }
 
-    // Vertikale Bewegung
     this.settings.fall += this.settings.gravity;
     nextY += this.settings.fall;
 

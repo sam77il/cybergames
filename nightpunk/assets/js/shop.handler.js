@@ -20,7 +20,7 @@ function Shop_Handler() {
       <div id="shop-content"></div>
       
       <div class="shop-menu-footer">
-        <img class="img-btn small-btn" id="shop-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+        <img class="img-btn small-btn" id="shop-back" src="./assets/img/de_imgs/back_btn.png">
       </div>
     </div>
   `;

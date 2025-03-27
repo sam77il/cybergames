@@ -1,33 +1,34 @@
 let settingsMenu = {
   content: null,
   tab: null,
+  listeningControl: null,
 };
 
 function Settings_Handler() {
   settingsMenu.tab = null;
   screens.settings.innerHTML = `
     <div class="menus-background"></div>
-    <header class="menus-content ${game.paused ? "pause-menu" : ""}">
+    <header class="menus-content ${game.pauseMenu ? "pause-menu" : ""}">
       <h2>${locales[settings.language].settingsTitle}</h2>
 
       <div class="settings-menu-header">
         <ul class="settings-menu-list">
           ${
-            game.paused
+            game.pauseMenu
               ? ""
-              : `<li><img class="img-btn small-btn" id="settings-language" src="./assets/img/de_imgs/Sprache_bttn.png"></li>`
+              : `<li><img class="img-btn small-btn" id="settings-language" src="./assets/img/de_imgs/language_btn.png"></li>`
           }
       
-          <li><img class="img-btn small-btn" id="settings-sound" src="./assets/img/de_imgs/Audio_Bttn.png"></li>
-          <li><img class="img-btn small-btn" id="settings-controls" src="./assets/img/de_imgs/Steuerung_Bttn.png"></li>
+          <li><img class="img-btn small-btn" id="settings-sound" src="./assets/img/de_imgs/audio_btn.png"></li>
+          <li><img class="img-btn small-btn" id="settings-controls" src="./assets/img/de_imgs/controls_btn.png"></li>
         </ul>
       </div>
 
       <div id="settings-content"></div>
       
       <div class="settings-menu-footer">
-        <img id="settings-save" class="img-btn small-btn" src="./assets/img/de_imgs/Speichern_Bttn.png">
-        <img class="img-btn small-btn" id="settings-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+        <img id="settings-save" class="img-btn small-btn" src="./assets/img/de_imgs/save_btn.png">
+        <img class="img-btn small-btn" id="settings-back" src="./assets/img/de_imgs/back_btn.png">
       </div>
     </header>
   `;
@@ -40,7 +41,7 @@ function Settings_Handler() {
   const SETTINGS_CONTROLS = document.querySelector("#settings-controls");
 
   SETTINGS_BACK.addEventListener("click", () => {
-    if (game.paused) {
+    if (game.pauseMenu) {
       handlePauseMenu();
     } else {
       ChangeScreen("main-menu");
@@ -59,7 +60,7 @@ function Settings_Handler() {
     SaveSettings();
   });
 
-  if (!game.paused) {
+  if (!game.pauseMenu) {
     const SETTINGS_LANGUAGE = document.querySelector("#settings-language");
     SETTINGS_LANGUAGE.addEventListener("click", () => {
       ChangeSettingsScreen("language");
@@ -91,27 +92,109 @@ function ChangeSettingsScreen(screen) {
     case "controls":
       settingsMenu.content.innerHTML = `
         <h3>${locales[settings.language].settingsControlsTitle}</h3>
-        <input type="text" id="controls-walk-left" maxlength="1" value="${
-          settings.controls.walkLeft
-        }">
-              <label for="controls-walk-left">${
-                locales[settings.language].settingsControlsWalkLeft
-              }</label>
-              <br>
-              <input type="text" id="controls-walk-right" maxlength="1" value="${
+        
+        <div class="settings-controls-list">
+            <div class="settings-controls-list-item">
+              <p>Nach links laufen</p>
+              <button class="settings-controls-list-item-btn" data-control="walkLeft">${
+                settings.controls.walkLeft
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Nach rechts laufen</p>
+              <button class="settings-controls-list-item-btn" data-control="walkRight">${
                 settings.controls.walkRight
-              }">
-              <label for="controls-walk-right">${
-                locales[settings.language].settingsControlsWalkRight
-              }</label>
-              <br>
-              <input type="text" id="controls-jump" maxlength="1" value="${
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Springen</p>
+              <button class="settings-controls-list-item-btn" data-control="jump">${
                 settings.controls.jump
-              }">
-              <label for="controls-jump">${
-                locales[settings.language].settingsControlsJump
-              }</label>
-            `;
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Attacke</p>
+              <button class="settings-controls-list-item-btn" data-control="attack">${
+                settings.controls.attack === " "
+                  ? "Space"
+                  : settings.controls.attack
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Item Slot 1</p>
+              <button class="settings-controls-list-item-btn" data-control="itemslot1">${
+                settings.controls.itemslot1
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Item Slot 2</p>
+              <button class="settings-controls-list-item-btn" data-control="itemslot2">${
+                settings.controls.itemslot2
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Item Slot 3</p>
+              <button class="settings-controls-list-item-btn" data-control="itemslot3">${
+                settings.controls.itemslot3
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Item Slot 4</p>
+              <button class="settings-controls-list-item-btn" data-control="itemslot4">${
+                settings.controls.itemslot4
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Interagieren</p>
+              <button class="settings-controls-list-item-btn" data-control="interact">${
+                settings.controls.interact
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Wegwerfen</p>
+              <button class="settings-controls-list-item-btn" data-control="drop">${
+                settings.controls.drop
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Jumpboost Perk</p>
+              <button class="settings-controls-list-item-btn" data-control="jumpperk">${
+                settings.controls.jumpperk
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Speedboost Perk</p>
+              <button class="settings-controls-list-item-btn" data-control="speedperk">${
+                settings.controls.speedperk
+              }</button>
+            </div>
+            <div class="settings-controls-list-item">
+              <p>Instakill Perk</p>
+              <button class="settings-controls-list-item-btn" data-control="instakillperk">${
+                settings.controls.instakillperk
+              }</button>
+            </div>
+        </div>
+      `;
+      const CONTROL_BUTTONS = document.querySelectorAll(
+        ".settings-controls-list-item-btn"
+      );
+      for (let button of CONTROL_BUTTONS) {
+        button.addEventListener("click", (event) => {
+          if (!settingsMenu.listeningControl) {
+            settingsMenu.listeningControl = event.target;
+            event.target.innerHTML = "Hört zu...";
+            window.addEventListener("keyup", listeningToSettingControls);
+          } else {
+            Notify(
+              "Controls",
+              "Du änderst bereits ein Keybind, drücke ESC um abzubrechen.",
+              "error",
+              3500
+            );
+          }
+        });
+      }
       break;
     case "sound":
       settingsMenu.content.innerHTML = `
@@ -166,6 +249,27 @@ function ChangeSettingsScreen(screen) {
   }
 }
 
+function listeningToSettingControls(e) {
+  if (e.key === "Escape") {
+    settingsMenu.listeningControl.innerHTML =
+      settings.controls[settingsMenu.listeningControl.dataset.control];
+    window.removeEventListener("keyup", listeningToSettingControls);
+    settingsMenu.listeningControl = null;
+
+    return;
+  }
+  settings.controls[settingsMenu.listeningControl.dataset.control] = e.key;
+  settingsMenu.listeningControl.innerHTML = e.key;
+  Notify(
+    "Controls",
+    "Erfolgreich zu " + e.key.toUpperCase() + " geändert",
+    "success",
+    3500
+  );
+  window.removeEventListener("keyup", listeningToSettingControls);
+  settingsMenu.listeningControl = null;
+}
+
 async function SaveSettings() {
   if (settingsMenu.tab === "language") {
     const languageValue = document.querySelector(
@@ -173,20 +277,6 @@ async function SaveSettings() {
     ).value;
     console.log(languageValue);
     settings.language = languageValue;
-  } else if (settingsMenu.tab === "controls") {
-    const walkLeftValue =
-      document.querySelector("#controls-walk-left")?.value ||
-      settings.controls.walkLeft;
-    const walkRightValue =
-      document.querySelector("#controls-walk-right")?.value ||
-      settings.controls.walkRight;
-    const jumpValue =
-      document.querySelector("#controls-jump")?.value || settings.controls.jump;
-    settings.controls = {
-      walkLeft: walkLeftValue,
-      walkRight: walkRightValue,
-      jump: jumpValue,
-    };
   } else if (settingsMenu.tab === "sound") {
     const soundVolume =
       document.querySelector("#sound-volume")?.value || settings.sound.volume;
@@ -199,7 +289,7 @@ async function SaveSettings() {
   Notify("Settings", "Einstellungen erfolgreich gespeichert", "success", 3000);
   localStorage.setItem("settings", JSON.stringify(settings));
 
-  if (!game.paused) {
+  if (!game.pauseMenu) {
     await ChangeScreen("settings");
     console.log(settingsMenu.tab);
     ChangeSettingsScreen(settingsMenu.tab);

@@ -9,12 +9,17 @@ function LevelSelection_Handler(id) {
       <div id="level-list"></div>
 
       <div class="level-selection-actions">
-        <img class="img-btn" id="level-selection-back" src="./assets/img/de_imgs/Zurueck_Bttn.png">
+        <img class="img-btn" id="level-selection-back" src="./assets/img/de_imgs/back_btn.png">
       </div>
     </div>
   `;
 
   LEVEL_LIST = document.querySelector("#level-list");
+  const LEVEL_BACK = document.querySelector("#level-selection-back");
+
+  LEVEL_BACK.addEventListener("click", () => {
+    ChangeScreen("character-selection");
+  });
 
   for (let level of config.levels) {
     LevelItem(level, id);
@@ -28,6 +33,7 @@ function LevelSelection_Handler(id) {
 
 async function StartGame(event) {
   game.paused = false;
+  game.pauseMenu = false;
   await ChangeScreen("game-screen");
   initiateGameCanvas(
     event.target.dataset.id,
@@ -54,7 +60,7 @@ function LevelItem({ label, level, enemies, items }, id) {
       <p>Itemrewards: <b>${items.length}</b></p>
 
       <div class="level-selection-item-actions">
-        <img class="${classList}" src="./assets/img/de_imgs/Spielen_Bttn.png" data-level="${level}" data-id="${id}">
+        <img class="${classList}" src="./assets/img/de_imgs/play_btn.png" data-level="${level}" data-id="${id}">
       </div>
     </div>
   `;
