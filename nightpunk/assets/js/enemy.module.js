@@ -139,6 +139,52 @@ class Enemy {
     }
   }
 
+  checkCollisionWithPlayer() {
+    return (
+      this.posX < game.player.posX + game.player.settings.width &&
+      this.posX + this.settings.width > game.player.posX &&
+      this.posY < game.player.posY + game.player.settings.height &&
+      this.posY + this.settings.height > game.player.posY
+    );
+  }
+
+  resolvePlayerCollision() {
+    // Prüfe, ob der Spieler steht (nicht links oder rechts bewegt)
+    const playerIsStanding =
+      !game.player.controls.left && !game.player.controls.right;
+
+    if (this.checkCollisionWithPlayer() && playerIsStanding) {
+      const overlapX = Math.min(
+        this.posX + this.settings.width - game.player.posX,
+        game.player.posX + game.player.settings.width - this.posX
+      );
+      const overlapY = Math.min(
+        this.posY + this.settings.height - game.player.posY,
+        game.player.posY + game.player.settings.height - this.posY
+      );
+
+      if (overlapX < overlapY) {
+        // Horizontale Kollision
+        if (this.posX < game.player.posX) {
+          // Gegner links vom Spieler
+          this.posX -= overlapX;
+        } else {
+          // Gegner rechts vom Spieler
+          this.posX += overlapX;
+        }
+      } else {
+        // Vertikale Kollision
+        if (this.posY < game.player.posY) {
+          // Gegner über dem Spieler
+          this.posY -= overlapY;
+        } else {
+          // Gegner unter dem Spieler
+          this.posY += overlapY;
+        }
+      }
+    }
+  }
+
   update() {
     if (this.health <= 0) {
       this.die();
@@ -169,6 +215,7 @@ class Enemy {
     this.updateProjectiles();
 
     this.resolveEnemyCollisions();
+    this.resolvePlayerCollision(); // Füge diese Zeile hinzu
 
     this.draw();
     this.move();

@@ -10,8 +10,8 @@ class Player {
     this.health = 1000;
     this.dead = false;
     this.settings = {
-      width: width,
-      height: height,
+      width: 50, // sprite width
+      height: 70, // sprite height
       speed: 5,
       gravity: 1,
       fall: 0,
@@ -28,6 +28,59 @@ class Player {
     this.maxCooldown = 60;
     this.damage = 500;
     this.lastDirectionRight = true;
+
+    // Sprite sheets for different states
+    this.spriteSheets = {
+      idle: {
+        image: new Image(),
+        frames: 4,
+        frameWidth: 50,
+        frameHeight: 70,
+        rowHeight: 140, // Total height is 2 * frameHeight
+      },
+      run: {
+        image: new Image(),
+        frames: 6,
+        frameWidth: 50,
+        frameHeight: 70,
+        rowHeight: 140,
+      },
+      jump: {
+        image: new Image(),
+        frames: 2,
+        frameWidth: 50,
+        frameHeight: 70,
+        rowHeight: 140,
+      },
+      hit: {
+        image: new Image(),
+        frames: 3,
+        frameWidth: 50,
+        frameHeight: 70,
+        rowHeight: 140,
+      },
+      death: {
+        image: new Image(),
+        frames: 4,
+        frameWidth: 50,
+        frameHeight: 70,
+        rowHeight: 140,
+      },
+    };
+
+    // Set sprite sheet sources
+    this.spriteSheets.idle.image.src = "./assets/img/player/netrunner/idle.png";
+    this.spriteSheets.run.image.src = "./assets/img/player/netrunner/run.png";
+    this.spriteSheets.jump.image.src = "./assets/img/player/netrunner/jump.png";
+    this.spriteSheets.hit.image.src = "./assets/img/player/netrunner/hit.png";
+    this.spriteSheets.death.image.src =
+      "./assets/img/player/netrunner/death.png";
+
+    this.animationState = "idle";
+    this.currentFrame = 0;
+    this.frameTimer = 0;
+    this.framesPerSecond = 10;
+    this.frameInterval = 1000 / this.framesPerSecond;
   }
 
   initialize() {
@@ -78,15 +131,35 @@ class Player {
   }
 
   draw() {
-    game.canvas.mainCtx.fillStyle = "black";
-    game.canvas.mainCtx.fillRect(
+    const ctx = game.canvas.mainCtx;
+
+    // Get current state's sprite sheet
+    const currentSpriteSheet = this.spriteSheets[this.animationState];
+
+    // Check if sprite sheet is loaded
+    if (!currentSpriteSheet.image.complete) return;
+
+    // Update frame based on animation state
+    this.frameTimer += game.core.deltaTime;
+    if (this.frameTimer >= this.frameInterval) {
+      this.currentFrame = (this.currentFrame + 1) % currentSpriteSheet.frames;
+      this.frameTimer = 0;
+    }
+
+    // Determine row and column based on direction
+    const row = this.lastDirectionRight ? 0 : 1;
+
+    ctx.drawImage(
+      currentSpriteSheet.image,
+      this.currentFrame * currentSpriteSheet.frameWidth, // Source X
+      row * currentSpriteSheet.frameHeight, // Source Y - Switch between top and bottom row
+      currentSpriteSheet.frameWidth, // Source Width
+      currentSpriteSheet.frameHeight, // Source Height
       this.posX,
       this.posY,
       this.settings.width,
       this.settings.height
     );
-
-    this.projectiles.forEach((projectile) => projectile.draw());
   }
 
   shoot() {
@@ -125,6 +198,17 @@ class Player {
   }
 
   update() {
+    // Determine animation state
+    if (this.dead) {
+      this.animationState = "death";
+    } else if (!this.settings.onGround) {
+      this.animationState = "jump";
+    } else if (this.controls.left || this.controls.right) {
+      this.animationState = "run";
+    } else {
+      this.animationState = "idle";
+    }
+
     this.draw();
     this.move();
     this.handleShooting();
@@ -195,6 +279,15 @@ class Player {
 
     if (this.dead) {
       this.updateStats("deaths", "add", 1);
+    }
+
+    // Trigger hit animation if health is reduced
+    if (type === "remove" && amount > 0) {
+      this.animationState = "hit";
+      // Optional: Reset to previous state after hit animation
+      setTimeout(() => {
+        this.animationState = this.dead ? "death" : "idle";
+      }, this.frameInterval * this.spriteSheets.hit.frames);
     }
   }
 
