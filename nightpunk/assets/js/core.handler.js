@@ -14,6 +14,9 @@ async function TitleScreen_Handler() {
 function TitleScreen_Event(e) {
   if (e.code === "Space") {
     window.removeEventListener("keyup", TitleScreen_Event);
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     ChangeScreen("main-menu");
   }
 }
@@ -24,9 +27,9 @@ async function MainMenu_Handler() {
     <div class="menus-content">
       <img class="menus-logo small" src="./assets/img/logo_game.png">
       <ul class="main-menu-selection">
-          <li><img class="img-btn" id="main-menu-start" src="./assets/img/de_imgs/start_btn.png"></li>
-          <li><img class="img-btn" id="main-menu-settings" src="./assets/img/de_imgs/settings_btn.png"></li>
-          <li><img class="img-btn" id="main-menu-quit" src="./assets/img/de_imgs/leave_btn.png"></li>
+          <li><img class="img-btn" id="main-menu-start" src="./assets/img/${settings.language}_imgs/start_btn.png"></li>
+          <li><img class="img-btn" id="main-menu-settings" src="./assets/img/${settings.language}_imgs/settings_btn.png"></li>
+          <li><img class="img-btn" id="main-menu-quit" src="./assets/img/${settings.language}_imgs/leave_btn.png"></li>
       </ul>
     </div>
   `;
@@ -37,10 +40,16 @@ async function MainMenu_Handler() {
     window.location.href = "/cybergame/home";
   });
   MAIN_START.addEventListener("click", async function () {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     await ChangeScreen("character-selection");
     //handleActionStart(true);
   });
-  MAIN_SETTINGS.addEventListener("click", () => {
-    ChangeScreen("settings");
+  MAIN_SETTINGS.addEventListener("click", async () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
+    await ChangeScreen("settings");
   });
 }

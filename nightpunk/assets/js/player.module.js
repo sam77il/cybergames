@@ -1,14 +1,17 @@
 class Player {
-  constructor(startPosX, startPosY, width, height, id) {
+  constructor(startPosX, startPosY, width, height, id, chartype) {
     this.id = Number(id);
+    this.chartype = chartype;
     this.posX = startPosX;
     this.posY = startPosY;
     this.inventory = [];
     this.selectedItem = null;
     this.coins = 0;
-    this.deaths = 0;
-    this.kills = 0;
-    this.health = 1000;
+    this.stats = {
+      deaths: 0,
+      kills: 0,
+    };
+    this.health = 1;
     this.dead = false;
     this.settings = {
       width: 50, // sprite width
@@ -24,10 +27,11 @@ class Player {
       right: false,
       up: false,
     };
+    this.activePerks = [];
     this.projectiles = [];
     this.shootCooldown = 0;
-    this.maxCooldown = 60;
-    this.damage = 500;
+    this.maxCooldown = 200;
+    this.damage = 30;
     this.lastDirectionRight = true;
 
     // Sprite sheets for different states
@@ -50,13 +54,13 @@ class Player {
         frameWidth: 50,
         frameHeight: 70,
       },
-      hit: {
+      superjump: {
         image: new Image(),
-        frames: 2,
+        frames: 6,
         frameWidth: 50,
         frameHeight: 70,
       },
-      death: {
+      attack: {
         image: new Image(),
         frames: 6,
         frameWidth: 50,
@@ -65,12 +69,11 @@ class Player {
     };
 
     // Set sprite sheet sources
-    this.spriteSheets.idle.image.src = "./assets/img/player/netrunner/idle.png";
-    this.spriteSheets.run.image.src = "./assets/img/player/netrunner/run.png";
-    this.spriteSheets.jump.image.src = "./assets/img/player/netrunner/jump.png";
-    this.spriteSheets.hit.image.src = "./assets/img/player/netrunner/hit.png";
-    this.spriteSheets.death.image.src =
-      "./assets/img/player/netrunner/death.png";
+    this.spriteSheets.idle.image.src = `./assets/img/player/${this.chartype}/idle.png`;
+    this.spriteSheets.run.image.src = `./assets/img/player/${this.chartype}/run.png`;
+    this.spriteSheets.jump.image.src = `./assets/img/player/${this.chartype}/jump.png`;
+    this.spriteSheets.superjump.image.src = `./assets/img/player/${this.chartype}/superjump.png`;
+    this.spriteSheets.attack.image.src = `./assets/img/player/${this.chartype}/attack.png`;
 
     this.animationState = "idle"; // Default state
     this.currentFrame = 0;
@@ -87,8 +90,8 @@ class Player {
     );
     this.inventory = character.inventory;
     this.coins = character.coins;
-    this.deaths = character.deaths;
-    this.kills = character.kills;
+    this.stats.deaths = character.stats.deaths;
+    this.stats.kills = character.stats.kills;
     this.draw();
     this.loadInventory();
     this.loadCoins();
@@ -96,9 +99,12 @@ class Player {
   }
 
   loadStats() {
-    game.ui.stats.kills.innerHTML = this.kills;
-    game.ui.stats.deaths.innerHTML = this.deaths;
-    game.ui.stats.kd.innerHTML = calculateKD(this.kills, this.deaths);
+    game.ui.stats.kills.innerHTML = this.stats.kills;
+    game.ui.stats.deaths.innerHTML = this.stats.deaths;
+    game.ui.stats.kd.innerHTML = calculateKD(
+      this.stats.kills,
+      this.stats.deaths
+    );
   }
 
   loadInventory() {
@@ -134,7 +140,7 @@ class Player {
     if (!currentSpriteSheet.image.complete) return;
 
     // Update frame based on animation state and timing
-    this.frameTimer += game.core.deltaTime;
+    this.frameTimer += 16; // Feste Zeit oder game.core.deltaTime
     if (this.frameTimer >= this.frameInterval) {
       // For death animation, don't loop - stay on the last frame
       if (
@@ -154,6 +160,16 @@ class Player {
       ? currentSpriteSheet.frameHeight
       : 0;
 
+    // Hier die Größe des Spielers ändern
+    // Original: this.settings.width, this.settings.height
+    const scaleFactor = 1.6; // Größenfaktor, z.B. 1.5 für 50% größer
+    const newWidth = this.settings.width * scaleFactor;
+    const newHeight = this.settings.height * scaleFactor;
+
+    // Position anpassen, damit der Spieler vom gleichen Bezugspunkt aus vergrößert wird
+    // (z.B. die Füße bleiben am gleichen Ort)
+    const posYAdjusted = this.posY - (newHeight - this.settings.height);
+
     ctx.drawImage(
       currentSpriteSheet.image,
       this.currentFrame * currentSpriteSheet.frameWidth,
@@ -161,18 +177,25 @@ class Player {
       currentSpriteSheet.frameWidth,
       currentSpriteSheet.frameHeight,
       this.posX,
-      this.posY,
-      this.settings.width,
-      this.settings.height
+      posYAdjusted, // Angepasste Y-Position
+      newWidth,
+      newHeight
     );
   }
 
   shoot() {
     if (this.shootCooldown === 0) {
+      // Set animation state to attack
+      this.animationState = "attack";
+
+      // Reset animation timer for smooth animation
+      this.frameTimer = 0;
+      this.currentFrame = 0;
+
       const direction = this.lastDirectionRight ? 1 : -1;
       const projectileX =
         direction > 0 ? this.posX + this.settings.width : this.posX;
-      const projectileY = this.posY + this.settings.height / 2;
+      const projectileY = this.posY + 15;
 
       const projectile = new Projectile(
         projectileX,
@@ -183,6 +206,26 @@ class Player {
       );
       this.projectiles.push(projectile);
       this.shootCooldown = this.maxCooldown;
+      game.sounds.shoot.play();
+
+      // Set timeout to return to normal animation
+      setTimeout(() => {
+        // Only reset if still in attack animation (could have changed due to other actions)
+        if (this.animationState === "attack") {
+          // Return to appropriate animation based on current state
+          if (!this.settings.onGround) {
+            if (this.activePerks.includes("jump")) {
+              this.animationState = "superjump";
+            } else {
+              this.animationState = "jump";
+            }
+          } else if (this.controls.left || this.controls.right) {
+            this.animationState = "run";
+          } else {
+            this.animationState = "idle";
+          }
+        }
+      }, 500); // Attack animation duration
     }
   }
 
@@ -194,21 +237,118 @@ class Player {
     if (this.controls.shoot && this.shootCooldown === 0 && this.selectedItem) {
       if (this.selectedItem.name === "railgun") {
         this.shoot();
+      } else if (this.selectedItem.name === "katana") {
+        this.knife("katana");
+      } else if (this.selectedItem.name === "mantisblade") {
+        this.knife("mantisblade");
       } else if (this.selectedItem.name === "ssd") {
         this.updateHealth("add", 100);
 
         if (this.health > 100) {
           this.updateHealth("set", 100);
         }
-        this.dropItem(this.selectedItem, 1, false);
+        this.removeInventoryItem(this.selectedItem, 1, false);
       } else if (this.selectedItem.name === "hdd") {
-        this.updateHealth("add", 50);
+        this.updateHealth("add", A50);
 
         if (this.health > 100) {
           this.updateHealth("set", 100);
         }
-        this.dropItem(this.selectedItem, 1, false);
+        this.removeInventoryItem(this.selectedItem, 1, false);
       }
+    }
+  }
+
+  knife(knifeType) {
+    // Only allow knife attack if not in cooldown
+    if (this.shootCooldown === 0) {
+      // Set animation state to attack when using knife
+      this.animationState = "attack";
+
+      // Reset animation timer to ensure smooth animation start
+      this.frameTimer = 0;
+      this.currentFrame = 0;
+
+      // Play knife sound effect
+      if (game.sounds[knifeType]) {
+        game.sounds[knifeType].play();
+      } else {
+        console.log("Knife sound effect not loaded");
+      }
+
+      // Define knife range
+      const knifeRange = 80; // Pixels
+
+      // Check for enemies within range
+      console.log(game.enemies);
+      const nearbyEnemies = game.enemies.filter((enemy) => {
+        // Calculate distance between player and enemy
+        const distanceX = Math.abs(
+          this.posX +
+            this.settings.width / 2 -
+            (enemy.posX + enemy.settings.width / 2)
+        );
+        const distanceY = Math.abs(
+          this.posY +
+            this.settings.height / 2 -
+            (enemy.posY + enemy.settings.height / 2)
+        );
+
+        // Check if enemy is in front of player based on direction
+        const isInFront = this.lastDirectionRight
+          ? enemy.posX > this.posX
+          : enemy.posX < this.posX;
+
+        return (
+          distanceX < knifeRange && distanceY < 60 && isInFront && !enemy.dead
+        );
+      });
+
+      // Deal damage to nearby enemies
+      let hitAny = false;
+
+      nearbyEnemies.forEach((enemy) => {
+        // Calculate damage based on weapon
+        let damage = 50; // Base knife damage
+
+        // Increase damage for mantisblade
+        if (this.selectedItem && this.selectedItem.name === "mantisblade") {
+          damage = 80;
+        }
+
+        // Apply damage to enemy
+        enemy.updateHealth("remove", damage);
+
+        hitAny = true;
+      });
+
+      // Play hit sound if any enemy was hit
+      if (hitAny && game.sounds.hit) {
+        game.sounds.hit.play();
+      }
+
+      // Apply cooldown - reuse the same cooldown mechanism as shoot
+      // You can adjust the cooldown time if knives should have different cooldown than guns
+      this.shootCooldown = this.maxCooldown;
+
+      // Set timeout to return to normal animation
+      setTimeout(() => {
+        // Only reset if still in attack animation (could have changed due to other actions)
+        if (this.animationState === "attack") {
+          // Return to appropriate animation based on current state
+          if (!this.settings.onGround) {
+            if (this.activePerks.includes("jump")) {
+              this.animationState = "superjump";
+            } else {
+              this.animationState = "jump";
+            }
+          } else if (this.controls.left || this.controls.right) {
+            this.animationState = "run";
+          } else {
+            this.animationState = "idle";
+          }
+        }
+      }, 500); // Attack animation duration
     }
   }
 
@@ -218,47 +358,37 @@ class Player {
     );
   }
 
-  update() {
-    // Don't change animation state if dead or in hit animation
-    if (this.dead) {
-      if (this.animationState !== "death") {
-        // Reset frame counter when transitioning to death animation
-        this.currentFrame = 0;
-        this.animationState = "death";
-      }
-    } else if (this.animationState === "hit") {
-      // Keep hit animation going until it completes
-      if (this.currentFrame >= this.spriteSheets.hit.frames - 1) {
-        // If hit animation is done, go back to appropriate state
-        if (!this.settings.onGround) {
-          this.animationState = "jump";
-        } else if (this.controls.left || this.controls.right) {
-          this.animationState = "run";
-        } else {
-          this.animationState = "idle";
-        }
-        this.currentFrame = 0;
-      }
+  updatePlayerSheet() {
+    console.log(this.selectedItem);
+    if (!this.selectedItem) {
+      this.spriteSheets.idle.image.src = `./assets/img/player/${this.chartype}/idle.png`;
+      this.spriteSheets.run.image.src = `./assets/img/player/${this.chartype}/run.png`;
+      this.spriteSheets.jump.image.src = `./assets/img/player/${this.chartype}/jump.png`;
+      this.spriteSheets.attack.image.src = `./assets/img/player/${this.chartype}/attack.png`;
+    } else if (this.selectedItem.name === "railgun") {
+      this.spriteSheets.idle.image.src = `./assets/img/player/${this.chartype}/railgun_idle.png`;
+      this.spriteSheets.run.image.src = `./assets/img/player/${this.chartype}/railgun_run.png`;
+      this.spriteSheets.jump.image.src = `./assets/img/player/${this.chartype}/railgun_jump.png`;
+      this.spriteSheets.attack.image.src = `./assets/img/player/${this.chartype}/railgun_run.png`;
+    } else if (this.selectedItem.name === "katana") {
+      this.spriteSheets.idle.image.src = `./assets/img/player/${this.chartype}/katana_idle.png`;
+      this.spriteSheets.run.image.src = `./assets/img/player/${this.chartype}/katana_run.png`;
+      this.spriteSheets.jump.image.src = `./assets/img/player/${this.chartype}/katana_jump.png`;
+      this.spriteSheets.attack.image.src = `./assets/img/player/${this.chartype}/katana_jump.png`;
+    } else if (this.selectedItem.name === "mantisblade") {
+      this.spriteSheets.idle.image.src = `./assets/img/player/${this.chartype}/mantisblade_idle.png`;
+      this.spriteSheets.run.image.src = `./assets/img/player/${this.chartype}/mantisblade_run.png`;
+      this.spriteSheets.jump.image.src = `./assets/img/player/${this.chartype}/mantisblade_jump.png`;
+      this.spriteSheets.attack.image.src = `./assets/img/player/${this.chartype}/mantisblade_attack.png`;
     } else {
-      // Normal state determination
-      if (!this.settings.onGround) {
-        if (this.animationState !== "jump") {
-          this.currentFrame = 0;
-          this.animationState = "jump";
-        }
-      } else if (this.controls.left || this.controls.right) {
-        if (this.animationState !== "run") {
-          this.currentFrame = 0;
-          this.animationState = "run";
-        }
-      } else {
-        if (this.animationState !== "idle") {
-          this.currentFrame = 0;
-          this.animationState = "idle";
-        }
-      }
+      this.spriteSheets.idle.image.src = `./assets/img/player/${this.chartype}/idle.png`;
+      this.spriteSheets.run.image.src = `./assets/img/player/${this.chartype}/run.png`;
+      this.spriteSheets.jump.image.src = `./assets/img/player/${this.chartype}/jump.png`;
+      this.spriteSheets.attack.image.src = `./assets/img/player/${this.chartype}/attack.png`;
     }
+  }
 
+  update() {
     // Update direction based on controls
     if (this.controls.left) {
       this.lastDirectionRight = false;
@@ -266,13 +396,20 @@ class Player {
       this.lastDirectionRight = true;
     }
 
-    // Update animation state based on movement and ground status
-    if (!this.settings.onGround) {
-      this.animationState = "jump";
-    } else if (this.controls.left || this.controls.right) {
-      this.animationState = "run";
-    } else {
-      this.animationState = "idle";
+    // Only update animation state if not in attack animation
+    // This prevents the attack animation from being interrupted
+    if (this.animationState !== "attack") {
+      if (!this.settings.onGround) {
+        if (this.activePerks.includes("jump")) {
+          this.animationState = "superjump";
+        } else {
+          this.animationState = "jump";
+        }
+      } else if (this.controls.left || this.controls.right) {
+        this.animationState = "run";
+      } else {
+        this.animationState = "idle";
+      }
     }
 
     this.draw();
@@ -287,21 +424,32 @@ class Player {
   updateStats(stat, type, amount) {
     if (stat === "kills") {
       if (type === "add") {
-        this.kills += amount;
+        this.stats.kills += amount;
       } else if (type === "remove") {
-        this.kills -= amount;
+        this.stats.kills -= amount;
       } else if (type === "set") {
-        this.kills = amount;
+        this.stats.kills = amount;
       }
     } else if (stat === "deaths") {
       if (type === "add") {
-        this.deaths += amount;
+        this.stats.deaths += amount;
       } else if (type === "remove") {
-        this.deaths -= amount;
+        this.stats.deaths -= amount;
       } else if (type === "set") {
-        this.deaths = amount;
+        this.stats.deaths = amount;
       }
     }
+    let character = JSON.parse(localStorage.getItem("characters")).find(
+      (c) => c.id === this.id
+    );
+    character.stats = this.stats;
+    let characters = JSON.parse(localStorage.getItem("characters")).map((c) => {
+      if (c.id === character.id) {
+        return (c = character);
+      }
+      return c;
+    });
+    localStorage.setItem("characters", JSON.stringify(characters));
     this.loadStats();
   }
 
@@ -341,17 +489,9 @@ class Player {
     // Check if player died
     if (this.health <= 0 && !this.dead) {
       this.dead = true;
+      Gameover_Handler();
       this.updateStats("deaths", "add", 1);
-      // Reset frame counter for death animation
-      this.currentFrame = 0;
-      this.animationState = "death";
-    }
-
-    // Trigger hit animation if health is reduced
-    if (type === "remove" && amount > 0 && !this.dead) {
-      // Save previous state to return to after hit animation
-      this.currentFrame = 0;
-      this.animationState = "hit";
+      game.sounds.death.play();
     }
   }
 
@@ -378,6 +518,8 @@ class Player {
       return { collides: true, type: "G" };
     } else if (this.getTileAt(x + this.settings.width, bottomY) === "H") {
       return { collides: true, type: "H" };
+    } else if (this.getTileAt(x + this.settings.width, bottomY) === "Y") {
+      return { collides: true, type: "Y" };
     }
 
     const collides =
@@ -496,6 +638,7 @@ class Player {
   addInventoryItem(newItem, from = "normal") {
     let newInventory = checkAddSlot(this.inventory, newItem);
 
+    if (!newInventory) return;
     let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
       (character) => Number(character.id) === Number(this.id)
     );
@@ -515,14 +658,14 @@ class Player {
     this.loadInventory();
     if (from === "shop") {
       Notify(
-        "Inventar",
+        locales[settings.language].notifyInventoryTitle,
         `Du hast ${newItem.label} ${newItem.amount}x für ${newItem.price} Coins gekauft`,
         "info",
         3500
       );
     } else {
       Notify(
-        "Inventar",
+        locales[settings.language].notifyInventoryTitle,
         `Du hast ${newItem.label} ${newItem.amount}x aufgehoben`,
         "info",
         3500
@@ -546,7 +689,7 @@ class Player {
     newCharacters.push(oldCharacters);
     localStorage.setItem("characters", JSON.stringify(newCharacters));
     Notify(
-      "Perks",
+      locales[settings.language].notifyInventoryTitle,
       "Der Perk " + perks[perk].label + " wurde installiert",
       "success",
       3500
@@ -554,38 +697,32 @@ class Player {
   }
 
   updateCoins(type, newCoin, from = "normal") {
-    let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
-      (character) => Number(character.id) === Number(this.id)
-    );
+    let characters = JSON.parse(localStorage.getItem("characters"));
+    let character = characters.find((c) => Number(c.id) === Number(this.id));
     if (type === "add") {
-      oldCharacters.coins += newCoin.amount;
       this.coins += newCoin.amount;
     } else if (type === "remove") {
-      oldCharacters.coins -= newCoin.amount;
       this.coins -= newCoin.amount;
     } else if (type === "set") {
-      oldCharacters.coins = newCoin.amount;
       this.coins = newCoin.amount;
     }
 
-    let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
-      (character) => Number(character.id) !== Number(this.id)
-    );
+    console.log(this.coins);
 
-    newCharacters.push(oldCharacters);
-
+    character.coins = this.coins;
+    console.log(character);
     if (from !== "shop") {
-      newCharacters
+      characters
         .find((c) => c.id === this.id)
         .levels.find((l) => l.level === game.core.currentLevel)
         .coinsCollected.push(newCoin.id);
     }
 
-    localStorage.setItem("characters", JSON.stringify(newCharacters));
+    localStorage.setItem("characters", JSON.stringify(characters));
     this.loadCoins();
     if (from === "normal") {
       Notify(
-        "Coins",
+        locales[settings.language].notifyInventoryTitle,
         `Du hast ${newCoin.amount}x Coins eingesammelt`,
         "info",
         3500
@@ -593,14 +730,8 @@ class Player {
     }
   }
 
-  dropItem(item, amount, onMap = true) {
+  removeInventoryItem(item, amount, onMap = true) {
     if (item?.name) {
-      // let newInventory = this.inventory.filter(
-      //   (invItem) => invItem.name !== item.name
-      // );
-      console.log(item);
-      console.log(amount);
-      console.log(onMap);
       let newInventory = this.inventory
         .map((invItem) => {
           if (invItem.name === item.name) {
@@ -613,29 +744,45 @@ class Player {
           return invItem; // Keep item in inventory
         })
         .filter(Boolean); // Filter out null values
-      console.log(newInventory);
 
-      let characters = JSON.parse(localStorage.getItem("characters")).find(
-        (character) => Number(character.id) === Number(this.id)
+      let characters = JSON.parse(localStorage.getItem("characters")).map(
+        (c) => {
+          if (c.id === this.id) {
+            c.inventory = newInventory;
+          }
+          return c;
+        }
       );
-      // oldCharacters.inventory = newInventory;
-      // let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
-      //   (character) => Number(character.id) !== Number(this.id)
-      // );
-      // newCharacters.push(oldCharacters);
-      // localStorage.setItem("characters", JSON.stringify(newCharacters));
-      // this.inventory = newInventory;
-      // this.loadInventory();
-      // if (onMap) {
-      //   game.map.itemsOnFloor.setItems(item);
-      // }
+      localStorage.setItem("characters", JSON.stringify(characters));
+      this.inventory = newInventory;
+      this.loadInventory();
+      renderInventoryItemSelection(true);
+      if (onMap) {
+        console.log(item);
+        game.map.itemsOnFloor.setItems(item);
+      }
     }
-    gameState.selectedInventoryItemSlot = null;
-    gameState.selectedItem = null;
-    renderInventoryItemSelection();
+  }
+
+  updateKilledEnemy(id) {
+    let characters = JSON.parse(localStorage.getItem("characters")) || [];
+    let character = characters.find((c) => c.id === this.id);
+
+    if (character) {
+      let levelIndex = character.levels.findIndex(
+        (l) => l.level === game.core.currentLevel
+      );
+
+      if (levelIndex !== -1) {
+        character.levels[levelIndex].enemiesKilled.push(id);
+        // Speichern der aktualisierten `characters`-Liste in localStorage
+        localStorage.setItem("characters", JSON.stringify(characters));
+      }
+    }
   }
 
   move() {
+    if (this.dead) return;
     let nextX = this.posX;
     let nextY = this.posY;
 
@@ -652,6 +799,14 @@ class Player {
       } else if (!collision.collides) {
         nextX -= this.settings.speed;
       }
+
+      if (collision.type === "Y") {
+        Nextlevel_Handler();
+      }
+
+      if (this.settings.onGround && game.sounds.run.paused) {
+        game.sounds.run.play();
+      }
     }
 
     if (this.controls.right) {
@@ -667,13 +822,35 @@ class Player {
       } else if (!collision.collides) {
         nextX += this.settings.speed;
       }
+
+      if (collision.type === "Y") {
+        Nextlevel_Handler();
+      }
+
+      if (this.settings.onGround && game.sounds.run.paused) {
+        game.sounds.run.play();
+      }
+    }
+
+    if (
+      (!this.controls.left && !this.controls.right) ||
+      !this.settings.onGround
+    ) {
+      if (!game.sounds.run.paused) {
+        game.sounds.run.pause();
+        game.sounds.run.currentTime = 0;
+      }
     }
 
     if (this.settings.onGround && this.controls.up) {
+      game.sounds.jump.pause();
+      game.sounds.jump.currentTime = 0;
+      game.sounds.jump.play();
       this.settings.onGround = false;
       this.settings.fall = -this.settings.jumpForce;
     }
 
+    // Rest of the method remains the same
     this.settings.fall += this.settings.gravity;
     nextY += this.settings.fall;
 

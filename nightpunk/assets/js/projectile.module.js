@@ -3,9 +3,9 @@ class Projectile {
     this.posX = x;
     this.posY = y;
     this.direction = direction;
-    this.speed = 10;
-    this.width = 5;
-    this.height = 5;
+    this.speed = 9;
+    this.width = 7;
+    this.height = 7;
     this.damage = damage;
     this.type = type;
     this.id = Math.random().toString(36).substr(2, 9);
@@ -14,19 +14,11 @@ class Projectile {
   draw() {
     switch (this.type) {
       case "player":
-        game.canvas.mainCtx.fillStyle = "yellow";
+        game.canvas.mainCtx.fillStyle = "cyan";
         break;
-      case "bot":
-        game.canvas.mainCtx.fillStyle = "lightblue";
+      case "enemy":
+        game.canvas.mainCtx.fillStyle = "red";
         break;
-      case "mutated":
-        game.canvas.mainCtx.fillStyle = "lightgreen";
-        break;
-      case "cyberpsycho":
-        game.canvas.mainCtx.fillStyle = "pink";
-        break;
-      default:
-        game.canvas.mainCtx.fillStyle = "gray";
     }
 
     game.canvas.mainCtx.fillRect(this.posX, this.posY, this.width, this.height);

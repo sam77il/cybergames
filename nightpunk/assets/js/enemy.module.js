@@ -1,5 +1,14 @@
 class Enemy {
-  constructor(startPosX, startPosY, width, height, health, items, type) {
+  constructor(
+    startPosX,
+    startPosY,
+    width,
+    height,
+    health,
+    items,
+    enemyId,
+    type
+  ) {
     this.posX = startPosX;
     this.posY = startPosY;
     this.items = items;
@@ -24,13 +33,58 @@ class Enemy {
     this.state = {
       isChasing: false,
       lastDirectionRight: true,
+      isAttacking: false, // Neue Variable für den Angriffszustand
+      attackAnimationDuration: 30, // Dauer der Angriffsanimation in Frames (30 frames ≈ 0.5 Sekunden)
+      attackAnimationTimer: 0, // Timer für die Angriffsanimation
     };
-    this.id = Math.random().toString(36).substr(2, 9);
+    this.id = enemyId;
 
     this.shootCooldown = 0;
     this.maxCooldown = 60;
     this.projectiles = [];
     this.damage = 10;
+
+    this.lastDirectionRight = true;
+
+    // Sprite sheets for different states
+    this.spriteSheets = {
+      run: {
+        image: new Image(),
+        frames: 6,
+        frameWidth: 96,
+        frameHeight: 96,
+      },
+      idle: {
+        image: new Image(),
+        frames: 4,
+        frameWidth: 96,
+        frameHeight: 96,
+      },
+      jump: {
+        image: new Image(),
+        frames: 4,
+        frameWidth: 96,
+        frameHeight: 96,
+      },
+      attack: {
+        image: new Image(),
+        frames: 6,
+        frameWidth: 96,
+        frameHeight: 96,
+      },
+    };
+
+    // Set sprite sheet sources
+    this.spriteSheets.idle.image.src = `./assets/img/enemy/${this.settings.type}/idle.png`;
+    this.spriteSheets.run.image.src = `./assets/img/enemy/${this.settings.type}/run.png`;
+    this.spriteSheets.jump.image.src = `./assets/img/enemy/${this.settings.type}/jump.png`;
+    this.spriteSheets.attack.image.src = `./assets/img/enemy/${this.settings.type}/attack.png`;
+
+    this.animationState = "idle"; // Default state
+    this.currentFrame = 0;
+    this.frameTimer = 0;
+    this.framesPerSecond = 10;
+    this.frameInterval = 1000 / this.framesPerSecond;
   }
 
   initialize() {
@@ -50,13 +104,19 @@ class Enemy {
         projectileX,
         projectileY,
         directionToPlayer,
-        this.settings.type,
+        "enemy",
         this.damage
       );
 
       this.projectiles.push(projectile);
 
       this.shootCooldown = this.maxCooldown;
+
+      // Starten der Angriffsanimation
+      this.state.isAttacking = true;
+      this.state.attackAnimationTimer = this.state.attackAnimationDuration;
+      this.animationState = "attack";
+      this.currentFrame = 0; // Animation von Anfang an starten
     }
   }
 
@@ -67,28 +127,52 @@ class Enemy {
   }
 
   draw() {
-    switch (this.settings.type) {
-      case "bot":
-        game.canvas.mainCtx.fillStyle = "blue";
-        break;
-      case "mutated":
-        game.canvas.mainCtx.fillStyle = "green";
-        break;
-      case "cyberpsycho":
-        game.canvas.mainCtx.fillStyle = "red";
-        break;
-      default:
-        game.canvas.mainCtx.fillStyle = "gray";
+    const ctx = game.canvas.mainCtx;
+
+    // Get current state's sprite sheet
+    const currentSpriteSheet = this.spriteSheets[this.animationState];
+    // Check if sprite sheet is loaded
+    if (!currentSpriteSheet.image.complete) return;
+
+    // Update frame based on animation state and timing
+    this.frameTimer += 16; // Feste Zeit oder game.core.deltaTime
+    if (this.frameTimer >= this.frameInterval) {
+      // For death animation, don't loop - stay on the last frame
+      if (this.currentFrame === currentSpriteSheet.frames - 1) {
+        // Stay on last frame for death animation
+        this.currentFrame = currentSpriteSheet.frames - 1;
+      } else {
+        this.currentFrame = (this.currentFrame + 1) % currentSpriteSheet.frames;
+      }
+      this.frameTimer = 0;
     }
 
-    game.canvas.mainCtx.fillRect(
-      this.posX,
-      this.posY,
-      this.settings.width,
-      this.settings.height
-    );
+    // Determine row based on direction (top row for right, bottom row for left)
+    const sourceY = this.lastDirectionRight
+      ? currentSpriteSheet.frameHeight
+      : 0;
 
-    this.projectiles.forEach((projectile) => projectile.draw());
+    // Hier die Größe des Spielers ändern
+    // Original: this.settings.width, this.settings.height
+    const scaleFactor = 2.7; // Größenfaktor, z.B. 1.5 für 50% größer
+    const newWidth = this.settings.width * scaleFactor;
+    const newHeight = this.settings.height * scaleFactor;
+
+    // Position anpassen, damit der Spieler vom gleichen Bezugspunkt aus vergrößert wird
+    // (z.B. die Füße bleiben am gleichen Ort)
+    const posYAdjusted = this.posY - (newHeight - this.settings.height);
+
+    ctx.drawImage(
+      currentSpriteSheet.image,
+      this.currentFrame * currentSpriteSheet.frameWidth,
+      sourceY,
+      currentSpriteSheet.frameWidth,
+      currentSpriteSheet.frameHeight,
+      this.posX,
+      posYAdjusted, // Angepasste Y-Position
+      newWidth,
+      newHeight
+    );
   }
 
   distanceToPlayer() {
@@ -120,10 +204,10 @@ class Enemy {
 
     if (playerCenterX < enemyCenterX) {
       this.controls.left = true;
-      this.state.lastDirectionRight = false;
+      this.lastDirectionRight = false;
     } else {
       this.controls.right = true;
-      this.state.lastDirectionRight = true;
+      this.lastDirectionRight = true;
     }
 
     const nextX = this.controls.left
@@ -191,6 +275,14 @@ class Enemy {
       return false;
     }
 
+    // Aktualisiere den Attack-Animation-Timer
+    if (this.state.isAttacking) {
+      this.state.attackAnimationTimer--;
+      if (this.state.attackAnimationTimer <= 0) {
+        this.state.isAttacking = false;
+      }
+    }
+
     const distance = this.distanceToPlayer();
 
     if (distance <= this.settings.detectionRange) {
@@ -215,12 +307,22 @@ class Enemy {
     this.updateProjectiles();
 
     this.resolveEnemyCollisions();
-    this.resolvePlayerCollision(); // Füge diese Zeile hinzu
+    this.resolvePlayerCollision();
+
+    // Setze animationState je nach Zustand
+    if (this.state.isAttacking) {
+      this.animationState = "attack";
+    } else if (!this.settings.onGround) {
+      this.animationState = "jump";
+    } else if (this.controls.left || this.controls.right) {
+      this.animationState = "run";
+    } else {
+      this.animationState = "idle";
+    }
 
     this.draw();
     this.move();
-
-    return true;
+    this.updateProjectiles();
   }
 
   resolveEnemyCollisions() {
@@ -281,8 +383,9 @@ class Enemy {
       this.distanceToPlayer() <= this.settings.chaseRange &&
       !game.player.dead
     ) {
+      // Der Angriffszustand hat jetzt höhere Priorität als der Cooldown
       if (this.shootCooldown === 0) {
-        this.shoot();
+        this.shoot(); // Diese Methode setzt jetzt auch isAttacking und den Timer
       }
     }
   }
@@ -316,8 +419,8 @@ class Enemy {
     }
 
     game.enemies = game.enemies.filter((enemy) => enemy.id !== this.id);
-
     game.player.updateStats("kills", "add", 1);
+    game.player.updateKilledEnemy(this.id);
   }
 
   updateHealth(type, amount) {
@@ -378,10 +481,36 @@ class Enemy {
   }
 
   move() {
+    if (this.dead) return;
     let nextX = this.posX;
     let nextY = this.posY;
 
+    // Bewege den Gegner nicht, wenn er gerade angreift
+    if (this.state.isAttacking) {
+      // Nur Gravitation und Bodenkollision anwenden, keine horizontale Bewegung
+      this.settings.fall += this.settings.gravity;
+      nextY += this.settings.fall;
+
+      if (this.settings.fall > 0) {
+        const collision = this.isColliding(nextX, nextY);
+        if (collision.collides) {
+          this.settings.onGround = true;
+          this.settings.fall = 0;
+          nextY =
+            Math.floor((nextY + this.settings.height) / game.core.tileSize) *
+              game.core.tileSize -
+            this.settings.height;
+        } else {
+          this.settings.onGround = false;
+        }
+      }
+
+      this.posY = nextY;
+      return;
+    }
+
     if (this.controls.left) {
+      this.lastDirectionRight = false;
       const collision = this.isColliding(
         nextX - this.settings.speed,
         this.posY
@@ -393,9 +522,16 @@ class Enemy {
       } else if (!collision.collides) {
         nextX -= this.settings.speed;
       }
+
+      // Play run sound if not already playing
+      if (this.settings.onGround && game.sounds.run.paused) {
+        game.sounds.run.play();
+      }
     }
 
     if (this.controls.right) {
+      this.lastDirectionRight = true;
+
       const collision = this.isColliding(
         nextX + this.settings.speed,
         this.posY
@@ -406,13 +542,33 @@ class Enemy {
       } else if (!collision.collides) {
         nextX += this.settings.speed;
       }
+
+      // Play run sound if not already playing
+      if (this.settings.onGround && game.sounds.run.paused) {
+        game.sounds.run.play();
+      }
+    }
+
+    // Stop run sound if player stopped running or is in the air
+    if (
+      (!this.controls.left && !this.controls.right) ||
+      !this.settings.onGround
+    ) {
+      if (!game.sounds.run.paused) {
+        game.sounds.run.pause();
+        game.sounds.run.currentTime = 0;
+      }
     }
 
     if (this.settings.onGround && this.controls.up) {
+      game.sounds.jump.pause();
+      game.sounds.jump.currentTime = 0;
+      game.sounds.jump.play();
       this.settings.onGround = false;
       this.settings.fall = -this.settings.jumpForce;
     }
 
+    // Rest of the method remains the same
     this.settings.fall += this.settings.gravity;
     nextY += this.settings.fall;
 

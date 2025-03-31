@@ -5,12 +5,14 @@ class Npc {
     this.settings = {
       width: width,
       height: height,
-      sprite: document.getElementById("npc"),
+      sprite: new Image(),
       level: level,
     };
 
     // Dialog Eigenschaften
-    this.dialogImage = document.getElementById("dialog"); // Das Bild für den Dialog
+    this.dialogImage = new Image(); // Das Bild für den Dialog
+    this.settings.sprite.src = "./assets/img/npc/tutorial_girl.png";
+    this.dialogImage.src = "./assets/img/npc/dialog_bg.png";
     this.showDialog = true;
     this.dialogTexts = [
       `A, D, W zum bewegen
@@ -43,6 +45,9 @@ class Npc {
       this.draw();
       document.addEventListener("keydown", (event) => {
         if (event.key === "Enter" && this.showDialog) {
+          game.sounds.ui.pause();
+          game.sounds.ui.currentTime = 0;
+          game.sounds.ui.play();
           this.enterCount++;
           console.log("Enter gedrückt:", this.enterCount, "mal");
 

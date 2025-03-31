@@ -80,20 +80,29 @@ function handleDropInventoryItem() {
     const itemToDrop = game.player.inventory.find(
       (item) => item.slot === gameState.selectedInventoryItemSlot
     );
-    game.player.dropItem(itemToDrop, itemToDrop.amount, true);
+    const itemToDrop_Copy = { ...itemToDrop };
+    game.player.removeInventoryItem(
+      itemToDrop_Copy,
+      itemToDrop_Copy.amount,
+      true
+    );
   }
 }
 
-function renderInventoryItemSelection() {
+function renderInventoryItemSelection(empty) {
   if (
     !game.player.inventory.find(
       (item) => item.slot === gameState.selectedInventoryItemSlot
-    )?.name
+    )?.name &&
+    !empty
   ) {
     return;
   }
 
-  if (gameState.selectedInventoryItemSlot === game.player.selectedItem?.slot) {
+  if (
+    gameState.selectedInventoryItemSlot === game.player.selectedItem?.slot ||
+    empty
+  ) {
     gameState.selectedInventoryItemSlot = null;
   }
 
@@ -113,8 +122,7 @@ function renderInventoryItemSelection() {
   } else {
     game.player.selectedItem = null;
   }
-
-  console.log(game.player.selectedItem);
+  game.player.updatePlayerSheet();
 }
 
 function handleKeyNavigation(event) {
@@ -240,8 +248,8 @@ function checkAddSlot(inventory, newItem) {
 
   // Alle Slots sind besetzt
   Notify(
-    "Inventar",
-    "Alle Slots sind besetzt. Item konnte nicht hinzugefügt werden.",
+    locales[settings.language].notifyInventoryTitle,
+    locales[settings.language].notifyInventorySlotsTaken,
     "error",
     3500
   );

@@ -29,9 +29,10 @@
       "V",
       "W",
       "X",
+      "Y",
       "Z"
     ],
-    "blocker": "ABCDEFGHIMNOPQRSTUVWXYZ"
+    "blocker": "ABCDEFGHIMNOPQRSTUVWZ"
   },
   "defaultSettings": {
     "sound": {
@@ -90,6 +91,7 @@
       "level": 1,
       "enemies": [
         {
+          "id": 1,
           "type": "bot",
           "health": 200,
           "position": {
@@ -152,12 +154,24 @@
             "x": 8,
             "y": 12
           }
+        },
+        {
+          "id": 5,
+          "name": "railgun",
+          "label": "Railgun",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 9,
+            "y": 12
+          }
         }
       ],
       "coins": [
         {
           "id": 1,
-          "amount": 1,
+          "amount": 500,
           "height": 40,
           "width": 50,
           "position": {
@@ -170,8 +184,8 @@
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAAAAAAAAAAAA",
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAA             NAARAAAAAAAAA",
         "AAAAAAAAA                NAAAAAAAAAAAAAAAAAA             NAAAAAADAAAAA",
-        "ALLLLLLLA                      NAAAAAEAAAAAA             OAAAAAAAAP  A",
-        "AAAAAAAAA                      NAAAAARAAAAAA                         A",
+        "ALLLLLLLA                      NAAAAAEAAAAAX             OAAAAAAAAP  A",
+        "AAAAAAAAA                      NAAAAARAAAAAY                         A",
         "AAAAAAAAA                      OAAAAAAAARAAAAP                       A",
         "ALLLLLLLA                                       STU                  A",
         "F                                                    STTU            A",
@@ -180,17 +194,18 @@
         "A                                                          STTTU    VA",
         "A                                                                   NA",
         "ALLK          JLLK                                 VAAAAW           NA",
-        "AAACABAAAW   VACABAAAFG        HI           STTU   NAADAM           NA",
-        "ADDAAEAAAM   NDAAEAAAAAFG    HIAJK   JK            NAAAAM  JLLLLK   NA",
-        "AAAAAAAAAAAABAAAAAAAAAAAAAAAABBCAAAACBAAAACAAAAAAAAAAAAAABCAAAACAAADAAA"
+        "AAACABAAAW   VACABAAAFG                     STTU   NAADAM           NA",
+        "ADDAAEAAAM   NDAAEAAAAAFG       JK   JK            NAAAAM  JLLLLK   NA",
+        "AAAAAAAAAAAABAAAAAAAAAAAAAAAABBCAAAACBAAAACAAAAAAAAAAAAAABCAAAACAAADAA"
       ]
     },
     {
-      "name": "goontown",
-      "label": "Goontown",
+      "name": "districta",
+      "label": "Disctrict A",
       "level": 2,
       "enemies": [
         {
+          "id": 1,
           "type": "bot",
           "health": 200,
           "position": {
@@ -199,36 +214,8 @@
           },
           "items": [
             {
-              "name": "potion",
+              "name": "ssd",
               "amount": 1
-            }
-          ]
-        },
-        {
-          "type": "mutated",
-          "health": 150,
-          "position": {
-            "x": 270,
-            "y": 320
-          },
-          "items": [
-            {
-              "name": "potion",
-              "amount": 2
-            }
-          ]
-        },
-        {
-          "type": "cyberpsycho",
-          "health": 300,
-          "position": {
-            "x": 320,
-            "y": 350
-          },
-          "items": [
-            {
-              "name": "potion",
-              "amount": 3
             }
           ]
         }
@@ -236,13 +223,73 @@
       "items": [
         {
           "id": 1,
-          "name": "potion",
-          "label": "Potion",
-          "amount": 5,
+          "name": "katana",
+          "label": "Katana",
+          "amount": 1,
           "height": 50,
           "width": 50,
           "position": {
             "x": 5,
+            "y": 12
+          }
+        },
+        {
+          "id": 2,
+          "name": "mantisblade",
+          "label": "Mantisblade",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 6,
+            "y": 12
+          }
+        },
+        {
+          "id": 3,
+          "name": "hdd",
+          "label": "HDD",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 7,
+            "y": 12
+          }
+        },
+        {
+          "id": 4,
+          "name": "ssd",
+          "label": "SSD",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 8,
+            "y": 12
+          }
+        },
+        {
+          "id": 5,
+          "name": "railgun",
+          "label": "Railgun",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 9,
+            "y": 12
+          }
+        }
+      ],
+      "coins": [
+        {
+          "id": 1,
+          "amount": 500,
+          "height": 40,
+          "width": 50,
+          "position": {
+            "x": 15,
             "y": 12
           }
         }
@@ -250,9 +297,9 @@
       "map": [
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAM             NAAAAAAAAAAAM        VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA         VAAAAAAAA",
         "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAM             NALLLLLLLLLAM        VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA          VAAAAAAAA",
-        "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAM             NATTTTTTTTTAM               NAAAAAAAAAAAAAAAAAAAAAAAAA                  A",
-        "AAAAAAAAA                AAAAAAAAAAAAAAAAAAM             NALLLLLLLLLAM               NAAAAAAAAAAAAAAAAAAAAAAAAA                  A",
-        "ALLLLLLLA                      AAAAAAAAAAAAM             OAAAAAAAAAAAw               PAAAW          VAAAAAAAAAAW                 A",
+        "AAAAAAAAA            AAAAAAAAAAAAAAAAAAAAAAM             NATTTTTTTTTAM               NAAAAAAAAAAAAAAAAAAAAAAAAX                  A",
+        "AAAAAAAAA                AAAAAAAAAAAAAAAAAAM             NALLLLLLLLLAM               NAAAAAAAAAAAAAAAAAAAAAAAAY                  A",
+        "ALLLLLLLA                      AAAAAAAAAAAAM             OAAAAAAAAAAAw               PAAAW          VAAAAAAAAAAA                 A",
         "AAAAAAAAA                      VAAAAAAAAAAAW                                                                                     R",
         "A                                                                                                                                A",
         "A                                                                                                                STTU            A",

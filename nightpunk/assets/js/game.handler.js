@@ -1,4 +1,4 @@
-async function initiateGameCanvas(id, level) {
+async function initiateGameCanvas(id, chartype, level) {
   screens.game.innerHTML = `
     <div id="game-screen-box">
       <div id="game-screen-hud">
@@ -20,15 +20,15 @@ async function initiateGameCanvas(id, level) {
 
           <div class="stats">
             <div>
-              <p>Kills:</p>
+              <p>${locales[settings.language].statsScreenKills}:</p>
               <span id="stat-kills"></span>
             </div>
             <div>
-              <p>Deaths:</p>
+              <p>${locales[settings.language].statsScreenDeaths}:</p>
               <span id="stat-deaths"></span>
             </div>
             <div>
-              <p>KD:</p>
+              <p>${locales[settings.language].statsScreenKD}:</p>
               <span id="stat-kd"></span>
             </div>            
           </div>
@@ -77,7 +77,7 @@ async function initiateGameCanvas(id, level) {
 
   game.core = new Game(level);
   await loadMap(game.core.map, game.core.tileSize);
-  game.player = new Player(50, 300, 50, 80, id);
+  game.player = new Player(50, 300, 50, 80, id, chartype);
   if (game.core.currentLevel === 1) {
     game.npc = new Npc(400, 550, 50, 100, level);
     game.npc.initialize();
@@ -209,16 +209,27 @@ function handlePauseMenu() {
       <h2>${locales[settings.language].pauseMenuTitle}</h2>
 
       <div class="pause-menu-actions">
-        <img id="resume" class="img-btn small-btn" src="./assets/img/de_imgs/continue_btn.png">
-        <img id="shop" class="img-btn small-btn" src="./assets/img/de_imgs/shop_btn.png">
-        <img id="settings" class="img-btn small-btn" src="./assets/img/de_imgs/settings_btn.png">
-        <img id="quit" class="img-btn small-btn" src="./assets/img/de_imgs/leave_btn.png">
+        <img id="resume" class="img-btn small-btn" src="./assets/img/${
+          settings.language
+        }_imgs/continue_btn.png">
+        <img id="shop" class="img-btn small-btn" src="./assets/img/${
+          settings.language
+        }_imgs/shop_btn.png">
+        <img id="settings" class="img-btn small-btn" src="./assets/img/${
+          settings.language
+        }_imgs/settings_btn.png">
+        <img id="quit" class="img-btn small-btn" src="./assets/img/${
+          settings.language
+        }_imgs/leave_btn.png">
       </div>
     </div>
   `;
 
   const shopButton = pauseMenu.querySelector("#shop");
   shopButton.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     pauseMenu.innerHTML = "";
     screens.shop = document.createElement("div");
     screens.shop.setAttribute("id", "shop");
@@ -228,12 +239,18 @@ function handlePauseMenu() {
 
   const resumeButton = pauseMenu.querySelector("#resume");
   resumeButton.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     screens.game.removeChild(pauseMenu);
     resumeGame();
   });
 
   const settingsButton = pauseMenu.querySelector("#settings");
   settingsButton.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     pauseMenu.innerHTML = "";
     screens.settings = document.createElement("div");
     screens.settings.setAttribute("id", "settings");
@@ -243,6 +260,9 @@ function handlePauseMenu() {
 
   const quitButton = pauseMenu.querySelector("#quit");
   quitButton.addEventListener("click", async () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     await ChangeScreen("main-menu");
     screens.game.innerHTML = "";
     game.pauseMenu = false;
@@ -317,7 +337,7 @@ function startGameLoop(currentTime) {
     game.canvas.mainCtx.save();
     game.canvas.mainCtx.translate(-game.camera.x, -game.camera.y);
     game.canvas.mainCtx.drawImage(game.canvas.bg, 0, 0);
-
+    game.core.deltaTime = (currentTime - lastTime) * 7;
     game.player.update();
     if (game.core.currentLevel === 1) {
       game.npc.update();

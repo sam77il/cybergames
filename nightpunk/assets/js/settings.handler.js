@@ -5,30 +5,38 @@ let settingsMenu = {
 };
 
 function Settings_Handler() {
-  settingsMenu.tab = null;
+  settingsMenu.tab = settingsMenu.tab ? settingsMenu.tab : null;
   screens.settings.innerHTML = `
     <div class="menus-background"></div>
     <header class="menus-content ${game.pauseMenu ? "pause-menu" : ""}">
-      <h2>${locales[settings.language].settingsTitle}</h2>
+      <h2>${locales[settings.language].settingsScreenTitle}</h2>
 
       <div class="settings-menu-header">
         <ul class="settings-menu-list">
           ${
             game.pauseMenu
               ? ""
-              : `<li><img class="img-btn small-btn" id="settings-language" src="./assets/img/de_imgs/language_btn.png"></li>`
+              : `<li><img class="img-btn small-btn" id="settings-language" src="./assets/img/${settings.language}_imgs/language_btn.png"></li>`
           }
       
-          <li><img class="img-btn small-btn" id="settings-sound" src="./assets/img/de_imgs/audio_btn.png"></li>
-          <li><img class="img-btn small-btn" id="settings-controls" src="./assets/img/de_imgs/controls_btn.png"></li>
+          <li><img class="img-btn small-btn" id="settings-sound" src="./assets/img/${
+            settings.language
+          }_imgs/audio_btn.png"></li>
+          <li><img class="img-btn small-btn" id="settings-controls" src="./assets/img/${
+            settings.language
+          }_imgs/controls_btn.png"></li>
         </ul>
       </div>
 
       <div id="settings-content"></div>
       
       <div class="settings-menu-footer">
-        <img id="settings-save" class="img-btn small-btn" src="./assets/img/de_imgs/save_btn.png">
-        <img class="img-btn small-btn" id="settings-back" src="./assets/img/de_imgs/back_btn.png">
+        <img id="settings-save" class="img-btn small-btn" src="./assets/img/${
+          settings.language
+        }_imgs/save_btn.png">
+        <img class="img-btn small-btn" id="settings-back" src="./assets/img/${
+          settings.language
+        }_imgs/back_btn.png">
       </div>
     </header>
   `;
@@ -41,6 +49,9 @@ function Settings_Handler() {
   const SETTINGS_CONTROLS = document.querySelector("#settings-controls");
 
   SETTINGS_BACK.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     if (game.pauseMenu) {
       handlePauseMenu();
     } else {
@@ -49,20 +60,32 @@ function Settings_Handler() {
   });
 
   SETTINGS_SOUND.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     ChangeSettingsScreen("sound");
   });
 
   SETTINGS_CONTROLS.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     ChangeSettingsScreen("controls");
   });
 
   SETTINGS_SAVE.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     SaveSettings();
   });
 
   if (!game.pauseMenu) {
     const SETTINGS_LANGUAGE = document.querySelector("#settings-language");
     SETTINGS_LANGUAGE.addEventListener("click", () => {
+      game.sounds.ui.pause();
+      game.sounds.ui.currentTime = 0;
+      game.sounds.ui.play();
       ChangeSettingsScreen("language");
     });
   }
@@ -75,15 +98,15 @@ function ChangeSettingsScreen(screen) {
   switch (screen) {
     case "language":
       settingsMenu.content.innerHTML = `
-        <h3>${locales[settings.language].settingsLanguageTitle}</h3>
+        <h3>${locales[settings.language].settingsScreenLanguageTitle}</h3>
 
         <div class="select-container">
           <select id="settings-tab-language">
             <option value="de">${
-              locales[settings.language].settingsLanguageGerman
+              locales[settings.language].settingsScreenLanguageGerman
             }</option>
             <option value="en">${
-              locales[settings.language].settingsLanguageEnglish
+              locales[settings.language].settingsScreenLanguageEnglish
             }</option>
           </select>
         </div>
@@ -91,29 +114,33 @@ function ChangeSettingsScreen(screen) {
       break;
     case "controls":
       settingsMenu.content.innerHTML = `
-        <h3>${locales[settings.language].settingsControlsTitle}</h3>
+        <h3>${locales[settings.language].settingsScreenControlsTitle}</h3>
         
         <div class="settings-controls-list">
             <div class="settings-controls-list-item">
-              <p>Nach links laufen</p>
+              <p>${
+                locales[settings.language].settingsScreenControlsWalkLeft
+              }</p>
               <button class="settings-controls-list-item-btn" data-control="walkLeft">${
                 settings.controls.walkLeft
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Nach rechts laufen</p>
+              <p>${
+                locales[settings.language].settingsScreenControlsWalkRight
+              }</p>
               <button class="settings-controls-list-item-btn" data-control="walkRight">${
                 settings.controls.walkRight
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Springen</p>
+              <p>${locales[settings.language].settingsScreenControlsJump}</p>
               <button class="settings-controls-list-item-btn" data-control="jump">${
                 settings.controls.jump
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Attacke</p>
+              <p>${locales[settings.language].settingsScreenControlsAttack}</p>
               <button class="settings-controls-list-item-btn" data-control="attack">${
                 settings.controls.attack === " "
                   ? "Space"
@@ -121,55 +148,65 @@ function ChangeSettingsScreen(screen) {
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Item Slot 1</p>
+              <p>${
+                locales[settings.language].settingsScreenControlsItemSlot1
+              }</p>
               <button class="settings-controls-list-item-btn" data-control="itemslot1">${
                 settings.controls.itemslot1
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Item Slot 2</p>
+              <p>${
+                locales[settings.language].settingsScreenControlsItemSlot2
+              }</p>
               <button class="settings-controls-list-item-btn" data-control="itemslot2">${
                 settings.controls.itemslot2
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Item Slot 3</p>
+              <p>${
+                locales[settings.language].settingsScreenControlsItemSlot3
+              }</p>
               <button class="settings-controls-list-item-btn" data-control="itemslot3">${
                 settings.controls.itemslot3
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Item Slot 4</p>
+              <p>${
+                locales[settings.language].settingsScreenControlsItemSlot4
+              }</p>
               <button class="settings-controls-list-item-btn" data-control="itemslot4">${
                 settings.controls.itemslot4
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Interagieren</p>
+              <p>${
+                locales[settings.language].settingsScreenControlsInteract
+              }</p>
               <button class="settings-controls-list-item-btn" data-control="interact">${
                 settings.controls.interact
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Wegwerfen</p>
+              <p>${locales[settings.language].settingsScreenControlsThrow}</p>
               <button class="settings-controls-list-item-btn" data-control="drop">${
                 settings.controls.drop
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Jumpboost Perk</p>
+              <p>${locales[settings.language].settingsScreenPerkJump}</p>
               <button class="settings-controls-list-item-btn" data-control="jumpperk">${
                 settings.controls.jumpperk
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Speedboost Perk</p>
+              <p>${locales[settings.language].settingsScreenPerkSpeed}</p>
               <button class="settings-controls-list-item-btn" data-control="speedperk">${
                 settings.controls.speedperk
               }</button>
             </div>
             <div class="settings-controls-list-item">
-              <p>Instakill Perk</p>
+              <p>${locales[settings.language].settingsScreenPerkInstakill}</p>
               <button class="settings-controls-list-item-btn" data-control="instakillperk">${
                 settings.controls.instakillperk
               }</button>
@@ -187,7 +224,7 @@ function ChangeSettingsScreen(screen) {
             window.addEventListener("keyup", listeningToSettingControls);
           } else {
             Notify(
-              "Controls",
+              locales[settings.language].notifySettingsTitle,
               "Du änderst bereits ein Keybind, drücke ESC um abzubrechen.",
               "error",
               3500
@@ -198,7 +235,7 @@ function ChangeSettingsScreen(screen) {
       break;
     case "sound":
       settingsMenu.content.innerHTML = `
-        <h3>${locales[settings.language].settingsSoundTitle}</h3>
+        <h3>${locales[settings.language].settingsScreenAudioTitle}</h3>
         
         <div class="settings-sound-container">
           <div>
@@ -206,7 +243,7 @@ function ChangeSettingsScreen(screen) {
               settings.sound.volume
             }">
             <label for="sound-volume">${
-              locales[settings.language].settingsSoundVolume
+              locales[settings.language].settingsScreenSoundVolume
             } <span id="sound-volume-text">${
         settings.sound.volume
       }</span>%</label>
@@ -216,7 +253,7 @@ function ChangeSettingsScreen(screen) {
               settings.sound.music
             }">
             <label for="sound-music">${
-              locales[settings.language].settingsMusicVolume
+              locales[settings.language].settingsScreenSoundMusic
             } <span id="sound-music-text">${
         settings.sound.music
       }</span>%</label>
@@ -243,7 +280,7 @@ function ChangeSettingsScreen(screen) {
       break;
     default:
       settingsMenu.content.innerHTML = `
-        <p>${locales[settings.language].settingsDefaultMessage}</p>
+        <p>${locales[settings.language].settingsScreenDefaultMessage}</p>
       `;
       break;
   }

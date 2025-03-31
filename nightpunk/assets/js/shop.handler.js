@@ -20,7 +20,7 @@ function Shop_Handler() {
       <div id="shop-content"></div>
       
       <div class="shop-menu-footer">
-        <img class="img-btn small-btn" id="shop-back" src="./assets/img/de_imgs/back_btn.png">
+        <img class="img-btn small-btn" id="shop-back" src="./assets/img/${settings.language}_imgs/back_btn.png">
       </div>
     </div>
   `;
@@ -30,12 +30,21 @@ function Shop_Handler() {
   const SHOP_PERKS = document.querySelector("#shop-perks");
 
   SHOP_BACK.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     handlePauseMenu();
   });
   SHOP_ITEMS.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     ChangeShopScreen("items");
   });
   SHOP_PERKS.addEventListener("click", () => {
+    game.sounds.ui.pause();
+    game.sounds.ui.currentTime = 0;
+    game.sounds.ui.play();
     ChangeShopScreen("perks");
   });
 }
@@ -58,6 +67,9 @@ function ChangeShopScreen(screen) {
       const ITEMS = document.querySelectorAll(".shop-menu-item-buy");
       for (let button of ITEMS) {
         button.addEventListener("click", (event) => {
+          game.sounds.ui.pause();
+          game.sounds.ui.currentTime = 0;
+          game.sounds.ui.play();
           if (game.player.coins >= Number(event.target.dataset.price)) {
             game.player.addInventoryItem(
               {
@@ -68,9 +80,14 @@ function ChangeShopScreen(screen) {
               },
               "shop"
             );
-            game.player.updateCoins("remove", {
-              amount: Number(event.target.dataset.amount),
-            });
+
+            game.player.updateCoins(
+              "remove",
+              {
+                amount: Number(event.target.dataset.price),
+              },
+              "shop"
+            );
           } else {
             Notify("Shop", "Du hast nicht genug Coins", "error", 3500);
           }
@@ -90,8 +107,18 @@ function ChangeShopScreen(screen) {
       const PERKS = document.querySelectorAll(".shop-menu-perk-buy");
       for (let button of PERKS) {
         button.addEventListener("click", (event) => {
+          game.sounds.ui.pause();
+          game.sounds.ui.currentTime = 0;
+          game.sounds.ui.play();
           if (game.player.coins >= Number(event.target.dataset.price)) {
             game.player.addPerk(event.target.dataset.perk);
+            game.player.updateCoins(
+              "remove",
+              {
+                amount: Number(event.target.dataset.price),
+              },
+              "shop"
+            );
           } else {
             Notify("Shop", "Du hast nicht genug Coins", "error", 3500);
           }
@@ -112,7 +139,9 @@ function ShopItem({ item, amount, price }) {
     <div class="shop-menu-item">
         <img src="./assets/img/items/${item}.png">
         <p>${amount}x</p>
-        <button class="shop-menu-item-buy" data-item="${item}" data-price="${price}" data-amount="${amount}">Kaufen für ${price} Coins</button>
+        <button class="shop-menu-item-buy" data-item="${item}" data-price="${price}" data-amount="${amount}">${
+    locales[settings.language].shopScreenBuy
+  } ${price} Coins</button>
     </div>
   `;
 }
@@ -121,7 +150,9 @@ function ShopPerk({ perk, price }) {
   shopMenu.perkList.innerHTML += `
     <div class="shop-menu-item">
         <img src="./assets/img/perks/${perk}.png">
-        <button class="shop-menu-perk-buy" data-perk="${perk}" data-price="${price}">Kaufen für ${price} Coins</button>
+        <button class="shop-menu-perk-buy" data-perk="${perk}" data-price="${price}">${
+    locales[settings.language].shopScreenBuy
+  } ${price} Coins</button>
     </div>
   `;
 }

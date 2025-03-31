@@ -7,6 +7,7 @@
 
 body {
   min-height: 100vh;
+  background-color: #000;
 }
 
 ul {
@@ -602,4 +603,30 @@ select option:hover {
   gap: 5px;
   color: white;
   font-weight: 300;
+}
+
+.game-over {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.game-over header > h3 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.game-over p {
+  text-align: center;
+  max-width: 600px;
+}
+
+.game-over div {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
 }

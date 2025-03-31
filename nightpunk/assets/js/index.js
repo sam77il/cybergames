@@ -25,6 +25,17 @@ let game = {
   camera: null,
   paused: false,
   pauseMenu: false,
+  sounds: {
+    run: new Audio("./assets/sounds/run.mp3"),
+    jump: new Audio("./assets/sounds/jump.mp3"),
+    death: new Audio("./assets/sounds/death.mp3"),
+    shoot: new Audio("./assets/sounds/shoot.mp3"),
+    perk: new Audio("./assets/sounds/perk.wav"),
+    ui: new Audio("./assets/sounds/ui.mp3"),
+    hit: new Audio("./assets/sounds/hit.mp3"),
+    mantisblade: new Audio("./assets/sounds/mantisblade.mp3"),
+    katana: new Audio("./assets/sounds/katana.mp3"),
+  },
   map: {
     items: {},
     itemsOnFloor: null,
@@ -122,8 +133,8 @@ async function initializeGame() {
   await loadPerks();
 
   console.log("Started game");
-  game.map.tileset = document.querySelector("#tileset");
-  npc = document.querySelector("#npc");
+  game.map.tileset = new Image();
+  game.map.tileset.src = "./assets/img/maps_tileset.png";
   if (config.global.dev) {
     StartGame();
   } else {
