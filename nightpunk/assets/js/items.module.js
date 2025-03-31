@@ -5,6 +5,8 @@ class Items {
       katana: new Image(),
       mantisblade: new Image(),
       railgun: new Image(),
+      hdd: new Image(),
+      ssd: new Image(),
     };
     this.loadImages();
   }
@@ -12,7 +14,8 @@ class Items {
   loadImages() {
     this.itemImgs.katana.src = "./assets/img/items/katana.png";
     this.itemImgs.mantisblade.src = "./assets/img/items/mantisblade.png";
-    this.itemImgs.railgun.src = "./assets/img/items/railgun.png";
+    this.itemImgs.hdd.src = "./assets/img/items/hdd.png";
+    this.itemImgs.ssd.src = "./assets/img/items/ssd.png";
   }
 
   initialize() {

@@ -128,6 +128,30 @@
             "x": 6,
             "y": 12
           }
+        },
+        {
+          "id": 3,
+          "name": "hdd",
+          "label": "HDD",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 7,
+            "y": 12
+          }
+        },
+        {
+          "id": 4,
+          "name": "ssd",
+          "label": "SSD",
+          "amount": 1,
+          "height": 50,
+          "width": 50,
+          "position": {
+            "x": 8,
+            "y": 12
+          }
         }
       ],
       "coins": [

@@ -77,11 +77,10 @@ function handleDropInventoryItem() {
           (item) => item.slot === gameState.selectedInventoryItemSlot
         )?.name
     );
-    game.player.dropItem(
-      game.player.inventory.find(
-        (item) => item.slot === gameState.selectedInventoryItemSlot
-      )
+    const itemToDrop = game.player.inventory.find(
+      (item) => item.slot === gameState.selectedInventoryItemSlot
     );
+    game.player.dropItem(itemToDrop, itemToDrop.amount, true);
   }
 }
 
@@ -94,20 +93,28 @@ function renderInventoryItemSelection() {
     return;
   }
 
+  if (gameState.selectedInventoryItemSlot === game.player.selectedItem?.slot) {
+    gameState.selectedInventoryItemSlot = null;
+  }
+
   let inventorySlots = document.querySelectorAll(".game-screen-inventory-slot");
 
   inventorySlots.forEach((el) => {
     el.style.backgroundImage = 'url("./assets/img/inventory/empty.png")';
   });
-  console.log(game.ui.inventory);
-  game.ui.inventory[
-    "slot" + gameState.selectedInventoryItemSlot
-  ].style.backgroundImage = 'url("./assets/img/inventory/selected.png")';
-  console.log(
-    game.player.inventory.find(
+
+  if (gameState.selectedInventoryItemSlot) {
+    game.ui.inventory[
+      "slot" + gameState.selectedInventoryItemSlot
+    ].style.backgroundImage = 'url("./assets/img/inventory/selected.png")';
+    game.player.selectedItem = game.player.inventory.find(
       (item) => item.slot === gameState.selectedInventoryItemSlot
-    ).name
-  );
+    );
+  } else {
+    game.player.selectedItem = null;
+  }
+
+  console.log(game.player.selectedItem);
 }
 
 function handleKeyNavigation(event) {

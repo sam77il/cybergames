@@ -4,6 +4,7 @@ class Player {
     this.posX = startPosX;
     this.posY = startPosY;
     this.inventory = [];
+    this.selectedItem = null;
     this.coins = 0;
     this.deaths = 0;
     this.kills = 0;
@@ -31,40 +32,35 @@ class Player {
 
     // Sprite sheets for different states
     this.spriteSheets = {
-      idle: {
-        image: new Image(),
-        frames: 4,
-        frameWidth: 50,
-        frameHeight: 70,
-        rowHeight: 140, // Total height is 2 * frameHeight
-      },
       run: {
         image: new Image(),
         frames: 6,
         frameWidth: 50,
         frameHeight: 70,
-        rowHeight: 140,
       },
-      jump: {
-        image: new Image(),
-        frames: 2,
-        frameWidth: 50,
-        frameHeight: 70,
-        rowHeight: 140,
-      },
-      hit: {
-        image: new Image(),
-        frames: 3,
-        frameWidth: 50,
-        frameHeight: 70,
-        rowHeight: 140,
-      },
-      death: {
+      idle: {
         image: new Image(),
         frames: 4,
         frameWidth: 50,
         frameHeight: 70,
-        rowHeight: 140,
+      },
+      jump: {
+        image: new Image(),
+        frames: 4,
+        frameWidth: 50,
+        frameHeight: 70,
+      },
+      hit: {
+        image: new Image(),
+        frames: 2,
+        frameWidth: 50,
+        frameHeight: 70,
+      },
+      death: {
+        image: new Image(),
+        frames: 6,
+        frameWidth: 50,
+        frameHeight: 70,
       },
     };
 
@@ -76,7 +72,7 @@ class Player {
     this.spriteSheets.death.image.src =
       "./assets/img/player/netrunner/death.png";
 
-    this.animationState = "idle";
+    this.animationState = "idle"; // Default state
     this.currentFrame = 0;
     this.frameTimer = 0;
     this.framesPerSecond = 10;
@@ -116,7 +112,6 @@ class Player {
     });
 
     for (let item of this.inventory) {
-      console.log(item.name);
       game.ui.inventory["slot" + item.slot].innerHTML = `
         <img src="./assets/img/items/${item.name}.png" alt="item image">
         <p>${item.amount}</p>
@@ -126,7 +121,6 @@ class Player {
 
   loadCoins() {
     const coinText = document.querySelector("#game-screen-hud-coin-amount");
-
     coinText.innerHTML = this.coins + "x";
   }
 
@@ -139,22 +133,33 @@ class Player {
     // Check if sprite sheet is loaded
     if (!currentSpriteSheet.image.complete) return;
 
-    // Update frame based on animation state
+    // Update frame based on animation state and timing
     this.frameTimer += game.core.deltaTime;
     if (this.frameTimer >= this.frameInterval) {
-      this.currentFrame = (this.currentFrame + 1) % currentSpriteSheet.frames;
+      // For death animation, don't loop - stay on the last frame
+      if (
+        this.animationState === "death" &&
+        this.currentFrame === currentSpriteSheet.frames - 1
+      ) {
+        // Stay on last frame for death animation
+        this.currentFrame = currentSpriteSheet.frames - 1;
+      } else {
+        this.currentFrame = (this.currentFrame + 1) % currentSpriteSheet.frames;
+      }
       this.frameTimer = 0;
     }
 
-    // Determine row and column based on direction
-    const row = this.lastDirectionRight ? 0 : 1;
+    // Determine row based on direction (top row for right, bottom row for left)
+    const sourceY = this.lastDirectionRight
+      ? currentSpriteSheet.frameHeight
+      : 0;
 
     ctx.drawImage(
       currentSpriteSheet.image,
-      this.currentFrame * currentSpriteSheet.frameWidth, // Source X
-      row * currentSpriteSheet.frameHeight, // Source Y - Switch between top and bottom row
-      currentSpriteSheet.frameWidth, // Source Width
-      currentSpriteSheet.frameHeight, // Source Height
+      this.currentFrame * currentSpriteSheet.frameWidth,
+      sourceY,
+      currentSpriteSheet.frameWidth,
+      currentSpriteSheet.frameHeight,
       this.posX,
       this.posY,
       this.settings.width,
@@ -186,8 +191,24 @@ class Player {
       this.shootCooldown--;
     }
 
-    if (this.controls.shoot && this.shootCooldown === 0) {
-      this.shoot();
+    if (this.controls.shoot && this.shootCooldown === 0 && this.selectedItem) {
+      if (this.selectedItem.name === "railgun") {
+        this.shoot();
+      } else if (this.selectedItem.name === "ssd") {
+        this.updateHealth("add", 100);
+
+        if (this.health > 100) {
+          this.updateHealth("set", 100);
+        }
+        this.dropItem(this.selectedItem, 1, false);
+      } else if (this.selectedItem.name === "hdd") {
+        this.updateHealth("add", 50);
+
+        if (this.health > 100) {
+          this.updateHealth("set", 100);
+        }
+        this.dropItem(this.selectedItem, 1, false);
+      }
     }
   }
 
@@ -198,10 +219,55 @@ class Player {
   }
 
   update() {
-    // Determine animation state
+    // Don't change animation state if dead or in hit animation
     if (this.dead) {
-      this.animationState = "death";
-    } else if (!this.settings.onGround) {
+      if (this.animationState !== "death") {
+        // Reset frame counter when transitioning to death animation
+        this.currentFrame = 0;
+        this.animationState = "death";
+      }
+    } else if (this.animationState === "hit") {
+      // Keep hit animation going until it completes
+      if (this.currentFrame >= this.spriteSheets.hit.frames - 1) {
+        // If hit animation is done, go back to appropriate state
+        if (!this.settings.onGround) {
+          this.animationState = "jump";
+        } else if (this.controls.left || this.controls.right) {
+          this.animationState = "run";
+        } else {
+          this.animationState = "idle";
+        }
+        this.currentFrame = 0;
+      }
+    } else {
+      // Normal state determination
+      if (!this.settings.onGround) {
+        if (this.animationState !== "jump") {
+          this.currentFrame = 0;
+          this.animationState = "jump";
+        }
+      } else if (this.controls.left || this.controls.right) {
+        if (this.animationState !== "run") {
+          this.currentFrame = 0;
+          this.animationState = "run";
+        }
+      } else {
+        if (this.animationState !== "idle") {
+          this.currentFrame = 0;
+          this.animationState = "idle";
+        }
+      }
+    }
+
+    // Update direction based on controls
+    if (this.controls.left) {
+      this.lastDirectionRight = false;
+    } else if (this.controls.right) {
+      this.lastDirectionRight = true;
+    }
+
+    // Update animation state based on movement and ground status
+    if (!this.settings.onGround) {
       this.animationState = "jump";
     } else if (this.controls.left || this.controls.right) {
       this.animationState = "run";
@@ -247,7 +313,6 @@ class Player {
     } else if (type === "remove") {
       this.health -= amount;
     }
-    console.log("New health: " + this.health);
 
     if (this.health >= 100) {
       game.ui.healthBar.style.background =
@@ -273,21 +338,20 @@ class Player {
     }
     game.ui.healthBar.style.backgroundSize = "cover";
 
-    if (this.health <= 0) {
+    // Check if player died
+    if (this.health <= 0 && !this.dead) {
       this.dead = true;
-    }
-
-    if (this.dead) {
       this.updateStats("deaths", "add", 1);
+      // Reset frame counter for death animation
+      this.currentFrame = 0;
+      this.animationState = "death";
     }
 
     // Trigger hit animation if health is reduced
-    if (type === "remove" && amount > 0) {
+    if (type === "remove" && amount > 0 && !this.dead) {
+      // Save previous state to return to after hit animation
+      this.currentFrame = 0;
       this.animationState = "hit";
-      // Optional: Reset to previous state after hit animation
-      setTimeout(() => {
-        this.animationState = this.dead ? "death" : "idle";
-      }, this.frameInterval * this.spriteSheets.hit.frames);
     }
   }
 
@@ -529,25 +593,46 @@ class Player {
     }
   }
 
-  dropItem(item) {
+  dropItem(item, amount, onMap = true) {
     if (item?.name) {
-      game.map.itemsOnFloor.setItems(item);
-      let newInventory = this.inventory.filter(
-        (invItem) => invItem.name !== item.name
-      );
+      // let newInventory = this.inventory.filter(
+      //   (invItem) => invItem.name !== item.name
+      // );
+      console.log(item);
+      console.log(amount);
+      console.log(onMap);
+      let newInventory = this.inventory
+        .map((invItem) => {
+          if (invItem.name === item.name) {
+            invItem.amount -= amount;
+            if (invItem.amount <= 0) {
+              return null; // Remove item from inventory
+            }
+            return invItem; // Keep item in inventory
+          }
+          return invItem; // Keep item in inventory
+        })
+        .filter(Boolean); // Filter out null values
+      console.log(newInventory);
 
-      let oldCharacters = JSON.parse(localStorage.getItem("characters")).find(
+      let characters = JSON.parse(localStorage.getItem("characters")).find(
         (character) => Number(character.id) === Number(this.id)
       );
-      oldCharacters.inventory = newInventory;
-      let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
-        (character) => Number(character.id) !== Number(this.id)
-      );
-      newCharacters.push(oldCharacters);
-      localStorage.setItem("characters", JSON.stringify(newCharacters));
-      this.inventory = newInventory;
-      this.loadInventory();
+      // oldCharacters.inventory = newInventory;
+      // let newCharacters = JSON.parse(localStorage.getItem("characters")).filter(
+      //   (character) => Number(character.id) !== Number(this.id)
+      // );
+      // newCharacters.push(oldCharacters);
+      // localStorage.setItem("characters", JSON.stringify(newCharacters));
+      // this.inventory = newInventory;
+      // this.loadInventory();
+      // if (onMap) {
+      //   game.map.itemsOnFloor.setItems(item);
+      // }
     }
+    gameState.selectedInventoryItemSlot = null;
+    gameState.selectedItem = null;
+    renderInventoryItemSelection();
   }
 
   move() {
