@@ -69,6 +69,7 @@
     "notifyPerksTitle": "Perks",
     "notifyPerksSpeedYes": "Speedboost ist aktiv",
     "notifyPerksInstakillNot": "Du hast kein Instakill Perk",
+    "notifyPerksInstakillYes": "Instakill ist aktiv",
     "notifyPerksSpeedNot": "Du hast kein Speedboost Perk",
     "notifyPerksJumpYes": "Jumpboost ist aktiv",
     "notifyPerksJumpNot": "Du hast kein Jumpboost Perk",
@@ -144,6 +145,7 @@
 
     "notifyPerksTitle": "Perks",
     "notifyPerksSpeedYes": "Speed boost is active",
+    "notifyPerksInstakillYes": "Instakill is active",
     "notifyPerksInstakillNot": "You don't have an Instakill Perk",
     "notifyPerksSpeedNot": "You don't have a Speed Boost Perk",
     "notifyPerksJumpYes": "Jump boost is active",

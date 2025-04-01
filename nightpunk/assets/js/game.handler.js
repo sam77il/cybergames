@@ -76,6 +76,7 @@ async function initiateGameCanvas(id, chartype, level) {
   game.canvas.main.style.objectFit = "contain";
 
   game.core = new Game(level);
+  game.cyberpsycho = false;
   await loadMap(game.core.map, game.core.tileSize);
   game.player = new Player(50, 300, 50, 80, id, chartype);
   if (game.core.currentLevel === 1) {
@@ -365,17 +366,15 @@ function loadMap(map, size) {
         let pos = config.global.tiles.indexOf(map[row].charAt(col));
 
         if (pos >= 0) {
-          // if (
-          //   config.global.tiles[pos] === "G" ||
-          //   config.global.tiles[pos] === "H"
-          // ) {
-          //   bgCtx.shadowColor = "red";
-          //   bgCtx.shadowOffsetX = 0;
-          //   bgCtx.shadowOffsetY = 0;
-          //   bgCtx.shadowBlur = 50;
-          // } else {
-          //   bgCtx.shadowColor = "transparent";
-          // }
+          console.log(game.cyberpsycho);
+          if (game.cyberpsycho) {
+            game.canvas.bgCtx.shadowColor = "red";
+            game.canvas.bgCtx.shadowOffsetX = 0;
+            game.canvas.bgCtx.shadowOffsetY = 0;
+            game.canvas.bgCtx.shadowBlur = 50;
+          } else {
+            game.canvas.bgCtx.shadowColor = "transparent";
+          }
 
           game.canvas.bgCtx.drawImage(
             game.map.tileset,

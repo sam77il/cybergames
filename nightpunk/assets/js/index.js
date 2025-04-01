@@ -25,6 +25,8 @@ let game = {
   camera: null,
   paused: false,
   pauseMenu: false,
+  cyberpsycho: false,
+  perksCount: 0,
   sounds: {
     run: new Audio("./assets/sounds/run.mp3"),
     jump: new Audio("./assets/sounds/jump.mp3"),
